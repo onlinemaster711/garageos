@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { toast } from '@/hooks/use-toast'
+import { toast } from '@/hooks/use-toas'
 import { Camera, Plus, X, Star, Loader2, Trash2 } from 'lucide-react'
 import {
   Select,
@@ -551,12 +551,12 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           <Label htmlFor="location_id" className="text-[#F0F0F0]">
             Standort
           </Label>
-          <Select value={formData.location_id} onValueChange={(value) => handleSelectChange('location_id', value)}>
+          <Select value={formData.location_id || '__none__'} onValueChange={(value) => handleSelectChange('location_id', value === '__none__' ? '' : value)}>
             <SelectTrigger id="location_id">
               <SelectValue placeholder="Standort wählen" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Kein Standort</SelectItem>
+              <SelectItem value="__none__">Kein Standort</SelectItem>
               {locations.map((loc) => (
                 <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
               ))}
