@@ -51,20 +51,9 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
   const [photosLoaded, setPhotosLoaded] = useState(false)
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
   const photoInputRef = useRef<HTMLInputElement>(null)
-  const [locations, setLocations] = useState<{ id: string; name: string }[]>([])
-  const [locationsLoaded, setLocationsLoaded] = useState(false)
+  
 
-  // Load locations
-  if (!locationsLoaded) {
-    setLocationsLoaded(true)
-    supabase
-      .from('locations')
-      .select('id, name')
-      .order('name', { ascending: true })
-      .then(({ data }) => {
-        if (data) setLocations(data)
-      })
-  }
+  
 
   // Load existing photos for edit mode
   if (vehicle?.id && !photosLoaded) {
@@ -217,7 +206,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     purchase_date: vehicle?.purchase_date || '',
     purchase_price: vehicle?.purchase_price?.toString() || '',
     current_mileage: vehicle?.current_mileage?.toString() || '',
-    location_id: vehicle?.location_id || '',
+    location_name: ((vehicle as unknown as Record<string, unknown>)?.location_name as string) || '',
     storage_address: ((vehicle as unknown as Record<string, unknown>)?.storage_address as string) || '',
     notes: vehicle?.notes || '',
   })
@@ -280,7 +269,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         current_mileage: formData.current_mileage
           ? parseInt(formData.current_mileage)
           : null,
-        location_id: formData.location_id || null,
+        location_name: formData.location_name.trim() || null,
         storage_address: formData.storage_address.trim() || null,
         notes: formData.notes.trim() || null,
       }
@@ -548,20 +537,17 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
         {/* Standort */}
         <div className="space-y-2">
-          <Label htmlFor="location_id" className="text-[#F0F0F0]">
+          <Label htmlFor="location_name" className="text-[#F0F0F0]">
             Standort
           </Label>
-          <Select value={formData.location_id || '__none__'} onValueChange={(value) => handleSelectChange('location_id', value === '__none__' ? '' : value)}>
-            <SelectTrigger id="location_id">
-              <SelectValue placeholder="Standort wählen" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__none__">Kein Standort</SelectItem>
-              {locations.map((loc) => (
-                <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Input
+            id="location_name"
+            name="location_name"
+            type="text"
+            value={formData.location_name}
+            onChange={handleInputChange}
+            placeholder="z. B. Garage München, Scheune Starnberg"
+          />
         </div>
 
         {/* Stellplatz-Adresse */}
