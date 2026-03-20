@@ -94,33 +94,71 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const loadInsurances = async () => {
     try {
       setLoadingInsurances(true)
-      const { data, error } = await supabase
+
+      console.log('📋 Loading insurances for vehicle:', vehicle.id)
+
+      // Query policy_vehicles to get linked insurance IDs
+      const { data: policyVehicleData, error: policyError } = await supabase
         .from('policy_vehicles')
-        .select(`
-          insurance_policies(id, user_id, name, file_url, valid_until, created_at)
-        `)
+        .select('policy_id')
         .eq('vehicle_id', vehicle.id)
 
-      if (error) {
-        console.error('Supabase Error loading insurances:', {
-          code: error.code,
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
+      if (policyError) {
+        console.error('❌ Error querying policy_vehicles:', {
+          code: policyError.code,
+          message: policyError.message,
+          details: policyError.details,
+          hint: policyError.hint,
         })
         setInsurances([])
         return
       }
 
-      const policyData = (data || [])
-        .map((item: any) => item.insurance_policies)
-        .filter(Boolean) as InsurancePolicy[]
+      console.log('✓ Found policy_vehicle links:', policyVehicleData?.length || 0)
 
-      setInsurances(policyData)
+      // If no linked policies, return empty
+      if (!policyVehicleData || policyVehicleData.length === 0) {
+        console.log('ℹ️ No linked insurance policies')
+        setInsurances([])
+        return
+      }
+
+      // Get policy IDs
+      const policyIds = policyVehicleData
+        .map((item: any) => item.policy_id)
+        .filter(Boolean)
+
+      if (policyIds.length === 0) {
+        console.log('ℹ️ No valid policy IDs found')
+        setInsurances([])
+        return
+      }
+
+      console.log('📌 Fetching insurance policies with IDs:', policyIds)
+
+      // Query insurance_policies by IDs (use wildcard to get all available columns)
+      const { data: insuranceData, error: insuranceError } = await supabase
+        .from('insurance_policies')
+        .select('*')
+        .in('id', policyIds)
+
+      if (insuranceError) {
+        console.error('❌ Error querying insurance_policies:', {
+          code: insuranceError.code,
+          message: insuranceError.message,
+          details: insuranceError.details,
+          hint: insuranceError.hint,
+        })
+        setInsurances([])
+        return
+      }
+
+      console.log('✓ Loaded insurance policies:', insuranceData?.length || 0)
+      setInsurances(insuranceData as InsurancePolicy[])
     } catch (error) {
-      console.error('Exception loading insurances:', {
-        error,
+      console.error('❌ Exception loading insurances:', {
         message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
       })
       setInsurances([])
     } finally {
