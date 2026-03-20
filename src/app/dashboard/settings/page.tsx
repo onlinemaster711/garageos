@@ -35,6 +35,11 @@ export default function SettingsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
 
+  // Delete User Confirmation
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteConfirmEmail, setDeleteConfirmEmail] = useState('')
+  const [deleteConfirmUserId, setDeleteConfirmUserId] = useState('')
+
   // Benutzer Management
   const [sharedUsers, setSharedUsers] = useState<SharedUser[]>([])
   const [addModalOpen, setAddModalOpen] = useState(false)
@@ -424,23 +429,49 @@ export default function SettingsPage() {
     }
   }
 
-  // Benutzer löschen
-  const handleDeleteUser = async (userId: string) => {
+  // Benutzer löschen - Confirmation Dialog öffnen
+  const handleDeleteUserClick = (userId: string, email: string) => {
+    console.log('Delete confirmation requested for:', email)
+    setDeleteConfirmUserId(userId)
+    setDeleteConfirmEmail(email)
+    setShowDeleteConfirm(true)
+  }
+
+  // Benutzer löschen - Bestätigt
+  const handleDeleteUserConfirm = async () => {
     try {
+      console.log('=== DELETE USER ===')
+      console.log('User ID:', deleteConfirmUserId)
+      console.log('Email:', deleteConfirmEmail)
+
       const { error } = await supabase
         .from('user_permissions')
         .delete()
-        .eq('id', userId)
+        .eq('id', deleteConfirmUserId)
 
-      if (error) throw error
+      if (error) {
+        console.error('=== SUPABASE ERROR ===')
+        console.error('Error Code:', error.code)
+        console.error('Error Message:', error.message)
+        throw error
+      }
+
+      console.log('✓ User erfolgreich gelöscht')
 
       await loadSharedUsers()
 
       toast({
         title: 'Erfolg',
-        description: 'Benutzer entfernt.',
+        description: `${deleteConfirmEmail} wurde entfernt.`,
       })
+
+      setShowDeleteConfirm(false)
+      setDeleteConfirmUserId('')
+      setDeleteConfirmEmail('')
     } catch (err) {
+      console.error('=== EXCEPTION ===')
+      console.error(err)
+
       toast({
         title: 'Fehler',
         description: 'Benutzer konnte nicht entfernt werden.',
@@ -710,7 +741,7 @@ export default function SettingsPage() {
                       )}
                     </div>
                     <button
-                      onClick={() => handleDeleteUser(user.id)}
+                      onClick={() => handleDeleteUserClick(user.id, user.email)}
                       className="p-2 hover:bg-[#3D4450] text-red-500 rounded-lg transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -880,6 +911,38 @@ export default function SettingsPage() {
                         Hinzufügen
                       </button>
                     </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Delete User Confirmation Modal */}
+            {showDeleteConfirm && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-[#2A2D30] border border-[#3D4450] rounded-lg p-6 max-w-md w-full">
+                  <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4">
+                    Sicher, dass du {deleteConfirmEmail} löschen möchtest?
+                  </h3>
+                  <p className="text-sm text-[#9B9B9B] mb-6">
+                    Diese Aktion kann nicht rückgängig gemacht werden. Der Benutzer verliert den Zugriff auf alle freigegebenen Fahrzeuge.
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setShowDeleteConfirm(false)
+                        setDeleteConfirmUserId('')
+                        setDeleteConfirmEmail('')
+                      }}
+                      className="flex-1 px-4 py-2 bg-[#3D4450] hover:bg-[#4A5260] text-[#E6E6E6] rounded-lg transition-colors font-medium"
+                    >
+                      Abbrechen
+                    </button>
+                    <button
+                      onClick={handleDeleteUserConfirm}
+                      className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
+                    >
+                      Ja, löschen
+                    </button>
                   </div>
                 </div>
               </div>
