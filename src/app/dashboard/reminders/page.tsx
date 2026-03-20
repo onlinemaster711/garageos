@@ -1,129 +1,280 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import Link from 'next/link'
-import { Calendar, Clock, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react'
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import type { Maintenance, Vehicle } from '@/lib/types';
+
+type SortBy = 'date-asc' | 'date-desc' | 'cost-asc' | 'cost-desc';
+type StatusFilter = 'all' | 'planned' | 'completed';
+type TypeFilter = 'all' | 'maintenance' | 'reminder';
+
+interface MaintenanceWithVehicle extends Maintenance {
+  vehicles: Vehicle;
+}
 
 export default function RemindersPage() {
-  const supabase = createClient()
-  const [reminders, setReminders] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [sortBy, setSortBy] = useState('date-soon')
-  const [statusFilter, setStatusFilter] = useState('all')
+  const [reminders, setReminders] = useState<MaintenanceWithVehicle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortBy>('date-asc');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
+
+  const supabase = createClient();
 
   useEffect(() => {
-    loadReminders()
-  }, [])
+    loadReminders();
+  }, []);
 
   const loadReminders = async () => {
     try {
-      const { data } = await supabase
+      setLoading(true);
+      const { data, error: fetchError } = await supabase
         .from('maintenance')
-        .select('*, vehicles(make, model)')
-        .order('date', { ascending: true })
-      if (data) setReminders(data)
+        .select(
+          `*, vehicles(id, user_id, make, model, year, plate, vin, color, country_code,
+          category, purchase_date, purchase_price, current_mileage, last_driven_date,
+          max_standzeit_weeks, location_id, cover_photo_url, notes, location_name,
+          storage_address, created_at)`
+        )
+        .order('date', { ascending: true });
+
+      if (fetchError) throw fetchError;
+
+      const typedData = (data || []).map((item) => ({
+        ...item,
+        type: (item.type || 'maintenance') as 'maintenance' | 'reminder',
+        status: (item.status || 'planned') as 'planned' | 'completed',
+      })) as MaintenanceWithVehicle[];
+
+      setReminders(typedData);
+      setError(null);
     } catch (err) {
-      console.error('Error:', err)
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der Wartungen');
+      console.error('Error loading reminders:', err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const sortReminders = (list: any[]) => {
-    const sorted = [...list]
+  const getTypeIcon = (type: 'maintenance' | 'reminder'): string => {
+    return type === 'reminder' ? '🛒' : '🔧';
+  };
+
+  const getTypeLabel = (type: 'maintenance' | 'reminder'): string => {
+    return type === 'reminder' ? 'Reminder' : 'Wartung';
+  };
+
+  const filterReminders = (): MaintenanceWithVehicle[] => {
+    return reminders.filter((reminder) => {
+      const statusMatch = statusFilter === 'all' || reminder.status === statusFilter;
+      const typeMatch = typeFilter === 'all' || reminder.type === typeFilter;
+      return statusMatch && typeMatch;
+    });
+  };
+
+  const sortReminders = (items: MaintenanceWithVehicle[]): MaintenanceWithVehicle[] => {
+    const sorted = [...items];
     switch (sortBy) {
-      case 'date-far':
-        return sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      case 'vehicle':
-        return sorted.sort((a, b) => `${a.vehicles?.make}`.localeCompare(`${b.vehicles?.make}`))
-      case 'status-open':
-        return sorted.sort((a, b) => (a.status === 'planned' ? -1 : 1))
-      case 'cost-high':
-        return sorted.sort((a, b) => (b.cost || 0) - (a.cost || 0))
-      case 'cost-low':
-        return sorted.sort((a, b) => (a.cost || 0) - (b.cost || 0))
+      case 'date-asc':
+        return sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      case 'date-desc':
+        return sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      case 'cost-asc':
+        return sorted.sort((a, b) => (a.cost || 0) - (b.cost || 0));
+      case 'cost-desc':
+        return sorted.sort((a, b) => (b.cost || 0) - (a.cost || 0));
       default:
-        return sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        return sorted;
     }
-  }
+  };
 
-  const filterReminders = (list: any[]) => {
-    if (statusFilter === 'all') return list
-    return list.filter(r => r.status === (statusFilter === 'open' ? 'planned' : 'completed'))
-  }
-
-  const filtered = filterReminders(sortReminders(reminders))
+  const filteredReminders = filterReminders();
+  const displayReminders = sortReminders(filteredReminders);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#F0F0F0] mb-8">
-          Wartungstermine
-        </h1>
+    <div className="min-h-screen bg-[#0A0A0A] text-[#F0F0F0] p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">Wartungen & Reminders</h1>
+          <p className="text-[#C9A84C]">
+            {displayReminders.length} {displayReminders.length === 1 ? 'Eintrag' : 'Einträge'}
+          </p>
+        </div>
 
-        {reminders.length > 0 && (
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[#9B9B9B]">Sortierung:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none bg-[#1E1E1E] border border-[#333333] text-[#F0F0F0] px-3 py-2 rounded-lg text-sm cursor-pointer pr-8"
-              >
-                <option value="date-soon">Nächstes Datum</option>
-                <option value="date-far">Entferntes Datum</option>
-                <option value="vehicle">Auto</option>
-                <option value="status-open">Status (Offen)</option>
-                <option value="cost-high">Kosten (Teuer)</option>
-                <option value="cost-low">Kosten (Günstig)</option>
-              </select>
+        <div className="bg-[#1E1E1E] rounded-lg p-6 mb-8 space-y-6 border border-[#2A2A2A]">
+          {/* Type Filter */}
+          <div>
+            <label className="text-sm font-semibold text-[#C9A84C] mb-3 block">Typ:</label>
+            <div className="flex flex-wrap gap-3">
+              {(['all', 'maintenance', 'reminder'] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setTypeFilter(type)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                    typeFilter === type
+                      ? 'bg-[#C9A84C] text-[#0A0A0A]'
+                      : 'bg-[#2A2A2A] text-[#F0F0F0] hover:bg-[#3A3A3A]'
+                  }`}
+                >
+                  {type === 'all' && 'Alle'}
+                  {type === 'maintenance' && '🔧 Nur Wartung'}
+                  {type === 'reminder' && '🛒 Nur Reminder'}
+                </button>
+              ))}
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[#9B9B9B]">Status:</span>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="appearance-none bg-[#1E1E1E] border border-[#333333] text-[#F0F0F0] px-3 py-2 rounded-lg text-sm cursor-pointer pr-8"
-              >
-                <option value="all">Alle</option>
-                <option value="open">Offen</option>
-                <option value="completed">Erledigt</option>
-              </select>
-            </div>
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label htmlFor="status" className="text-sm font-semibold text-[#C9A84C] mb-3 block">
+              Status:
+            </label>
+            <select
+              id="status"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+              className="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#F0F0F0] border border-[#3A3A3A] focus:border-[#C9A84C] focus:outline-none"
+            >
+              <option value="all">Alle</option>
+              <option value="planned">Geplant</option>
+              <option value="completed">Erledigt</option>
+            </select>
+          </div>
+
+          {/* Sort By */}
+          <div>
+            <label htmlFor="sort" className="text-sm font-semibold text-[#C9A84C] mb-3 block">
+              Sortieren:
+            </label>
+            <select
+              id="sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortBy)}
+              className="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#F0F0F0] border border-[#3A3A3A] focus:border-[#C9A84C] focus:outline-none"
+            >
+              <option value="date-asc">Datum (früher)</option>
+              <option value="date-desc">Datum (später)</option>
+              <option value="cost-asc">Kosten (niedrig)</option>
+              <option value="cost-desc">Kosten (hoch)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-[#C9A84C]">Lädt Wartungen...</p>
           </div>
         )}
 
-        {!loading && filtered.length > 0 ? (
+        {/* Error State */}
+        {error && (
+          <div className="bg-red-900/20 border border-red-700 rounded-lg p-4 mb-8">
+            <p className="text-red-400">Fehler: {error}</p>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && displayReminders.length === 0 && (
+          <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-8 text-center">
+            <p className="text-[#808080]">Keine Wartungen oder Reminders gefunden.</p>
+          </div>
+        )}
+
+        {/* Reminders List */}
+        {!loading && !error && displayReminders.length > 0 && (
           <div className="space-y-4">
-            {filtered.map((reminder: any) => (
-              <div key={reminder.id} className="border-l-4 border-blue-700 rounded-lg p-4 sm:p-5 bg-blue-900/30">
-                <div className="flex items-start justify-between gap-4">
+            {displayReminders.map((reminder) => (
+              <div
+                key={reminder.id}
+                className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-6 hover:border-[#C9A84C] transition-colors"
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-[#F0F0F0]">{reminder.title}</h3>
-                    <p className="text-sm text-[#B0B0B0]">{reminder.vehicles?.make} {reminder.vehicles?.model}</p>
-                    {reminder.description && <p className="text-sm text-[#9B9B9B] mt-2">{reminder.description}</p>}
-                    <div className="flex gap-4 mt-3 text-sm">
-                      <span className="text-[#9B9B9B]">{new Date(reminder.date).toLocaleDateString('de-DE')}</span>
-                      {reminder.cost && <span className="text-[#C9A84C]">€{reminder.cost}</span>}
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-xl font-bold text-[#F0F0F0]">{reminder.title}</h3>
+                      <span className="text-2xl">{getTypeIcon(reminder.type)}</span>
+                      {reminder.status === 'completed' && (
+                        <span className="text-green-400 text-lg font-bold">✓</span>
+                      )}
                     </div>
+                    <Link
+                      href={`/vehicles/${reminder.vehicle_id}`}
+                      className="text-[#C9A84C] hover:underline text-sm"
+                    >
+                      {reminder.vehicles.make} {reminder.vehicles.model} ({reminder.vehicles.year})
+                    </Link>
                   </div>
-                  <Link href={`/vehicles/${reminder.vehicle_id}`} className="px-3 py-2 rounded-lg bg-[#C9A84C] text-[#0A0A0A] text-sm font-medium hover:bg-[#B8961F] whitespace-nowrap">
-                    Bearbeiten
-                  </Link>
+                  <div className="flex flex-col items-end gap-2">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        reminder.status === 'completed'
+                          ? 'bg-green-900/30 text-green-400'
+                          : 'bg-yellow-900/30 text-yellow-400'
+                      }`}
+                    >
+                      {reminder.status === 'completed' ? 'Erledigt' : 'Geplant'}
+                    </span>
+                    <span className="text-[#C9A84C] text-xs font-semibold">
+                      {getTypeLabel(reminder.type)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Date */}
+                <p className="text-[#808080] text-sm mb-3">
+                  📅 {new Date(reminder.date).toLocaleDateString('de-DE', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+
+                {/* Description */}
+                {reminder.description && (
+                  <p className="text-[#D0D0D0] mb-4">{reminder.description}</p>
+                )}
+
+                {/* Details Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  {reminder.workshop && (
+                    <div className="bg-[#0A0A0A] rounded p-3">
+                      <p className="text-[#808080] text-xs mb-1">Werkstatt</p>
+                      <p className="text-[#F0F0F0] font-medium">{reminder.workshop}</p>
+                    </div>
+                  )}
+                  {reminder.cost && (
+                    <div className="bg-[#0A0A0A] rounded p-3">
+                      <p className="text-[#808080] text-xs mb-1">Kosten</p>
+                      <p className="text-[#C9A84C] font-medium">€ {reminder.cost.toFixed(2)}</p>
+                    </div>
+                  )}
+                  {reminder.mileage && (
+                    <div className="bg-[#0A0A0A] rounded p-3">
+                      <p className="text-[#808080] text-xs mb-1">Kilometerstand</p>
+                      <p className="text-[#F0F0F0] font-medium">
+                        {reminder.mileage.toLocaleString('de-DE')} km
+                      </p>
+                    </div>
+                  )}
+                  {reminder.vehicles.current_mileage && (
+                    <div className="bg-[#0A0A0A] rounded p-3">
+                      <p className="text-[#808080] text-xs mb-1">Aktuell</p>
+                      <p className="text-[#F0F0F0] font-medium">
+                        {reminder.vehicles.current_mileage.toLocaleString('de-DE')} km
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
-        ) : !loading ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Calendar className="h-12 w-12 text-[#C9A84C] mb-4 opacity-50" />
-            <h2 className="text-lg font-semibold text-[#F0F0F0]">Keine Termine</h2>
-          </div>
-        ) : (
-          <p className="text-[#9B9B9B]">Lädt...</p>
         )}
       </div>
     </div>
-  )
+  );
 }

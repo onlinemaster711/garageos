@@ -72,6 +72,8 @@ export interface Maintenance {
   workshop: string | null
   cost: number | null
   mileage: number | null
+  type: 'maintenance' | 'reminder'
+  status: 'planned' | 'completed'
   created_at: string
 }
 
