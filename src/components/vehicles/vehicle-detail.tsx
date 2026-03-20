@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/button'
 import { MaintenanceTab } from './maintenance-tab'
 import { DocumentsTab } from './documents-tab'
 import { PhotosTab } from './photos-tab'
+import { TiresTab } from './tires-tab'
 import type { InsurancePolicy } from '@/lib/types'
 
 interface Vehicle {
@@ -51,7 +52,7 @@ interface Vehicle {
   created_at: string
 }
 
-type TabType = 'overview' | 'maintenance' | 'documents' | 'photos'
+type TabType = 'overview' | 'maintenance' | 'documents' | 'photos' | 'tires'
 
 export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const router = useRouter()
@@ -248,6 +249,17 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               <ImageIcon className="h-4 w-4" />
               Fotos
             </button>
+            <button
+              onClick={() => setActiveTab('tires')}
+              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+                activeTab === 'tires'
+                  ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
+              }`}
+            >
+              🛞
+              Reifen
+            </button>
           </div>
         </div>
 
@@ -354,6 +366,13 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           {activeTab === 'photos' && (
             <div className="max-w-7xl mx-auto">
               <PhotosTab vehicleId={vehicle.id} />
+            </div>
+          )}
+
+          {/* Tires Tab */}
+          {activeTab === 'tires' && (
+            <div className="max-w-7xl mx-auto">
+              <TiresTab vehicleId={vehicle.id} />
             </div>
           )}
         </div>
