@@ -48,6 +48,7 @@ interface MaintenanceRecord {
   workshop: string | null
   cost: number | null
   mileage: number | null
+  type: 'maintenance' | 'reminder'
   status: 'planned' | 'completed'
   has_appointment: boolean
   created_at: string
@@ -100,6 +101,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
     workshop: '',
     cost: '',
     mileage: '',
+    type: 'maintenance' as 'maintenance' | 'reminder',
     status: 'planned' as 'planned' | 'completed',
     has_appointment: false,
   })
@@ -133,6 +135,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         setRecords(
           (recordsRes.data || []).map((r: Record<string, unknown>) => ({
             ...r,
+            type: (r.type as string) || 'maintenance',
             status: (r.status as string) || 'completed',
             has_appointment: (r.has_appointment as boolean) || false,
           })) as MaintenanceRecord[]
@@ -178,6 +181,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         workshop: formData.workshop || null,
         cost: formData.cost ? parseFloat(formData.cost) : null,
         mileage: formData.mileage ? parseInt(formData.mileage, 10) : null,
+        type: formData.type,
         status: formData.status,
         has_appointment: formData.has_appointment,
       }
@@ -198,6 +202,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         workshop: '',
         cost: '',
         mileage: '',
+        type: 'maintenance',
         status: 'planned',
         has_appointment: false,
       })
@@ -339,6 +344,14 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
     )
   }
 
+  const getTypeIcon = (type: 'maintenance' | 'reminder'): string => {
+    return type === 'reminder' ? '🛒' : '🔧'
+  }
+
+  const getTypeLabel = (type: 'maintenance' | 'reminder'): string => {
+    return type === 'reminder' ? 'Reminder' : 'Wartung'
+  }
+
   const renderRecord = (record: MaintenanceRecord, showActions = true) => (
     <div
       key={record.id}
@@ -346,7 +359,11 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
     >
       <div className="flex-1">
         <div className="flex items-center gap-3 mb-2">
+          <span className="text-xl">{getTypeIcon(record.type)}</span>
           <h3 className="text-base font-semibold text-[#F0F0F0]">{record.title}</h3>
+          <span className="text-xs font-medium text-[#C9A84C] bg-[#C9A84C]/20 px-2 py-0.5 rounded">
+            {getTypeLabel(record.type)}
+          </span>
           <span className="text-sm text-gray-400">
             {new Date(record.date).toLocaleDateString('de-DE')}
           </span>
@@ -610,14 +627,40 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
           <div className="space-y-4">
             <div>
-              <Label className="text-gray-300">Typ</Label>
+              <Label className="text-gray-300">Wartungstyp</Label>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setFormData({ ...formData, type: 'maintenance' })}
+                  className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors ${
+                    formData.type === 'maintenance'
+                      ? 'bg-[#C9A84C] text-[#0A0A0A]'
+                      : 'bg-[#0A0A0A] text-[#F0F0F0] border border-gray-600 hover:border-[#C9A84C]'
+                  }`}
+                >
+                  🔧 Wartung
+                </button>
+                <button
+                  onClick={() => setFormData({ ...formData, type: 'reminder' })}
+                  className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors ${
+                    formData.type === 'reminder'
+                      ? 'bg-[#C9A84C] text-[#0A0A0A]'
+                      : 'bg-[#0A0A0A] text-[#F0F0F0] border border-gray-600 hover:border-[#C9A84C]'
+                  }`}
+                >
+                  🛒 Reminder
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-gray-300">Status</Label>
               <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v as 'planned' | 'completed' })}>
                 <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="planned">Geplante Wartung</SelectItem>
-                  <SelectItem value="completed">Erledigte Wartung</SelectItem>
+                  <SelectItem value="planned">Geplant</SelectItem>
+                  <SelectItem value="completed">Erledigt</SelectItem>
                 </SelectContent>
               </Select>
             </div>
