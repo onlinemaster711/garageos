@@ -112,3 +112,23 @@ export interface UserRole {
   role: 'owner' | 'assistant' | 'viewer'
   created_at: string
 }
+
+export interface InsurancePolicy {
+  id: string
+  user_id: string
+  name: string
+  file_url: string
+  valid_until: string | null
+  created_at: string
+}
+
+export interface PolicyVehicle {
+  id: string
+  policy_id: string
+  vehicle_id: string
+  created_at: string
+}
+
+export interface InsurancePolicyWithVehicles extends InsurancePolicy {
+  vehicle_count?: number
+}

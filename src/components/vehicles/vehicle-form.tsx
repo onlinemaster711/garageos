@@ -2,13 +2,14 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Vehicle } from '@/lib/types'
+import { Vehicle, InsurancePolicy } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 import { toast } from '@/hooks/use-toast'
-import { Camera, Plus, X, Star, Loader2, Trash2 } from 'lucide-react'
+import { Camera, Plus, X, Star, Loader2, Trash2, Shield, Check } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -16,6 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 const CAR_MAKES = [
   'Alfa Romeo', 'Aston Martin', 'Audi', 'Bentley', 'BMW',
@@ -51,6 +60,14 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
   const [photosLoaded, setPhotosLoaded] = useState(false)
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
   const photoInputRef = useRef<HTMLInputElement>(null)
+
+  // Insurance Modal States
+  const [isInsuranceModalOpen, setIsInsuranceModalOpen] = useState(false)
+  const [allInsurancePolicies, setAllInsurancePolicies] = useState<(InsurancePolicy & { vehicle_count: number })[]>([])
+  const [selectedPolicies, setSelectedPolicies] = useState<Set<string>>(new Set())
+  const [savingInsurances, setSavingInsurances] = useState(false)
+  const [loadingPolicies, setLoadingPolicies] = useState(false)
+  const [newVehicleId, setNewVehicleId] = useState<string | null>(null)
 
   if (vehicle?.id && !photosLoaded) {
     setPhotosLoaded(true)
@@ -285,6 +302,94 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     }
   }
 
+  const loadInsurancePolicies = async (vehicleId: string) => {
+    try {
+      setLoadingPolicies(true)
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) throw new Error('Nicht authentifiziert')
+
+      // Query: insurance_policies mit >1 Auto (excluding this new vehicle)
+      const { data, error } = await supabase
+        .from('insurance_policies')
+        .select(`
+          *,
+          policy_vehicles(count)
+        `)
+        .eq('user_id', userData.user.id)
+        .gt('policy_vehicles.count', 0)
+
+      if (error) throw error
+
+      // Filter policies with more than 1 vehicle
+      const policiesWithCounts = (data || []).map(policy => ({
+        ...policy,
+        vehicle_count: policy.policy_vehicles[0]?.count || 0,
+      })).filter(p => p.vehicle_count > 0)
+
+      setAllInsurancePolicies(policiesWithCounts)
+    } catch (error) {
+      console.error('Error loading insurance policies:', error)
+    } finally {
+      setLoadingPolicies(false)
+    }
+  }
+
+  const handleTogglePolicy = (policyId: string) => {
+    const newSelected = new Set(selectedPolicies)
+    if (newSelected.has(policyId)) {
+      newSelected.delete(policyId)
+    } else {
+      newSelected.add(policyId)
+    }
+    setSelectedPolicies(newSelected)
+  }
+
+  const handleSaveInsurances = async () => {
+    if (!newVehicleId || selectedPolicies.size === 0) {
+      // If no policies selected, just navigate away
+      router.push(`/vehicles/${newVehicleId}`)
+      return
+    }
+
+    setSavingInsurances(true)
+    try {
+      // Link selected policies to new vehicle
+      const policyVehicles = Array.from(selectedPolicies).map(policyId => ({
+        policy_id: policyId,
+        vehicle_id: newVehicleId,
+      }))
+
+      const { error } = await supabase
+        .from('policy_vehicles')
+        .insert(policyVehicles)
+
+      if (error) throw error
+
+      const count = selectedPolicies.size
+      toast({
+        title: 'Erfolg',
+        description: `${count} ${count === 1 ? 'Versicherung' : 'Versicherungen'} hinzugefügt`,
+      })
+
+      setIsInsuranceModalOpen(false)
+      setSelectedPolicies(new Set())
+
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        router.push(`/vehicles/${newVehicleId}`)
+      }
+    } catch (error) {
+      toast({
+        title: 'Fehler',
+        description: error instanceof Error ? error.message : 'Versicherungen konnten nicht hinzugefügt werden',
+        variant: 'destructive',
+      })
+    } finally {
+      setSavingInsurances(false)
+    }
+  }
+
   const [formData, setFormData] = useState({
     make: vehicle?.make || '',
     model: vehicle?.model || '',
@@ -424,11 +529,10 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           description: 'Fahrzeug wurde erstellt.',
         })
 
-        if (onSuccess) {
-          onSuccess()
-        } else {
-          router.push(`/vehicles/${newVehicleId}`)
-        }
+        // Show insurance modal for new vehicle
+        setNewVehicleId(newVehicleId)
+        await loadInsurancePolicies(newVehicleId)
+        setIsInsuranceModalOpen(true)
       }
     } catch (error) {
       console.error('Form submission error:', error)
@@ -757,6 +861,89 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
       >
         {loading ? 'Wird gespeichert...' : 'Fahrzeug speichern'}
       </button>
+
+      {/* Insurance Modal */}
+      <Dialog open={isInsuranceModalOpen} onOpenChange={setIsInsuranceModalOpen}>
+        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-[#F0F0F0]">
+              <Shield className="h-5 w-5 text-[#C9A84C]" />
+              Versicherungen für dieses Auto
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Welche bestehenden Versicherungen deckten dieses Fahrzeug ab?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 max-h-96 overflow-y-auto py-4">
+            {loadingPolicies ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]" />
+              </div>
+            ) : allInsurancePolicies.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-4">
+                Keine Versicherungen mit mehreren Autos vorhanden
+              </p>
+            ) : (
+              allInsurancePolicies.map(policy => (
+                <label
+                  key={policy.id}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-gray-700 hover:border-[#C9A84C] cursor-pointer transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedPolicies.has(policy.id)}
+                    onChange={() => handleTogglePolicy(policy.id)}
+                    className="w-4 h-4 rounded bg-[#0A0A0A] border-gray-600 accent-[#C9A84C] cursor-pointer"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-[#F0F0F0] truncate">
+                      {policy.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {policy.vehicle_count} Auto{policy.vehicle_count !== 1 ? 's' : ''}
+                      {policy.valid_until && ` • bis ${new Date(policy.valid_until).toLocaleDateString('de-DE')}`}
+                    </p>
+                  </div>
+                </label>
+              ))
+            )}
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsInsuranceModalOpen(false)
+                if (newVehicleId) {
+                  router.push(`/vehicles/${newVehicleId}`)
+                }
+              }}
+              className="border-gray-600"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Überspringen
+            </Button>
+            <Button
+              onClick={handleSaveInsurances}
+              disabled={savingInsurances}
+              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C] disabled:opacity-50"
+            >
+              {savingInsurances ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Wird gespeichert...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Speichern
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </form>
   )
 }

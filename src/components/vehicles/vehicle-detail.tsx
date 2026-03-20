@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -12,6 +12,8 @@ import {
   FileText,
   Image as ImageIcon,
   Info,
+  Shield,
+  Loader2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
@@ -28,6 +30,7 @@ import { MaintenanceTab } from './maintenance-tab'
 import { DocumentsTab } from './documents-tab'
 import { PhotosTab } from './photos-tab'
 import { DossierButton } from './dossier-button'
+import type { InsurancePolicy } from '@/lib/types'
 
 interface Vehicle {
   id: string
@@ -58,6 +61,38 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const [activeTab, setActiveTab] = useState<TabType>('maintenance')
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  // Insurance States
+  const [insurances, setInsurances] = useState<InsurancePolicy[]>([])
+  const [loadingInsurances, setLoadingInsurances] = useState(true)
+
+  useEffect(() => {
+    loadInsurances()
+  }, [])
+
+  const loadInsurances = async () => {
+    try {
+      setLoadingInsurances(true)
+      const { data, error } = await supabase
+        .from('policy_vehicles')
+        .select(`
+          insurance_policies(id, user_id, name, file_url, valid_until, created_at)
+        `)
+        .eq('vehicle_id', vehicle.id)
+
+      if (error) throw error
+
+      const policyData = (data || [])
+        .map((item: any) => item.insurance_policies)
+        .filter(Boolean) as InsurancePolicy[]
+
+      setInsurances(policyData)
+    } catch (error) {
+      console.error('Error loading insurances:', error)
+    } finally {
+      setLoadingInsurances(false)
+    }
+  }
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -268,6 +303,41 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   <p className="text-gray-400 whitespace-pre-wrap">{vehicle.notes}</p>
                 </div>
               )}
+
+              {/* Insurances Section */}
+              <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="h-5 w-5 text-[#C9A84C]" />
+                  <h3 className="text-lg font-semibold text-[#F0F0F0]">Versicherungen</h3>
+                </div>
+                {loadingInsurances ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]" />
+                  </div>
+                ) : insurances.length === 0 ? (
+                  <p className="text-gray-400">Keine Versicherungen verlinkt</p>
+                ) : (
+                  <div className="space-y-3">
+                    {insurances.map(insurance => (
+                      <div key={insurance.id} className="flex items-center justify-between p-3 bg-[#0A0A0A] rounded-lg border border-gray-700">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-[#F0F0F0] truncate">{insurance.name}</p>
+                          {insurance.valid_until && (
+                            <p className="text-xs text-gray-500">
+                              Gültig bis: {new Date(insurance.valid_until).toLocaleDateString('de-DE')}
+                            </p>
+                          )}
+                        </div>
+                        <a href={insurance.file_url} download target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="sm" className="text-[#C9A84C] hover:bg-[#C9A84C]/10 ml-2">
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

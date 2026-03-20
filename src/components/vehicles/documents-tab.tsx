@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Upload, Download, Trash2, FileText, Loader2 } from 'lucide-react'
+import { Upload, Download, Trash2, FileText, Loader2, Shield, Check, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import type { Vehicle } from '@/lib/types'
 
 interface Document {
   id: string
@@ -47,6 +56,14 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
+
+  // Insurance Modal States
+  const [isInsuranceModalOpen, setIsInsuranceModalOpen] = useState(false)
+  const [insuranceDocumentName, setInsuranceDocumentName] = useState('')
+  const [allVehicles, setAllVehicles] = useState<Vehicle[]>([])
+  const [selectedVehicles, setSelectedVehicles] = useState<Set<string>>(new Set())
+  const [savingInsurance, setSavingInsurance] = useState(false)
+  const [loadingVehicles, setLoadingVehicles] = useState(false)
 
   const [formData, setFormData] = useState({
     category: 'kaufvertrag',
@@ -150,6 +167,14 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
       if (dbError) throw dbError
 
       toast({ title: 'Erfolg', description: 'Dokument hochgeladen' })
+
+      // Open insurance modal if this was an insurance document
+      if (formData.category === 'versicherung') {
+        setInsuranceDocumentName(formData.name)
+        await loadAllVehicles()
+        setIsInsuranceModalOpen(true)
+      }
+
       setFormData({ category: 'kaufvertrag', name: '', file: null })
 
       const fileInput = document.getElementById('file-input') as HTMLInputElement
@@ -203,6 +228,102 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
 
   const getCategoryLabel = (value: string) => CATEGORIES.find(c => c.value === value)?.label || value
   const getCategoryColor = (value: string) => CATEGORIES.find(c => c.value === value)?.color || 'bg-gray-900/30 text-gray-400'
+
+  const loadAllVehicles = async () => {
+    try {
+      setLoadingVehicles(true)
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) throw new Error('Nicht authentifiziert')
+
+      const { data, error } = await supabase
+        .from('vehicles')
+        .select('*')
+        .eq('user_id', userData.user.id)
+        .order('make')
+
+      if (error) throw error
+      setAllVehicles(data || [])
+      setSelectedVehicles(new Set([vehicleId])) // Pre-select current vehicle
+    } catch (error) {
+      toast({
+        title: 'Fehler',
+        description: 'Fahrzeuge konnten nicht geladen werden',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoadingVehicles(false)
+    }
+  }
+
+  const handleToggleVehicle = (id: string) => {
+    const newSelected = new Set(selectedVehicles)
+    if (newSelected.has(id)) {
+      newSelected.delete(id)
+    } else {
+      newSelected.add(id)
+    }
+    setSelectedVehicles(newSelected)
+  }
+
+  const handleSaveInsurance = async () => {
+    if (selectedVehicles.size === 0) {
+      toast({ title: 'Fehler', description: 'Bitte mindestens ein Auto wählen', variant: 'destructive' })
+      return
+    }
+
+    setSavingInsurance(true)
+    try {
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) throw new Error('Nicht authentifiziert')
+
+      // Get the insurance document we just uploaded
+      const insuranceDoc = documents.find(d => d.name === insuranceDocumentName && d.category === 'versicherung')
+      if (!insuranceDoc) throw new Error('Versicherungsdokument nicht gefunden')
+
+      // Create insurance policy
+      const { data: policyData, error: policyError } = await supabase
+        .from('insurance_policies')
+        .insert([{
+          user_id: userData.user.id,
+          name: insuranceDocumentName,
+          file_url: insuranceDoc.file_url,
+        }])
+        .select()
+        .single()
+
+      if (policyError) throw policyError
+
+      // Link policy to selected vehicles
+      const policyVehicles = Array.from(selectedVehicles).map(vehicleId => ({
+        policy_id: policyData.id,
+        vehicle_id: vehicleId,
+      }))
+
+      const { error: linkError } = await supabase
+        .from('policy_vehicles')
+        .insert(policyVehicles)
+
+      if (linkError) throw linkError
+
+      const count = selectedVehicles.size
+      toast({
+        title: 'Erfolg',
+        description: `Versicherung für ${count} ${count === 1 ? 'Auto' : 'Autos'} verlinkt`,
+      })
+
+      setIsInsuranceModalOpen(false)
+      setSelectedVehicles(new Set())
+      setInsuranceDocumentName('')
+    } catch (error) {
+      toast({
+        title: 'Fehler',
+        description: error instanceof Error ? error.message : 'Versicherung konnte nicht verlinkt werden',
+        variant: 'destructive',
+      })
+    } finally {
+      setSavingInsurance(false)
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -320,6 +441,79 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
           ))}
         </div>
       )}
+
+      {/* Insurance Modal */}
+      <Dialog open={isInsuranceModalOpen} onOpenChange={setIsInsuranceModalOpen}>
+        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-[#F0F0F0]">
+              <Shield className="h-5 w-5 text-[#C9A84C]" />
+              Versicherung für Autos
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Wählen Sie die Fahrzeuge aus, die von dieser Versicherung gedeckt sind.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 max-h-96 overflow-y-auto py-4">
+            {loadingVehicles ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]" />
+              </div>
+            ) : allVehicles.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-4">Keine Fahrzeuge vorhanden</p>
+            ) : (
+              allVehicles.map(vehicle => (
+                <label
+                  key={vehicle.id}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-gray-700 hover:border-[#C9A84C] cursor-pointer transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedVehicles.has(vehicle.id)}
+                    onChange={() => handleToggleVehicle(vehicle.id)}
+                    className="w-4 h-4 rounded bg-[#0A0A0A] border-gray-600 accent-[#C9A84C] cursor-pointer"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-[#F0F0F0] truncate">
+                      {vehicle.make} {vehicle.model}
+                    </p>
+                    <p className="text-xs text-gray-500">{vehicle.year}</p>
+                  </div>
+                </label>
+              ))
+            )}
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsInsuranceModalOpen(false)}
+              className="border-gray-600"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Abbrechen
+            </Button>
+            <Button
+              onClick={handleSaveInsurance}
+              disabled={savingInsurance || selectedVehicles.size === 0}
+              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C] disabled:opacity-50"
+            >
+              {savingInsurance ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Wird gespeichert...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Speichern
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
