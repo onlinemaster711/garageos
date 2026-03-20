@@ -62,14 +62,32 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const [activeTab, setActiveTab] = useState<TabType>('maintenance')
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isOwner, setIsOwner] = useState(false)
+  const [checkingOwner, setCheckingOwner] = useState(true)
 
   // Insurance States
   const [insurances, setInsurances] = useState<InsurancePolicy[]>([])
   const [loadingInsurances, setLoadingInsurances] = useState(true)
 
   useEffect(() => {
-    loadInsurances()
+    checkOwnershipAndLoadData()
   }, [])
+
+  const checkOwnershipAndLoadData = async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user?.id === vehicle.user_id) {
+        setIsOwner(true)
+      }
+    } catch (err) {
+      console.error('Error checking ownership:', err)
+    } finally {
+      setCheckingOwner(false)
+      loadInsurances()
+    }
+  }
 
   const loadInsurances = async () => {
     try {
@@ -182,23 +200,27 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   € {vehicle.purchase_price.toLocaleString('de-DE')}
                 </span>
               )}
-              <Link href={`/vehicles/${vehicle.id}/edit`}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#E5C97B] hover:bg-[#E5C97B]/10"
-                >
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-red-400 hover:bg-red-400/10"
-                onClick={() => setIsDeleteDialogOpen(true)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {isOwner && (
+                <>
+                  <Link href={`/vehicles/${vehicle.id}/edit`}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[#E5C97B] hover:bg-[#E5C97B]/10"
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-400 hover:bg-red-400/10"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

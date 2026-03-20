@@ -21,20 +21,67 @@ export default function DashboardPage() {
     loadVehicles()
   }, [])
 
+  const isDateValid = (validFrom: string, validUntil: string | null): boolean => {
+    const now = new Date()
+    const from = new Date(validFrom)
+    if (now < from) return false
+    if (validUntil) {
+      const until = new Date(validUntil)
+      if (now > until) return false
+    }
+    return true
+  }
+
   const loadVehicles = async () => {
     try {
-      const { data } = await supabase
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+
+      // Get owned vehicles
+      const { data: ownedVehicles } = await supabase
         .from('vehicles')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
-      if (data) {
-        setVehicles(data)
-        const oldtimers = data.filter((v) => v.category === 'oldtimer').length
-        const moderns = data.filter((v) => v.category === 'modern').length
-        setOldtimerCount(oldtimers)
-        setModernCount(moderns)
+      // Get shared vehicles
+      const { data: permissions } = await supabase
+        .from('user_permissions')
+        .select('vehicle_id, valid_from, valid_until')
+        .eq('guest_email', user.email)
+
+      let sharedVehicleIds: string[] = []
+      if (permissions) {
+        sharedVehicleIds = permissions
+          .filter((p) => p.vehicle_id && isDateValid(p.valid_from, p.valid_until))
+          .map((p) => p.vehicle_id)
+          .filter(Boolean)
       }
+
+      let sharedVehicles: any[] = []
+      if (sharedVehicleIds.length > 0) {
+        const { data } = await supabase
+          .from('vehicles')
+          .select('*')
+          .in('id', sharedVehicleIds)
+          .order('created_at', { ascending: false })
+        sharedVehicles = data || []
+      }
+
+      const allVehicles = [
+        ...(ownedVehicles || []),
+        ...sharedVehicles.filter(
+          (sv) => !ownedVehicles?.some((ov) => ov.id === sv.id)
+        ),
+      ]
+
+      setVehicles(allVehicles)
+      const oldtimers = allVehicles.filter((v) => v.category === 'oldtimer').length
+      const moderns = allVehicles.filter((v) => v.category === 'modern').length
+      setOldtimerCount(oldtimers)
+      setModernCount(moderns)
     } catch (err) {
       console.error('Error loading vehicles:', err)
     } finally {
