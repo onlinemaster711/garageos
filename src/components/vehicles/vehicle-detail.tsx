@@ -29,7 +29,6 @@ import { Button } from '@/components/ui/button'
 import { MaintenanceTab } from './maintenance-tab'
 import { DocumentsTab } from './documents-tab'
 import { PhotosTab } from './photos-tab'
-import { DossierButton } from './dossier-button'
 import type { InsurancePolicy } from '@/lib/types'
 
 interface Vehicle {
@@ -181,10 +180,6 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   € {vehicle.purchase_price.toLocaleString('de-DE')}
                 </span>
               )}
-              <DossierButton
-                vehicleId={vehicle.id}
-                vehicleName={`${vehicle.make} ${vehicle.model}`}
-              />
               <Link href={`/vehicles/${vehicle.id}/edit`}>
                 <Button
                   variant="ghost"
