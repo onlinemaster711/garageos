@@ -743,6 +743,9 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
                 <>
                   <Plus className="h-8 w-8 text-gray-500 mb-1" />
                   <span className="text-xs text-gray-500">Foto hinzufügen</span>
+            <p className="text-xs text-gray-500 mt-2">
+              Max. 5MB • JPG, PNG oder WebP
+            </p>
                 </>
               )}
             </label>
