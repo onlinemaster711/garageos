@@ -28,6 +28,7 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordLoading, setPasswordLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   // Konto
   const [googleConnected, setGoogleConnected] = useState(false)
@@ -48,8 +49,9 @@ export default function SettingsPage() {
   const [newUserValidFrom, setNewUserValidFrom] = useState(
     new Date().toISOString().split('T')[0]
   )
-  const [newUserValidUntil, setNewUserValidUntil] = useState('')
-  const [newUserForever, setNewUserForever] = useState(true)
+  const [newUserValidUntil, setNewUserValidUntil] = useState(
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  )
 
   useEffect(() => {
     loadSettings()
@@ -245,7 +247,7 @@ export default function SettingsPage() {
         vehicle_id: null,
         permissions: newUserPermissions,
         valid_from: newUserValidFrom,
-        valid_until: newUserForever ? null : newUserValidUntil,
+        valid_until: newUserValidUntil,
       })
 
       if (error) throw error
@@ -257,8 +259,9 @@ export default function SettingsPage() {
         dokumente: false,
       })
       setNewUserValidFrom(new Date().toISOString().split('T')[0])
-      setNewUserValidUntil('')
-      setNewUserForever(true)
+      setNewUserValidUntil(
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      )
       setAddModalOpen(false)
 
       await loadSharedUsers()
@@ -382,6 +385,17 @@ export default function SettingsPage() {
         {/* PASSWORT TAB */}
         {activeTab === 'passwort' && (
           <div className="space-y-6 bg-[#2A2D30] p-6 rounded-lg border border-[#3D4450]">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-medium text-[#E6E6E6]">Passwörter</h3>
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-[#1A2332] hover:bg-[#3D4450] text-[#E5C97B] text-xs font-medium rounded-lg transition-colors"
+              >
+                <span className="text-lg">👁️</span>
+                <span>{showPassword ? 'Verbergen' : 'Anzeigen'}</span>
+              </button>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-[#E6E6E6] mb-2">
                 Aktuelles Passwort
@@ -400,11 +414,11 @@ export default function SettingsPage() {
                 Neues Passwort
               </label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full px-4 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] transition-colors"
-                placeholder="••••••••"
+                placeholder="Neues Passwort"
               />
             </div>
 
@@ -413,11 +427,11 @@ export default function SettingsPage() {
                 Wiederholen
               </label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-4 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] transition-colors"
-                placeholder="••••••••"
+                placeholder="Passwort wiederholen"
               />
             </div>
 
@@ -629,42 +643,31 @@ export default function SettingsPage() {
                     <div className="space-y-3 border-t border-[#3D4450] pt-4">
                       <p className="text-sm font-medium text-[#E6E6E6]">Zeitbegrenzung</p>
 
-                      <label className="flex items-center gap-3 cursor-pointer">
+                      <div>
+                        <label className="block text-xs font-medium text-[#9B9B9B] mb-1">
+                          Ab
+                        </label>
                         <input
-                          type="checkbox"
-                          checked={newUserForever}
-                          onChange={(e) => setNewUserForever(e.target.checked)}
-                          className="w-4 h-4 rounded accent-[#E5C97B]"
+                          type="date"
+                          value={newUserValidFrom}
+                          onChange={(e) => setNewUserValidFrom(e.target.value)}
+                          className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm"
+                          placeholder="dd.mm.yyyy"
                         />
-                        <span className="text-sm text-[#E6E6E6]">Für immer</span>
-                      </label>
+                      </div>
 
-                      {!newUserForever && (
-                        <>
-                          <div>
-                            <label className="block text-xs font-medium text-[#9B9B9B] mb-1">
-                              Ab
-                            </label>
-                            <input
-                              type="date"
-                              value={newUserValidFrom}
-                              onChange={(e) => setNewUserValidFrom(e.target.value)}
-                              className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-[#9B9B9B] mb-1">
-                              Bis
-                            </label>
-                            <input
-                              type="date"
-                              value={newUserValidUntil}
-                              onChange={(e) => setNewUserValidUntil(e.target.value)}
-                              className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm"
-                            />
-                          </div>
-                        </>
-                      )}
+                      <div>
+                        <label className="block text-xs font-medium text-[#9B9B9B] mb-1">
+                          Bis
+                        </label>
+                        <input
+                          type="date"
+                          value={newUserValidUntil}
+                          onChange={(e) => setNewUserValidUntil(e.target.value)}
+                          className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm"
+                          placeholder="dd.mm.yyyy"
+                        />
+                      </div>
                     </div>
 
                     <div className="flex gap-3 border-t border-[#3D4450] pt-4">
