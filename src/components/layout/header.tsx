@@ -59,13 +59,13 @@ export function Header({ user }: HeaderProps) {
               Dashboard
             </Link>
             <Link
-            <Link
               href="/dashboard/reminders"
               className="text-sm font-medium transition-colors hover:opacity-80"
               style={{ color: '#F0F0F0' }}
             >
               Termine
             </Link>
+            <Link
               href="/portfolio"
               className="text-sm font-medium transition-colors hover:opacity-80"
               style={{ color: '#F0F0F0' }}
@@ -144,13 +144,13 @@ export function Header({ user }: HeaderProps) {
               Dashboard
             </Link>
             <Link
-            <Link
               href="/dashboard/reminders"
               className="text-sm font-medium transition-colors hover:opacity-80"
               style={{ color: '#F0F0F0' }}
             >
               Termine
             </Link>
+            <Link
               href="/portfolio"
               className="block px-3 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
               style={{ backgroundColor: '#2A2A2A', color: '#F0F0F0' }}
