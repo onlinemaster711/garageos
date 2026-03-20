@@ -14,6 +14,8 @@ import {
   Info,
   Shield,
   Loader2,
+  Circle,
+  Car,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
@@ -214,25 +216,15 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                 </span>
               )}
               {isOwner && (
-                <>
-                  <Link href={`/vehicles/${vehicle.id}/edit`}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-[#E5C97B] hover:bg-[#E5C97B]/10"
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                <Link href={`/vehicles/${vehicle.id}/edit`}>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-red-400 hover:bg-red-400/10"
-                    onClick={() => setIsDeleteDialogOpen(true)}
+                    className="text-[#E5C97B] hover:bg-[#E5C97B]/10"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Edit2 className="h-4 w-4" />
                   </Button>
-                </>
+                </Link>
               )}
             </div>
           </div>
@@ -293,7 +285,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <span className={`text-lg ${activeTab === 'tires' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`}>🛞</span>
+              <Circle className={`h-4 w-4 ${activeTab === 'tires' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
               Reifen
             </button>
             <button
@@ -304,7 +296,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <span className={`text-lg ${activeTab === 'drives' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`}>🚗</span>
+              <Car className={`h-4 w-4 ${activeTab === 'drives' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
               Fahrten
             </button>
           </div>
@@ -392,6 +384,20 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   </div>
                 )}
               </div>
+
+              {/* Delete Button Section */}
+              {isOwner && (
+                <div className="pt-4">
+                  <Button
+                    variant="destructive"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Fahrzeug löschen
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
