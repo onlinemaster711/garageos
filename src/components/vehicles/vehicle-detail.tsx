@@ -203,9 +203,9 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           </div>
         </div>
 
-        {/* Tab Navigation - Horizontal Tabs */}
-        <div className="bg-[#0A1A2F] border-b border-gray-700 px-4 md:px-8 flex-shrink-0 overflow-x-auto">
-          <div className="flex gap-6">
+        {/* Tab Navigation - Horizontal Tabs - Responsive */}
+        <div className="bg-[#0A1A2F] border-b border-gray-700 px-4 md:px-8 flex-shrink-0">
+          <div className="flex flex-wrap gap-2 md:gap-6">
             <button
               onClick={() => setActiveTab('overview')}
               className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
@@ -214,7 +214,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <Info className="h-4 w-4" />
+              <Info className={`h-4 w-4 ${activeTab === 'overview' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
               Übersicht
             </button>
             <button
@@ -225,7 +225,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <Wrench className="h-4 w-4" />
+              <Wrench className={`h-4 w-4 ${activeTab === 'maintenance' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
               Wartung
             </button>
             <button
@@ -236,7 +236,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <FileText className="h-4 w-4" />
+              <FileText className={`h-4 w-4 ${activeTab === 'documents' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
               Dokumente
             </button>
             <button
@@ -247,7 +247,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <ImageIcon className="h-4 w-4" />
+              <ImageIcon className={`h-4 w-4 ${activeTab === 'photos' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
               Fotos
             </button>
             <button
@@ -258,7 +258,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              🛞
+              <span className={`text-lg ${activeTab === 'tires' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`}>🛞</span>
               Reifen
             </button>
             <button
@@ -269,7 +269,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              🚗
+              <span className={`text-lg ${activeTab === 'drives' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`}>🚗</span>
               Fahrten
             </button>
           </div>

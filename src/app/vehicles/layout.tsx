@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/header'
-import { VoiceInputButton } from '@/components/voice/voice-input-button'
 
 export default async function VehiclesLayout({
   children,
@@ -21,7 +20,6 @@ export default async function VehiclesLayout({
     <div className="min-h-screen bg-[#0A1A2F]">
       <Header user={user.email || ''} />
       <main>{children}</main>
-      <VoiceInputButton />
     </div>
   )
 }

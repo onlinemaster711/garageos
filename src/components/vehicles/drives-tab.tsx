@@ -368,19 +368,88 @@ export function DrivesTab({ vehicleId }: { vehicleId: string }) {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {drives.map((drive) => (
-              <DriveCard
-                key={drive.id}
-                drive={drive}
-                onEdit={() => openEditDialog(drive)}
-                onDelete={() => {
-                  setDriveToDelete(drive.id)
-                  setDeleteConfirmOpen(true)
-                }}
-              />
-            ))}
-          </div>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-[#2A2D30] rounded-lg border border-gray-700 overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-700 bg-[#1A2332]">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
+                      Datum
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
+                      km
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
+                      Notiz
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wide">
+                      Aktionen
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {drives.map((drive) => (
+                    <tr key={drive.id} className="border-b border-gray-700 hover:bg-[#1A2332] transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-medium text-[#E6E6E6]">
+                          {new Date(drive.date).toLocaleDateString('de-DE')}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-medium text-[#E5C97B]">
+                          {drive.kilometers.toLocaleString('de-DE')} km
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-gray-300 max-w-xs truncate">
+                          {drive.notes || '-'}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex gap-2 justify-end">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEditDialog(drive)}
+                            className="text-[#E5C97B] hover:text-[#E5C97B] hover:bg-[#E5C97B]/10"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setDriveToDelete(drive.id)
+                              setDeleteConfirmOpen(true)
+                            }}
+                            className="text-red-400 hover:text-red-300 hover:bg-red-950"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 md:hidden gap-4">
+              {drives.map((drive) => (
+                <DriveCard
+                  key={drive.id}
+                  drive={drive}
+                  onEdit={() => openEditDialog(drive)}
+                  onDelete={() => {
+                    setDriveToDelete(drive.id)
+                    setDeleteConfirmOpen(true)
+                  }}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
