@@ -355,82 +355,98 @@ export function ScheduleTab({ vehicleId }: { vehicleId: string }) {
   const renderRecord = (record: MaintenanceRecord, showActions = true) => (
     <div
       key={record.id}
-      className="bg-[#2A2D30] rounded-lg px-5 py-4 border border-gray-700 flex justify-between items-start"
+      className="bg-[#2A2D30] rounded-lg px-6 py-6 border border-gray-700 flex flex-col space-y-4"
     >
-      <div className="flex-1">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-xl">{getTypeIcon(record.type)}</span>
-          <h3 className="text-base font-semibold text-[#E6E6E6]">{record.title}</h3>
-          <span className="text-xs font-medium text-[#E5C97B] bg-[#E5C97B]/20 px-2 py-0.5 rounded">
-            {getTypeLabel(record.type)}
-          </span>
-          <span className="text-sm text-gray-400">
-            {new Date(record.date).toLocaleDateString('de-DE')}
-          </span>
-          {record.status === 'planned' && (
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                record.has_appointment
-                  ? 'bg-green-900/40 text-green-400 border border-green-800'
-                  : 'bg-yellow-900/40 text-yellow-400 border border-yellow-800'
-              }`}
-            >
-              {record.has_appointment ? (
-                <><CalendarCheck className="h-3 w-3" /> Termin steht</>
-              ) : (
-                <><Clock className="h-3 w-3" /> Termin offen</>
-              )}
-            </span>
-          )}
+      {/* Title Row */}
+      <div className="flex items-start gap-3">
+        <span className="text-2xl flex-shrink-0">{getTypeIcon(record.type)}</span>
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-[#E6E6E6]">{record.title}</h3>
         </div>
+      </div>
 
-        {record.description && (
-          <p className="text-gray-400 mb-3 text-sm">{record.description}</p>
+      {/* Date Row */}
+      <div>
+        <p className="text-sm text-[#9B9B9B]">
+          {new Date(record.date).toLocaleDateString('de-DE')}
+        </p>
+      </div>
+
+      {/* Type & Status Row */}
+      <div className="flex flex-wrap gap-2">
+        <span className="text-xs font-medium text-[#E5C97B] bg-[#E5C97B]/20 px-3 py-1 rounded-full">
+          {getTypeLabel(record.type)}
+        </span>
+        {record.status === 'planned' && (
+          <span
+            className={`text-xs px-3 py-1 rounded-full flex items-center gap-1.5 font-medium ${
+              record.has_appointment
+                ? 'bg-green-900/40 text-green-400 border border-green-800'
+                : 'bg-yellow-900/40 text-yellow-400 border border-yellow-800'
+            }`}
+          >
+            {record.has_appointment ? (
+              <><CalendarCheck className="h-3.5 w-3.5" /> Termin steht</>
+            ) : (
+              <><Clock className="h-3.5 w-3.5" /> Termin offen</>
+            )}
+          </span>
         )}
+      </div>
 
-        <div className="flex flex-wrap gap-4 text-sm">
+      {/* Description */}
+      {record.description && (
+        <p className="text-[#9B9B9B] text-sm leading-relaxed">{record.description}</p>
+      )}
+
+      {/* Details Grid */}
+      {(record.workshop || record.cost !== null || record.mileage !== null) && (
+        <div className="grid grid-cols-2 gap-4 pt-2">
           {record.workshop && (
             <div>
-              <p className="text-gray-500 text-xs uppercase tracking-wide">Werkstatt</p>
-              <p className="text-gray-300">{record.workshop}</p>
+              <p className="text-[#9B9B9B] text-xs uppercase tracking-wide mb-1">Werkstatt</p>
+              <p className="text-[#E6E6E6] text-sm font-medium">{record.workshop}</p>
             </div>
           )}
           {record.cost !== null && (
             <div>
-              <p className="text-gray-500 text-xs uppercase tracking-wide">Kosten</p>
-              <p className="text-gray-300">€ {record.cost.toLocaleString('de-DE')}</p>
+              <p className="text-[#9B9B9B] text-xs uppercase tracking-wide mb-1">Kosten</p>
+              <p className="text-[#E5C97B] text-sm font-medium">€ {record.cost.toLocaleString('de-DE')}</p>
             </div>
           )}
           {record.mileage !== null && (
             <div>
-              <p className="text-gray-500 text-xs uppercase tracking-wide">Kilometerstand</p>
-              <p className="text-gray-300">{record.mileage.toLocaleString('de-DE')} km</p>
+              <p className="text-[#9B9B9B] text-xs uppercase tracking-wide mb-1">Kilometerstand</p>
+              <p className="text-[#E6E6E6] text-sm font-medium">{record.mileage.toLocaleString('de-DE')} km</p>
             </div>
           )}
         </div>
-      </div>
+      )}
 
+      {/* Actions - Bottom */}
       {showActions && (
-        <div className="flex items-center gap-2 ml-3">
+        <div className="flex gap-2 pt-2 border-t border-gray-700">
           {record.status === 'planned' && (
             <>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => handleToggleAppointment(record.id, record.has_appointment)}
-                className={`${record.has_appointment ? 'text-green-400 hover:text-green-300' : 'text-yellow-400 hover:text-yellow-300'} hover:bg-gray-800`}
+                className={`flex-1 ${record.has_appointment ? 'text-green-400 hover:text-green-300 hover:bg-green-950/30' : 'text-yellow-400 hover:text-yellow-300 hover:bg-yellow-950/30'}`}
                 title={record.has_appointment ? 'Termin entfernen' : 'Termin bestätigen'}
               >
-                <CalendarCheck className="h-4 w-4" />
+                <CalendarCheck className="h-4 w-4 mr-2" />
+                <span className="text-xs">{record.has_appointment ? 'Entfernen' : 'Bestätigen'}</span>
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => handleMarkCompleted(record.id)}
-                className="text-green-400 hover:text-green-300 hover:bg-green-950"
+                className="flex-1 text-green-400 hover:text-green-300 hover:bg-green-950/30"
                 title="Als erledigt markieren"
               >
-                <CheckCircle2 className="h-4 w-4" />
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                <span className="text-xs">Erledigt</span>
               </Button>
             </>
           )}
@@ -438,9 +454,10 @@ export function ScheduleTab({ vehicleId }: { vehicleId: string }) {
             variant="ghost"
             size="sm"
             onClick={() => { setRecordToDelete(record.id); setDeleteConfirmOpen(true) }}
-            className="text-red-400 hover:text-red-300 hover:bg-red-950"
+            className="flex-1 text-red-400 hover:text-red-300 hover:bg-red-950/30"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 mr-2" />
+            <span className="text-xs">Löschen</span>
           </Button>
         </div>
       )}
@@ -459,10 +476,10 @@ export function ScheduleTab({ vehicleId }: { vehicleId: string }) {
           <div className="flex flex-col md:flex-row gap-2 flex-1">
             <button
               onClick={() => setActiveSection('planned')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors md:flex-initial flex-1 ${
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors md:flex-initial flex-1 ${
                 activeSection === 'planned'
                   ? 'bg-[#E5C97B] text-[#0A1A2F]'
-                  : 'text-gray-400 hover:text-[#E6E6E6] bg-[#2A2D30] border border-gray-700'
+                  : 'text-[#9B9B9B] hover:text-[#E6E6E6] bg-[#2A2D30] border border-gray-700'
               }`}
             >
               <Clock className="h-4 w-4 inline mr-1.5 -mt-0.5" />
@@ -470,10 +487,10 @@ export function ScheduleTab({ vehicleId }: { vehicleId: string }) {
             </button>
             <button
               onClick={() => setActiveSection('completed')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors md:flex-initial flex-1 ${
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors md:flex-initial flex-1 ${
                 activeSection === 'completed'
                   ? 'bg-[#E5C97B] text-[#0A1A2F]'
-                  : 'text-gray-400 hover:text-[#E6E6E6] bg-[#2A2D30] border border-gray-700'
+                  : 'text-[#9B9B9B] hover:text-[#E6E6E6] bg-[#2A2D30] border border-gray-700'
               }`}
             >
               <CheckCircle2 className="h-4 w-4 inline mr-1.5 -mt-0.5" />
@@ -481,10 +498,10 @@ export function ScheduleTab({ vehicleId }: { vehicleId: string }) {
             </button>
             <button
               onClick={() => setActiveSection('contacts')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors md:flex-initial flex-1 ${
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors md:flex-initial flex-1 ${
                 activeSection === 'contacts'
                   ? 'bg-[#E5C97B] text-[#0A1A2F]'
-                  : 'text-gray-400 hover:text-[#E6E6E6] bg-[#2A2D30] border border-gray-700'
+                  : 'text-[#9B9B9B] hover:text-[#E6E6E6] bg-[#2A2D30] border border-gray-700'
               }`}
             >
               <Building2 className="h-4 w-4 inline mr-1.5 -mt-0.5" />

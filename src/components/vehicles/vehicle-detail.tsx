@@ -269,11 +269,11 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         </div>
 
         {/* Tab Navigation - Horizontal Tabs - Responsive */}
-        <div className="bg-[#0A1A2F] border-b border-gray-700 px-4 md:px-8 flex-shrink-0">
-          <div className="flex flex-wrap gap-2 md:gap-6">
+        <div className="bg-[#0A1A2F] border-b border-gray-700 overflow-x-auto flex-shrink-0 scrollbar-hide">
+          <div className="flex gap-1 md:gap-6 px-4 md:px-8 min-w-min scroll-smooth">
             <button
               onClick={() => setActiveTab('overview')}
-              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+              className={`py-4 px-2 md:px-0 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'overview'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
@@ -284,7 +284,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             </button>
             <button
               onClick={() => setActiveTab('schedule')}
-              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+              className={`py-4 px-2 md:px-0 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'schedule'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
@@ -295,7 +295,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             </button>
             <button
               onClick={() => setActiveTab('documents')}
-              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+              className={`py-4 px-2 md:px-0 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'documents'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
@@ -306,7 +306,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             </button>
             <button
               onClick={() => setActiveTab('photos')}
-              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+              className={`py-4 px-2 md:px-0 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'photos'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
@@ -317,7 +317,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             </button>
             <button
               onClick={() => setActiveTab('tires')}
-              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+              className={`py-4 px-2 md:px-0 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'tires'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
@@ -328,7 +328,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             </button>
             <button
               onClick={() => setActiveTab('drives')}
-              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+              className={`py-4 px-2 md:px-0 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'drives'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
