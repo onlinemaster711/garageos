@@ -348,7 +348,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <DetailCard label="Marke" value={vehicle.make} />
                 <DetailCard label="Modell" value={vehicle.model} />
-                <DetailCard label="Baujahr" value={vehicle.year.toString()} />
+                <DetailCard label="Baujahr" value={vehicle.year ? vehicle.year.toString() : '-'} />
                 <DetailCard label="Farbe" value={vehicle.color} />
                 <DetailCard label="VIN" value={vehicle.vin} />
                 <DetailCard label="Kennzeichen" value={vehicle.plate || '-'} />
