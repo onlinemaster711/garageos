@@ -130,7 +130,7 @@ export function PortfolioOverview() {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#C9A84C] border-t-transparent mx-auto mb-4" />
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#E5C97B] border-t-transparent mx-auto mb-4" />
           <p style={{ color: '#9B9B9B' }}>Laden...</p>
         </div>
       </div>
@@ -139,8 +139,8 @@ export function PortfolioOverview() {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-[#FF6B6B] bg-[#FF6B6B20] p-4">
-        <p style={{ color: '#FF6B6B' }}>Fehler beim Laden der Portfolio-Daten: {error}</p>
+      <div className="rounded-lg border border-[#E5799F] bg-[#E5799F20] p-4">
+        <p style={{ color: '#E5799F' }}>Fehler beim Laden der Portfolio-Daten: {error}</p>
       </div>
     )
   }
@@ -153,22 +153,22 @@ export function PortfolioOverview() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-[#F0F0F0] mb-2">Portfolio-Dashboard</h1>
+        <h1 className="text-4xl font-bold text-[#E6E6E6] mb-2">Portfolio-Dashboard</h1>
         <p style={{ color: '#9B9B9B' }}>Übersicht deiner Fahrzeugsammlung und deren Wert</p>
       </div>
 
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Gesamtwert */}
-        <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}>
+        <Card style={{ backgroundColor: '#2A2D30', borderColor: '#4A5260' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium" style={{ color: '#9B9B9B' }}>
               Gesamtwert
             </CardTitle>
-            <DollarSign className="h-4 w-4" style={{ color: '#C9A84C' }} />
+            <DollarSign className="h-4 w-4" style={{ color: '#E5C97B' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl lg:text-3xl font-bold text-[#F0F0F0]">
+            <div className="text-2xl lg:text-3xl font-bold text-[#E6E6E6]">
               {formatCurrency(stats.totalValue)}
             </div>
             <p className="text-xs mt-1" style={{ color: '#9B9B9B' }}>
@@ -178,15 +178,15 @@ export function PortfolioOverview() {
         </Card>
 
         {/* Anzahl Fahrzeuge */}
-        <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}>
+        <Card style={{ backgroundColor: '#2A2D30', borderColor: '#4A5260' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium" style={{ color: '#9B9B9B' }}>
               Anzahl Fahrzeuge
             </CardTitle>
-            <Car className="h-4 w-4" style={{ color: '#C9A84C' }} />
+            <Car className="h-4 w-4" style={{ color: '#E5C97B' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl lg:text-3xl font-bold text-[#F0F0F0]">
+            <div className="text-2xl lg:text-3xl font-bold text-[#E6E6E6]">
               {stats.vehicleCount}
             </div>
             <p className="text-xs mt-1" style={{ color: '#9B9B9B' }}>
@@ -196,15 +196,15 @@ export function PortfolioOverview() {
         </Card>
 
         {/* Durchschnittspreis */}
-        <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}>
+        <Card style={{ backgroundColor: '#2A2D30', borderColor: '#4A5260' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium" style={{ color: '#9B9B9B' }}>
               Durchschnittspreis
             </CardTitle>
-            <TrendingUp className="h-4 w-4" style={{ color: '#C9A84C' }} />
+            <TrendingUp className="h-4 w-4" style={{ color: '#E5C97B' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl lg:text-3xl font-bold text-[#F0F0F0]">
+            <div className="text-2xl lg:text-3xl font-bold text-[#E6E6E6]">
               {formatCurrency(stats.averagePrice)}
             </div>
             <p className="text-xs mt-1" style={{ color: '#9B9B9B' }}>
@@ -214,15 +214,15 @@ export function PortfolioOverview() {
         </Card>
 
         {/* Gesamtkosten Wartung */}
-        <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}>
+        <Card style={{ backgroundColor: '#2A2D30', borderColor: '#4A5260' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium" style={{ color: '#9B9B9B' }}>
               Gesamtkosten Wartung
             </CardTitle>
-            <TrendingDown className="h-4 w-4" style={{ color: '#C9A84C' }} />
+            <TrendingDown className="h-4 w-4" style={{ color: '#E5C97B' }} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl lg:text-3xl font-bold text-[#F0F0F0]">
+            <div className="text-2xl lg:text-3xl font-bold text-[#E6E6E6]">
               {formatCurrency(stats.totalMaintenanceCost)}
             </div>
             <p className="text-xs mt-1" style={{ color: '#9B9B9B' }}>
@@ -236,16 +236,16 @@ export function PortfolioOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Teuerstes Fahrzeug */}
         {stats.mostExpensiveVehicle && (
-          <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#C9A84C' }} className="border-2">
+          <Card style={{ backgroundColor: '#2A2D30', borderColor: '#E5C97B' }} className="border-2">
             <CardHeader>
-              <CardTitle className="text-lg text-[#C9A84C]">Teuerstes Fahrzeug</CardTitle>
+              <CardTitle className="text-lg text-[#E5C97B]">Teuerstes Fahrzeug</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
                 <p className="text-sm" style={{ color: '#9B9B9B' }}>
                   Fahrzeug
                 </p>
-                <p className="text-xl font-bold text-[#F0F0F0]">
+                <p className="text-xl font-bold text-[#E6E6E6]">
                   {stats.mostExpensiveVehicle.make} {stats.mostExpensiveVehicle.model}
                 </p>
               </div>
@@ -253,15 +253,15 @@ export function PortfolioOverview() {
                 <p className="text-sm" style={{ color: '#9B9B9B' }}>
                   Kaufpreis
                 </p>
-                <p className="text-lg font-semibold text-[#C9A84C]">
+                <p className="text-lg font-semibold text-[#E5C97B]">
                   {formatCurrency(stats.mostExpensiveVehicle.purchase_price || 0)}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[#333333]">
+              <div className="pt-2 border-t border-[#4A5260]">
                 <p className="text-sm" style={{ color: '#9B9B9B' }}>
                   Wartungskosten
                 </p>
-                <p className="text-lg font-semibold text-[#F0F0F0]">
+                <p className="text-lg font-semibold text-[#E6E6E6]">
                   {formatCurrency(stats.mostExpensiveVehicle.maintenanceCost)}
                 </p>
               </div>
@@ -271,16 +271,16 @@ export function PortfolioOverview() {
 
         {/* Günstigstes Fahrzeug */}
         {stats.cheapestVehicle && (
-          <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#C9A84C' }} className="border-2">
+          <Card style={{ backgroundColor: '#2A2D30', borderColor: '#E5C97B' }} className="border-2">
             <CardHeader>
-              <CardTitle className="text-lg text-[#C9A84C]">Günstigstes Fahrzeug</CardTitle>
+              <CardTitle className="text-lg text-[#E5C97B]">Günstigstes Fahrzeug</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
                 <p className="text-sm" style={{ color: '#9B9B9B' }}>
                   Fahrzeug
                 </p>
-                <p className="text-xl font-bold text-[#F0F0F0]">
+                <p className="text-xl font-bold text-[#E6E6E6]">
                   {stats.cheapestVehicle.make} {stats.cheapestVehicle.model}
                 </p>
               </div>
@@ -288,15 +288,15 @@ export function PortfolioOverview() {
                 <p className="text-sm" style={{ color: '#9B9B9B' }}>
                   Kaufpreis
                 </p>
-                <p className="text-lg font-semibold text-[#C9A84C]">
+                <p className="text-lg font-semibold text-[#E5C97B]">
                   {formatCurrency(stats.cheapestVehicle.purchase_price || 0)}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[#333333]">
+              <div className="pt-2 border-t border-[#4A5260]">
                 <p className="text-sm" style={{ color: '#9B9B9B' }}>
                   Wartungskosten
                 </p>
-                <p className="text-lg font-semibold text-[#F0F0F0]">
+                <p className="text-lg font-semibold text-[#E6E6E6]">
                   {formatCurrency(stats.cheapestVehicle.maintenanceCost)}
                 </p>
               </div>
@@ -306,7 +306,7 @@ export function PortfolioOverview() {
       </div>
 
       {/* Fahrzeuge Liste */}
-      <Card style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}>
+      <Card style={{ backgroundColor: '#2A2D30', borderColor: '#4A5260' }}>
         <CardHeader>
           <CardTitle>Kosten pro Fahrzeug</CardTitle>
         </CardHeader>
@@ -315,7 +315,7 @@ export function PortfolioOverview() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ borderColor: '#333333' }} className="border-b">
+                  <tr style={{ borderColor: '#4A5260' }} className="border-b">
                     <th className="text-left py-3 px-4 font-semibold text-[#9B9B9B]">
                       Fahrzeug
                     </th>
@@ -334,28 +334,28 @@ export function PortfolioOverview() {
                   {stats.vehiclesWithCosts.map((vehicle) => (
                     <tr
                       key={vehicle.id}
-                      style={{ borderColor: '#333333' }}
-                      className="border-b hover:bg-[#2A2A2A] transition-colors"
+                      style={{ borderColor: '#4A5260' }}
+                      className="border-b hover:bg-[#3D4450] transition-colors"
                     >
-                      <td className="py-4 px-4 text-[#F0F0F0]">
+                      <td className="py-4 px-4 text-[#E6E6E6]">
                         {vehicle.make} {vehicle.model}
                         {vehicle.year && <span style={{ color: '#9B9B9B' }}> ({vehicle.year})</span>}
                       </td>
-                      <td className="text-right py-4 px-4 text-[#F0F0F0]">
+                      <td className="text-right py-4 px-4 text-[#E6E6E6]">
                         {formatCurrency(vehicle.purchase_price || 0)}
                       </td>
-                      <td className="text-right py-4 px-4 text-[#F0F0F0]">
+                      <td className="text-right py-4 px-4 text-[#E6E6E6]">
                         {formatCurrency(vehicle.maintenanceCost)}
                       </td>
                       <td className="text-right py-4 px-4">
                         <div className="flex items-center justify-end gap-2">
-                          <span className="text-[#C9A84C] font-semibold">
+                          <span className="text-[#E5C97B] font-semibold">
                             {vehicle.costRatio.toFixed(1)}%
                           </span>
                           {vehicle.costRatio > 50 && (
                             <div
                               className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: '#FF6B6B' }}
+                              style={{ backgroundColor: '#E5799F' }}
                             />
                           )}
                         </div>

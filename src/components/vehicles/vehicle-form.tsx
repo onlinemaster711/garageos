@@ -549,7 +549,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     <form onSubmit={handleSubmit} className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="space-y-2">
-          <Label htmlFor="make" className="text-[#F0F0F0]">
+          <Label htmlFor="make" className="text-[#E6E6E6]">
             Marke *
           </Label>
           <Select value={formData.make} onValueChange={(value) => handleSelectChange('make', value)}>
@@ -565,7 +565,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="model" className="text-[#F0F0F0]">
+          <Label htmlFor="model" className="text-[#E6E6E6]">
             Modell *
           </Label>
           <Input
@@ -580,7 +580,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="year" className="text-[#F0F0F0]">
+          <Label htmlFor="year" className="text-[#E6E6E6]">
             Baujahr
           </Label>
           <Input
@@ -596,7 +596,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="color" className="text-[#F0F0F0]">
+          <Label htmlFor="color" className="text-[#E6E6E6]">
             Farbe
           </Label>
           <Input
@@ -610,7 +610,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="vin" className="text-[#F0F0F0]">
+          <Label htmlFor="vin" className="text-[#E6E6E6]">
             Fahrgestellnummer (VIN)
           </Label>
           <Input
@@ -624,7 +624,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="plate" className="text-[#F0F0F0]">
+          <Label htmlFor="plate" className="text-[#E6E6E6]">
             Kennzeichen
           </Label>
           <Input
@@ -638,7 +638,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="category" className="text-[#F0F0F0]">
+          <Label htmlFor="category" className="text-[#E6E6E6]">
             Kategorie
           </Label>
           <Select value={formData.category} onValueChange={(value) => handleSelectChange('category', value)}>
@@ -654,7 +654,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="country_code" className="text-[#F0F0F0]">
+          <Label htmlFor="country_code" className="text-[#E6E6E6]">
             Land
           </Label>
           <Select value={formData.country_code} onValueChange={(value) => handleSelectChange('country_code', value)}>
@@ -687,7 +687,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="purchase_date" className="text-[#F0F0F0]">
+          <Label htmlFor="purchase_date" className="text-[#E6E6E6]">
             Kaufdatum
           </Label>
           <Input
@@ -700,7 +700,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="purchase_price" className="text-[#F0F0F0]">
+          <Label htmlFor="purchase_price" className="text-[#E6E6E6]">
             Kaufpreis (€)
           </Label>
           <Input
@@ -716,7 +716,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="current_mileage" className="text-[#F0F0F0]">
+          <Label htmlFor="current_mileage" className="text-[#E6E6E6]">
             Aktueller Kilometerstand
           </Label>
           <Input
@@ -731,7 +731,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="location_name" className="text-[#F0F0F0]">
+          <Label htmlFor="location_name" className="text-[#E6E6E6]">
             Standort
           </Label>
           <Input
@@ -745,7 +745,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="storage_address" className="text-[#F0F0F0]">
+          <Label htmlFor="storage_address" className="text-[#E6E6E6]">
             Stellplatz / Adresse
           </Label>
           <Input
@@ -760,7 +760,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
       </div>
 
       <div className="space-y-2 mb-8">
-        <Label htmlFor="notes" className="text-[#F0F0F0]">
+        <Label htmlFor="notes" className="text-[#E6E6E6]">
           Notizen
         </Label>
         <Textarea
@@ -775,8 +775,8 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
 
       {(
         <div className="space-y-4 mb-8">
-          <Label className="text-[#F0F0F0] text-lg font-semibold flex items-center gap-2">
-            <Camera className="h-5 w-5 text-[#C9A84C]" />
+          <Label className="text-[#E6E6E6] text-lg font-semibold flex items-center gap-2">
+            <Camera className="h-5 w-5 text-[#E5C97B]" />
             Fahrzeugfotos
           </Label>
 
@@ -785,7 +785,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
               <div
                 key={photo.id}
                 className={`relative group rounded-lg overflow-hidden aspect-square border-2 ${
-                  photo.is_cover ? 'border-[#C9A84C]' : 'border-gray-700'
+                  photo.is_cover ? 'border-[#E5C97B]' : 'border-gray-700'
                 } bg-gray-900`}
               >
                 <img
@@ -794,7 +794,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
                   className="w-full h-full object-cover"
                 />
                 {photo.is_cover && (
-                  <div className="absolute top-1.5 left-1.5 bg-[#C9A84C] text-[#0A0A0A] text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                  <div className="absolute top-1.5 left-1.5 bg-[#E5C97B] text-[#0A1A2F] text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
                     <Star className="h-3 w-3" />
                     Cover
                   </div>
@@ -804,7 +804,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
                     <button
                       type="button"
                       onClick={() => handleSetCover(photo.id)}
-                      className="bg-[#C9A84C] text-[#0A0A0A] rounded-md p-1.5 hover:bg-[#B89A3C] transition-colors"
+                      className="bg-[#E5C97B] text-[#0A1A2F] rounded-md p-1.5 hover:bg-[#B89A3C] transition-colors"
                       title="Als Titelbild setzen"
                     >
                       <Star className="h-4 w-4" />
@@ -822,7 +822,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
               </div>
             ))}
 
-            <label className="relative rounded-lg border-2 border-dashed border-gray-600 hover:border-[#C9A84C] aspect-square flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#1E1E1E] hover:bg-[#252525]">
+            <label className="relative rounded-lg border-2 border-dashed border-gray-600 hover:border-[#E5C97B] aspect-square flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#2A2D30] hover:bg-[#252525]">
               <input
                 ref={photoInputRef}
                 type="file"
@@ -833,7 +833,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
                 className="hidden"
               />
               {isUploadingPhoto ? (
-                <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+                <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
               ) : (
                 <>
                   <Plus className="h-8 w-8 text-gray-500 mb-1" />
@@ -857,17 +857,17 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full md:w-auto bg-[#C9A84C] hover:bg-[#B8961F] text-[#0A0A0A] font-semibold py-2.5 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full md:w-auto bg-[#E5C97B] hover:bg-[#B8961F] text-[#0A1A2F] font-semibold py-2.5 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Wird gespeichert...' : 'Fahrzeug speichern'}
       </button>
 
       {/* Insurance Modal */}
       <Dialog open={isInsuranceModalOpen} onOpenChange={setIsInsuranceModalOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#F0F0F0]">
-              <Shield className="h-5 w-5 text-[#C9A84C]" />
+            <DialogTitle className="flex items-center gap-2 text-[#E6E6E6]">
+              <Shield className="h-5 w-5 text-[#E5C97B]" />
               Versicherungen für dieses Auto
             </DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -878,7 +878,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           <div className="space-y-3 max-h-96 overflow-y-auto py-4">
             {loadingPolicies ? (
               <div className="flex justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]" />
+                <Loader2 className="h-6 w-6 animate-spin text-[#E5C97B]" />
               </div>
             ) : allInsurancePolicies.length === 0 ? (
               <p className="text-gray-400 text-sm text-center py-4">
@@ -888,16 +888,16 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
               allInsurancePolicies.map(policy => (
                 <label
                   key={policy.id}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-gray-700 hover:border-[#C9A84C] cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-[#0A1A2F] border border-gray-700 hover:border-[#E5C97B] cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedPolicies.has(policy.id)}
                     onChange={() => handleTogglePolicy(policy.id)}
-                    className="w-4 h-4 rounded bg-[#0A0A0A] border-gray-600 accent-[#C9A84C] cursor-pointer"
+                    className="w-4 h-4 rounded bg-[#0A1A2F] border-gray-600 accent-[#E5C97B] cursor-pointer"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#F0F0F0] truncate">
+                    <p className="text-sm font-medium text-[#E6E6E6] truncate">
                       {policy.name}
                     </p>
                     <p className="text-xs text-gray-500">
@@ -927,7 +927,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
             <Button
               onClick={handleSaveInsurances}
               disabled={savingInsurances}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C] disabled:opacity-50"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C] disabled:opacity-50"
             >
               {savingInsurances ? (
                 <>

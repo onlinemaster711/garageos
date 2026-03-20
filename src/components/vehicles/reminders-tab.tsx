@@ -245,7 +245,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#C9A84C] border-t-transparent"></div>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#E5C97B] border-t-transparent"></div>
       </div>
     )
   }
@@ -256,7 +256,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
       <div className="flex items-center gap-2">
         <Button
           onClick={() => setShowDialog(true)}
-          className="flex items-center gap-2 bg-[#C9A84C] text-black hover:bg-[#B89A3C]"
+          className="flex items-center gap-2 bg-[#E5C97B] text-black hover:bg-[#B89A3C]"
         >
           <Plus className="h-4 w-4" />
           Erinnerung hinzufügen
@@ -265,7 +265,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
           onClick={handleCreateAutoReminders}
           disabled={submitting}
           variant="outline"
-          className="flex items-center gap-2 border-[#C9A84C] text-[#C9A84C] hover:bg-[#1E1E1E]"
+          className="flex items-center gap-2 border-[#E5C97B] text-[#E5C97B] hover:bg-[#2A2D30]"
         >
           <Wand2 className="h-4 w-4" />
           Automatische Erinnerungen
@@ -274,7 +274,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
 
       {/* Reminders list */}
       {reminders.length === 0 ? (
-        <div className="rounded-lg border border-[#333333] bg-[#1E1E1E] p-8 text-center">
+        <div className="rounded-lg border border-[#4A5260] bg-[#2A2D30] p-8 text-center">
           <p className="text-sm text-[#A0A0A0]">Noch keine Erinnerungen</p>
         </div>
       ) : (
@@ -284,7 +284,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
             return (
               <div
                 key={reminder.id}
-                className="flex items-center gap-4 rounded-lg border border-[#333333] bg-[#1E1E1E] p-4 transition-colors hover:border-[#C9A84C]/30"
+                className="flex items-center gap-4 rounded-lg border border-[#4A5260] bg-[#2A2D30] p-4 transition-colors hover:border-[#E5C97B]/30"
               >
                 {/* Urgency dot */}
                 <div
@@ -295,11 +295,11 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
                 {/* Reminder details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="inline-block rounded bg-[#C9A84C] px-2 py-1 text-xs font-medium text-black">
+                    <span className="inline-block rounded bg-[#E5C97B] px-2 py-1 text-xs font-medium text-black">
                       {getReminderTypeLabel(reminder.type)}
                     </span>
                   </div>
-                  <p className="mt-1 font-medium text-[#F0F0F0]">{reminder.title}</p>
+                  <p className="mt-1 font-medium text-[#E6E6E6]">{reminder.title}</p>
                   <p className="text-sm text-[#A0A0A0]">{formatDueDate(reminder.due_date)}</p>
                   {reminder.repeat_months && reminder.repeat_months > 0 && (
                     <p className="text-xs text-[#808080]">
@@ -337,19 +337,19 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
 
       {/* Dialog for adding reminder */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="border-[#333333] bg-[#0A0A0A]">
+        <DialogContent className="border-[#4A5260] bg-[#0A1A2F]">
           <DialogHeader>
-            <DialogTitle className="text-[#F0F0F0]">Erinnerung hinzufügen</DialogTitle>
+            <DialogTitle className="text-[#E6E6E6]">Erinnerung hinzufügen</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Type select */}
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">Typ</label>
+              <label className="block text-sm font-medium text-[#E6E6E6] mb-1">Typ</label>
               <select
                 value={formData.type}
                 onChange={(e) => setFormData((prev) => ({ ...prev, type: e.target.value }))}
-                className="w-full rounded-md border border-[#333333] bg-[#1E1E1E] px-3 py-2 text-[#F0F0F0] outline-none focus:border-[#C9A84C]"
+                className="w-full rounded-md border border-[#4A5260] bg-[#2A2D30] px-3 py-2 text-[#E6E6E6] outline-none focus:border-[#E5C97B]"
               >
                 {reminderTypes.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -361,31 +361,31 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
 
             {/* Title input */}
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">Titel</label>
+              <label className="block text-sm font-medium text-[#E6E6E6] mb-1">Titel</label>
               <Input
                 value={formData.title}
                 onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="z.B. TÜV Inspektion fällig"
-                className="border-[#333333] bg-[#1E1E1E] text-[#F0F0F0] placeholder-[#808080]"
+                className="border-[#4A5260] bg-[#2A2D30] text-[#E6E6E6] placeholder-[#808080]"
               />
             </div>
 
             {/* Due date */}
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">
+              <label className="block text-sm font-medium text-[#E6E6E6] mb-1">
                 Fälligkeitsdatum
               </label>
               <Input
                 type="date"
                 value={formData.dueDate}
                 onChange={(e) => setFormData((prev) => ({ ...prev, dueDate: e.target.value }))}
-                className="border-[#333333] bg-[#1E1E1E] text-[#F0F0F0]"
+                className="border-[#4A5260] bg-[#2A2D30] text-[#E6E6E6]"
               />
             </div>
 
             {/* Repeat months */}
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">
+              <label className="block text-sm font-medium text-[#E6E6E6] mb-1">
                 Wiederholen alle X Monate (optional)
               </label>
               <Input
@@ -395,13 +395,13 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
                   setFormData((prev) => ({ ...prev, repeatMonths: e.target.value }))
                 }
                 placeholder="z.B. 12 oder 24"
-                className="border-[#333333] bg-[#1E1E1E] text-[#F0F0F0] placeholder-[#808080]"
+                className="border-[#4A5260] bg-[#2A2D30] text-[#E6E6E6] placeholder-[#808080]"
               />
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-[#F0F0F0] mb-1">
+              <label className="block text-sm font-medium text-[#E6E6E6] mb-1">
                 Notizen (optional)
               </label>
               <textarea
@@ -409,7 +409,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
                 onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
                 placeholder="Zusätzliche Informationen..."
                 rows={3}
-                className="w-full rounded-md border border-[#333333] bg-[#1E1E1E] px-3 py-2 text-[#F0F0F0] outline-none focus:border-[#C9A84C] resize-none"
+                className="w-full rounded-md border border-[#4A5260] bg-[#2A2D30] px-3 py-2 text-[#E6E6E6] outline-none focus:border-[#E5C97B] resize-none"
               />
             </div>
 
@@ -417,7 +417,7 @@ export function RemindersTab({ vehicleId, countryCode, category }: RemindersTabP
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full bg-[#C9A84C] text-black hover:bg-[#B89A3C]"
+              className="w-full bg-[#E5C97B] text-black hover:bg-[#B89A3C]"
             >
               {submitting ? 'Wird erstellt...' : 'Erinnerung erstellen'}
             </Button>

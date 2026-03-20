@@ -148,21 +148,21 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <>
-      <div className="flex flex-col h-screen bg-[#0A0A0A]">
+      <div className="flex flex-col h-screen bg-[#0A1A2F]">
         {/* Compact Header - One Line */}
-        <div className="bg-[#0A0A0A] border-b border-gray-700 px-4 md:px-8 py-3 flex-shrink-0">
+        <div className="bg-[#0A1A2F] border-b border-gray-700 px-4 md:px-8 py-3 flex-shrink-0">
           <div className="flex items-center justify-between gap-4">
             {/* Back Link + Vehicle Info */}
             <div className="flex items-center gap-3 min-w-0">
               <Link
                 href="/dashboard"
-                className="flex-shrink-0 text-gray-400 hover:text-[#C9A84C] transition-colors"
+                className="flex-shrink-0 text-gray-400 hover:text-[#E5C97B] transition-colors"
                 title="Zurück"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Link>
               <div className="flex items-center gap-2 min-w-0">
-                <h1 className="text-lg font-bold text-[#F0F0F0] truncate">
+                <h1 className="text-lg font-bold text-[#E6E6E6] truncate">
                   {vehicle.make} {vehicle.model}
                 </h1>
                 <span className="flex-shrink-0 text-sm text-gray-400">
@@ -177,7 +177,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             {/* Price + Actions */}
             <div className="flex items-center gap-2 flex-shrink-0">
               {vehicle.purchase_price && (
-                <span className="text-sm font-semibold text-[#C9A84C] hidden sm:inline">
+                <span className="text-sm font-semibold text-[#E5C97B] hidden sm:inline">
                   € {vehicle.purchase_price.toLocaleString('de-DE')}
                 </span>
               )}
@@ -189,7 +189,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[#C9A84C] hover:bg-[#C9A84C]/10"
+                  className="text-[#E5C97B] hover:bg-[#E5C97B]/10"
                 >
                   <Edit2 className="h-4 w-4" />
                 </Button>
@@ -207,14 +207,14 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         </div>
 
         {/* Tab Navigation - Horizontal Tabs */}
-        <div className="bg-[#0A0A0A] border-b border-gray-700 px-4 md:px-8 flex-shrink-0 overflow-x-auto">
+        <div className="bg-[#0A1A2F] border-b border-gray-700 px-4 md:px-8 flex-shrink-0 overflow-x-auto">
           <div className="flex gap-6">
             <button
               onClick={() => setActiveTab('overview')}
               className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'overview'
-                  ? 'text-[#C9A84C] border-b-2 border-[#C9A84C]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <Info className="h-4 w-4" />
@@ -224,8 +224,8 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               onClick={() => setActiveTab('maintenance')}
               className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'maintenance'
-                  ? 'text-[#C9A84C] border-b-2 border-[#C9A84C]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <Wrench className="h-4 w-4" />
@@ -235,8 +235,8 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               onClick={() => setActiveTab('documents')}
               className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'documents'
-                  ? 'text-[#C9A84C] border-b-2 border-[#C9A84C]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <FileText className="h-4 w-4" />
@@ -246,8 +246,8 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               onClick={() => setActiveTab('photos')}
               className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                 activeTab === 'photos'
-                  ? 'text-[#C9A84C] border-b-2 border-[#C9A84C]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <ImageIcon className="h-4 w-4" />
@@ -298,30 +298,30 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               </div>
 
               {vehicle.notes && (
-                <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
-                  <h3 className="text-lg font-semibold text-[#F0F0F0] mb-3">Notizen</h3>
+                <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
+                  <h3 className="text-lg font-semibold text-[#E6E6E6] mb-3">Notizen</h3>
                   <p className="text-gray-400 whitespace-pre-wrap">{vehicle.notes}</p>
                 </div>
               )}
 
               {/* Insurances Section */}
-              <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+              <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
-                  <Shield className="h-5 w-5 text-[#C9A84C]" />
-                  <h3 className="text-lg font-semibold text-[#F0F0F0]">Versicherungen</h3>
+                  <Shield className="h-5 w-5 text-[#E5C97B]" />
+                  <h3 className="text-lg font-semibold text-[#E6E6E6]">Versicherungen</h3>
                 </div>
                 {loadingInsurances ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]" />
+                    <Loader2 className="h-6 w-6 animate-spin text-[#E5C97B]" />
                   </div>
                 ) : insurances.length === 0 ? (
                   <p className="text-gray-400">Keine Versicherungen verlinkt</p>
                 ) : (
                   <div className="space-y-3">
                     {insurances.map(insurance => (
-                      <div key={insurance.id} className="flex items-center justify-between p-3 bg-[#0A0A0A] rounded-lg border border-gray-700">
+                      <div key={insurance.id} className="flex items-center justify-between p-3 bg-[#0A1A2F] rounded-lg border border-gray-700">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-[#F0F0F0] truncate">{insurance.name}</p>
+                          <p className="text-sm font-semibold text-[#E6E6E6] truncate">{insurance.name}</p>
                           {insurance.valid_until && (
                             <p className="text-xs text-gray-500">
                               Gültig bis: {new Date(insurance.valid_until).toLocaleDateString('de-DE')}
@@ -329,7 +329,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
                           )}
                         </div>
                         <a href={insurance.file_url} download target="_blank" rel="noopener noreferrer">
-                          <Button variant="ghost" size="sm" className="text-[#C9A84C] hover:bg-[#C9A84C]/10 ml-2">
+                          <Button variant="ghost" size="sm" className="text-[#E5C97B] hover:bg-[#E5C97B]/10 ml-2">
                             <FileText className="h-4 w-4" />
                           </Button>
                         </a>
@@ -366,7 +366,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />
@@ -400,9 +400,9 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
 function DetailCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#1E1E1E] rounded-lg p-4 border border-gray-700">
+    <div className="bg-[#2A2D30] rounded-lg p-4 border border-gray-700">
       <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">{label}</p>
-      <p className="text-base font-semibold text-[#F0F0F0] break-words">{value}</p>
+      <p className="text-base font-semibold text-[#E6E6E6] break-words">{value}</p>
     </div>
   )
 }

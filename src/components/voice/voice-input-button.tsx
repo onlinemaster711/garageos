@@ -55,7 +55,7 @@ export function VoiceInputButton() {
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
         {/* Transcript Overlay */}
         {isListening && transcript && (
-          <div className="max-w-xs rounded-lg border border-[#333333] bg-[#1E1E1E] px-4 py-2 text-[#F0F0F0] shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="max-w-xs rounded-lg border border-[#4A5260] bg-[#2A2D30] px-4 py-2 text-[#E6E6E6] shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
             <p className="text-sm">{transcript}</p>
           </div>
         )}
@@ -65,22 +65,22 @@ export function VoiceInputButton() {
           onClick={handleMicClick}
           disabled={!isSupported}
           className={cn(
-            'relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#C9A84C] focus:ring-offset-2 focus:ring-offset-[#0A0A0A]',
+            'relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E5C97B] focus:ring-offset-2 focus:ring-offset-[#0A1A2F]',
             isSupported ? 'cursor-pointer' : 'cursor-not-allowed opacity-50',
             isListening
-              ? 'bg-[#C9A84C] hover:bg-[#B8963D] active:bg-[#A78632]'
-              : 'bg-[#C9A84C] hover:bg-[#B8963D] active:bg-[#A78632]'
+              ? 'bg-[#E5C97B] hover:bg-[#B8963D] active:bg-[#A78632]'
+              : 'bg-[#E5C97B] hover:bg-[#B8963D] active:bg-[#A78632]'
           )}
           title={isSupported ? 'Sprachbefehl aufnehmen' : 'Web Speech API nicht unterstützt'}
         >
           {/* Pulsing Ring Animation (when listening) */}
           {isListening && (
-            <div className="absolute inset-0 rounded-full border-2 border-[#C9A84C] animate-pulse" />
+            <div className="absolute inset-0 rounded-full border-2 border-[#E5C97B] animate-pulse" />
           )}
 
           {/* Microphone Icon */}
           <svg
-            className="relative z-10 h-6 w-6 text-[#0A0A0A]"
+            className="relative z-10 h-6 w-6 text-[#0A1A2F]"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -108,7 +108,7 @@ export function VoiceInputButton() {
 
       {/* Info message for unsupported browsers */}
       {!isSupported && (
-        <div className="fixed bottom-28 right-6 rounded-lg border border-[#333333] bg-[#1E1E1E] px-4 py-2 text-xs text-[#888888] shadow-lg max-w-xs">
+        <div className="fixed bottom-28 right-6 rounded-lg border border-[#4A5260] bg-[#2A2D30] px-4 py-2 text-xs text-[#888888] shadow-lg max-w-xs">
           Web Speech API wird von Ihrem Browser nicht unterstützt.
         </div>
       )}

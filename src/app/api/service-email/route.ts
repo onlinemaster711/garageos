@@ -32,10 +32,10 @@ export async function POST(request: NextRequest) {
       subject: subject,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: #0A0A0A; padding: 20px; border-radius: 8px 8px 0 0;">
-            <h2 style="color: #C9A84C; margin: 0; font-size: 20px;">GarageOS</h2>
+          <div style="background: #0A1A2F; padding: 20px; border-radius: 8px 8px 0 0;">
+            <h2 style="color: #E5C97B; margin: 0; font-size: 20px;">GarageOS</h2>
           </div>
-          <div style="background: #1E1E1E; padding: 24px; border-radius: 0 0 8px 8px; color: #F0F0F0;">
+          <div style="background: #2A2D30; padding: 24px; border-radius: 0 0 8px 8px; color: #E6E6E6;">
             <p style="margin-top: 0;">Sehr geehrte Damen und Herren${contactName ? ` bei ${contactName}` : ''},</p>
             <div style="white-space: pre-wrap; line-height: 1.6;">${body}</div>
             <hr style="border: none; border-top: 1px solid #333; margin: 24px 0;" />

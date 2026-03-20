@@ -58,11 +58,11 @@ export default function DashboardPage() {
   const sortedVehicles = sortVehicles(vehicles)
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0A1A2F] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col items-start justify-between gap-4 mb-8 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#F0F0F0]">
+            <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6E6]">
               Meine Fahrzeuge
             </h1>
             <p className="text-sm sm:text-base text-[#9B9B9B] mt-1">
@@ -71,7 +71,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/vehicles/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-[#C9A84C] px-4 py-2.5 text-sm font-medium text-[#0A0A0A] hover:bg-[#B8961F] transition-colors duration-200"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2.5 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
           >
             <Plus className="h-4 w-4" />
             Fahrzeug hinzufügen
@@ -85,7 +85,7 @@ export default function DashboardPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none bg-[#1E1E1E] border border-[#333333] text-[#F0F0F0] px-4 py-2 rounded-lg text-sm cursor-pointer hover:border-[#C9A84C] transition-colors pr-8"
+                className="appearance-none bg-[#2A2D30] border border-[#4A5260] text-[#E6E6E6] px-4 py-2 rounded-lg text-sm cursor-pointer hover:border-[#E5C97B] transition-colors pr-8"
               >
                 <option value="recent">Hinzugefügt (Neu zuerst)</option>
                 <option value="value-high">Wert (Teuer zuerst)</option>
@@ -108,10 +108,10 @@ export default function DashboardPage() {
           </div>
         ) : !loading ? (
           <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center">
-            <div className="rounded-full bg-[#1E1E1E] p-4 sm:p-6 mb-6">
-              <Car className="h-10 w-10 sm:h-12 sm:w-12 text-[#C9A84C]" />
+            <div className="rounded-full bg-[#2A2D30] p-4 sm:p-6 mb-6">
+              <Car className="h-10 w-10 sm:h-12 sm:w-12 text-[#E5C97B]" />
             </div>
-            <h2 className="text-lg sm:text-xl font-semibold text-[#F0F0F0] mb-2">
+            <h2 className="text-lg sm:text-xl font-semibold text-[#E6E6E6] mb-2">
               Noch keine Fahrzeuge
             </h2>
             <p className="text-sm sm:text-base text-[#9B9B9B] mb-6 max-w-md">
@@ -119,7 +119,7 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/vehicles/new"
-              className="inline-flex items-center gap-2 rounded-lg bg-[#C9A84C] px-4 py-2.5 text-sm font-medium text-[#0A0A0A] hover:bg-[#B8961F] transition-colors duration-200"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2.5 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
             >
               <Plus className="h-4 w-4" />
               Erstes Fahrzeug hinzufügen

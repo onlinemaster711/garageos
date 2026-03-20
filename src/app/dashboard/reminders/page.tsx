@@ -94,19 +94,19 @@ export default function RemindersPage() {
   const displayReminders = sortReminders(filteredReminders);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#F0F0F0] p-8">
+    <div className="min-h-screen bg-[#0A1A2F] text-[#E6E6E6] p-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Wartungen & Reminders</h1>
-          <p className="text-[#C9A84C]">
+          <p className="text-[#E5C97B]">
             {displayReminders.length} {displayReminders.length === 1 ? 'Eintrag' : 'Einträge'}
           </p>
         </div>
 
-        <div className="bg-[#1E1E1E] rounded-lg p-6 mb-8 space-y-6 border border-[#2A2A2A]">
+        <div className="bg-[#2A2D30] rounded-lg p-6 mb-8 space-y-6 border border-[#3D4450]">
           {/* Type Filter */}
           <div>
-            <label className="text-sm font-semibold text-[#C9A84C] mb-3 block">Typ:</label>
+            <label className="text-sm font-semibold text-[#E5C97B] mb-3 block">Typ:</label>
             <div className="flex flex-wrap gap-3">
               {(['all', 'maintenance', 'reminder'] as const).map((type) => (
                 <button
@@ -114,8 +114,8 @@ export default function RemindersPage() {
                   onClick={() => setTypeFilter(type)}
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
                     typeFilter === type
-                      ? 'bg-[#C9A84C] text-[#0A0A0A]'
-                      : 'bg-[#2A2A2A] text-[#F0F0F0] hover:bg-[#3A3A3A]'
+                      ? 'bg-[#E5C97B] text-[#0A1A2F]'
+                      : 'bg-[#3D4450] text-[#E6E6E6] hover:bg-[#454A55]'
                   }`}
                 >
                   {type === 'all' && 'Alle'}
@@ -128,14 +128,14 @@ export default function RemindersPage() {
 
           {/* Status Filter */}
           <div>
-            <label htmlFor="status" className="text-sm font-semibold text-[#C9A84C] mb-3 block">
+            <label htmlFor="status" className="text-sm font-semibold text-[#E5C97B] mb-3 block">
               Status:
             </label>
             <select
               id="status"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#F0F0F0] border border-[#3A3A3A] focus:border-[#C9A84C] focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-[#3D4450] text-[#E6E6E6] border border-[#454A55] focus:border-[#E5C97B] focus:outline-none"
             >
               <option value="all">Alle</option>
               <option value="planned">Geplant</option>
@@ -145,14 +145,14 @@ export default function RemindersPage() {
 
           {/* Sort By */}
           <div>
-            <label htmlFor="sort" className="text-sm font-semibold text-[#C9A84C] mb-3 block">
+            <label htmlFor="sort" className="text-sm font-semibold text-[#E5C97B] mb-3 block">
               Sortieren:
             </label>
             <select
               id="sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#F0F0F0] border border-[#3A3A3A] focus:border-[#C9A84C] focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-[#3D4450] text-[#E6E6E6] border border-[#454A55] focus:border-[#E5C97B] focus:outline-none"
             >
               <option value="date-asc">Datum (früher)</option>
               <option value="date-desc">Datum (später)</option>
@@ -165,7 +165,7 @@ export default function RemindersPage() {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <p className="text-[#C9A84C]">Lädt Wartungen...</p>
+            <p className="text-[#E5C97B]">Lädt Wartungen...</p>
           </div>
         )}
 
@@ -178,7 +178,7 @@ export default function RemindersPage() {
 
         {/* Empty State */}
         {!loading && !error && displayReminders.length === 0 && (
-          <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-8 text-center">
+          <div className="bg-[#2A2D30] border border-[#3D4450] rounded-lg p-8 text-center">
             <p className="text-[#808080]">Keine Wartungen oder Reminders gefunden.</p>
           </div>
         )}
@@ -189,13 +189,13 @@ export default function RemindersPage() {
             {displayReminders.map((reminder) => (
               <div
                 key={reminder.id}
-                className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-6 hover:border-[#C9A84C] transition-colors"
+                className="bg-[#2A2D30] border border-[#3D4450] rounded-lg p-6 hover:border-[#E5C97B] transition-colors"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold text-[#F0F0F0]">{reminder.title}</h3>
+                      <h3 className="text-xl font-bold text-[#E6E6E6]">{reminder.title}</h3>
                       <span className="text-2xl">{getTypeIcon(reminder.type)}</span>
                       {reminder.status === 'completed' && (
                         <span className="text-green-400 text-lg font-bold">✓</span>
@@ -203,7 +203,7 @@ export default function RemindersPage() {
                     </div>
                     <Link
                       href={`/vehicles/${reminder.vehicle_id}`}
-                      className="text-[#C9A84C] hover:underline text-sm"
+                      className="text-[#E5C97B] hover:underline text-sm"
                     >
                       {reminder.vehicles.make} {reminder.vehicles.model} ({reminder.vehicles.year})
                     </Link>
@@ -218,7 +218,7 @@ export default function RemindersPage() {
                     >
                       {reminder.status === 'completed' ? 'Erledigt' : 'Geplant'}
                     </span>
-                    <span className="text-[#C9A84C] text-xs font-semibold">
+                    <span className="text-[#E5C97B] text-xs font-semibold">
                       {getTypeLabel(reminder.type)}
                     </span>
                   </div>
@@ -242,29 +242,29 @@ export default function RemindersPage() {
                 {/* Details Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   {reminder.workshop && (
-                    <div className="bg-[#0A0A0A] rounded p-3">
+                    <div className="bg-[#0A1A2F] rounded p-3">
                       <p className="text-[#808080] text-xs mb-1">Werkstatt</p>
-                      <p className="text-[#F0F0F0] font-medium">{reminder.workshop}</p>
+                      <p className="text-[#E6E6E6] font-medium">{reminder.workshop}</p>
                     </div>
                   )}
                   {reminder.cost && (
-                    <div className="bg-[#0A0A0A] rounded p-3">
+                    <div className="bg-[#0A1A2F] rounded p-3">
                       <p className="text-[#808080] text-xs mb-1">Kosten</p>
-                      <p className="text-[#C9A84C] font-medium">€ {reminder.cost.toFixed(2)}</p>
+                      <p className="text-[#E5C97B] font-medium">€ {reminder.cost.toFixed(2)}</p>
                     </div>
                   )}
                   {reminder.mileage && (
-                    <div className="bg-[#0A0A0A] rounded p-3">
+                    <div className="bg-[#0A1A2F] rounded p-3">
                       <p className="text-[#808080] text-xs mb-1">Kilometerstand</p>
-                      <p className="text-[#F0F0F0] font-medium">
+                      <p className="text-[#E6E6E6] font-medium">
                         {reminder.mileage.toLocaleString('de-DE')} km
                       </p>
                     </div>
                   )}
                   {reminder.vehicles.current_mileage && (
-                    <div className="bg-[#0A0A0A] rounded p-3">
+                    <div className="bg-[#0A1A2F] rounded p-3">
                       <p className="text-[#808080] text-xs mb-1">Aktuell</p>
-                      <p className="text-[#F0F0F0] font-medium">
+                      <p className="text-[#E6E6E6] font-medium">
                         {reminder.vehicles.current_mileage.toLocaleString('de-DE')} km
                       </p>
                     </div>

@@ -53,14 +53,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#0A0A0A' }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#0A1A2F' }}>
       <div
         className="w-full max-w-md rounded-lg p-8 shadow-2xl border"
-        style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}
+        style={{ backgroundColor: '#2A2D30', borderColor: '#4A5260' }}
       >
         {/* Logo and Tagline */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#C9A84C' }}>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: '#E5C97B' }}>
             GarageOS
           </h1>
           <p className="text-sm" style={{ color: '#A0A0A0' }}>
@@ -71,7 +71,7 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#F0F0F0' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#E6E6E6' }}>
               E-Mail
             </label>
             <Input
@@ -83,15 +83,15 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full"
               style={{
-                backgroundColor: '#2A2A2A',
-                borderColor: '#444444',
-                color: '#F0F0F0',
+                backgroundColor: '#3D4450',
+                borderColor: '#5A6270',
+                color: '#E6E6E6',
               }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#F0F0F0' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#E6E6E6' }}>
               Passwort
             </label>
             <Input
@@ -103,9 +103,9 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full"
               style={{
-                backgroundColor: '#2A2A2A',
-                borderColor: '#444444',
-                color: '#F0F0F0',
+                backgroundColor: '#3D4450',
+                borderColor: '#5A6270',
+                color: '#E6E6E6',
               }}
             />
           </div>
@@ -115,8 +115,8 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full py-2 font-medium transition-all"
             style={{
-              backgroundColor: '#C9A84C',
-              color: '#0A0A0A',
+              backgroundColor: '#E5C97B',
+              color: '#0A1A2F',
             }}
           >
             {isLoading ? 'Wird angemeldet...' : 'Anmelden'}
@@ -129,7 +129,7 @@ export default function LoginPage() {
           <Link
             href="/auth/signup"
             className="font-medium hover:underline"
-            style={{ color: '#C9A84C' }}
+            style={{ color: '#E5C97B' }}
           >
             Jetzt registrieren
           </Link>

@@ -160,8 +160,8 @@ function generateDossierHTML(
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0A0A0A;
-      color: #F0F0F0;
+      background-color: #0A1A2F;
+      color: #E6E6E6;
       line-height: 1.6;
     }
 
@@ -169,11 +169,11 @@ function generateDossierHTML(
       max-width: 900px;
       margin: 0 auto;
       padding: 40px;
-      background-color: #0A0A0A;
+      background-color: #0A1A2F;
     }
 
     header {
-      border-bottom: 3px solid #C9A84C;
+      border-bottom: 3px solid #E5C97B;
       padding-bottom: 30px;
       margin-bottom: 40px;
     }
@@ -188,7 +188,7 @@ function generateDossierHTML(
     h1 {
       font-size: 36px;
       font-weight: 700;
-      color: #F0F0F0;
+      color: #E6E6E6;
     }
 
     .year {
@@ -203,7 +203,7 @@ function generateDossierHTML(
 
     h2 {
       font-size: 24px;
-      color: #C9A84C;
+      color: #E5C97B;
       margin-top: 40px;
       margin-bottom: 20px;
       padding-bottom: 10px;
@@ -212,7 +212,7 @@ function generateDossierHTML(
 
     h3 {
       font-size: 16px;
-      color: #F0F0F0;
+      color: #E6E6E6;
       margin-top: 15px;
       margin-bottom: 10px;
     }
@@ -225,7 +225,7 @@ function generateDossierHTML(
     }
 
     .card {
-      background-color: #1E1E1E;
+      background-color: #2A2D30;
       border: 1px solid #333;
       padding: 20px;
       border-radius: 8px;
@@ -235,7 +235,7 @@ function generateDossierHTML(
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid #2A2A2A;
+      border-bottom: 1px solid #3D4450;
     }
 
     .detail-row:last-child {
@@ -250,15 +250,15 @@ function generateDossierHTML(
     }
 
     .value {
-      color: #F0F0F0;
+      color: #E6E6E6;
       font-weight: 500;
     }
 
     .badge {
       display: inline-block;
-      background-color: #C9A84C;
+      background-color: #E5C97B;
       background-color: rgba(201, 168, 76, 0.2);
-      color: #C9A84C;
+      color: #E5C97B;
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 12px;
@@ -266,7 +266,7 @@ function generateDossierHTML(
     }
 
     .maintenance-item {
-      background-color: #1E1E1E;
+      background-color: #2A2D30;
       border: 1px solid #333;
       padding: 20px;
       margin-bottom: 15px;
@@ -282,7 +282,7 @@ function generateDossierHTML(
 
     .maintenance-title {
       font-weight: 600;
-      color: #F0F0F0;
+      color: #E6E6E6;
       font-size: 16px;
     }
 
@@ -316,7 +316,7 @@ function generateDossierHTML(
     }
 
     .document-item {
-      background-color: #1E1E1E;
+      background-color: #2A2D30;
       border: 1px solid #333;
       padding: 15px;
       margin-bottom: 10px;
@@ -331,7 +331,7 @@ function generateDossierHTML(
     }
 
     .document-name {
-      color: #F0F0F0;
+      color: #E6E6E6;
       font-weight: 500;
       margin-bottom: 4px;
     }
@@ -355,7 +355,7 @@ function generateDossierHTML(
 
     .market-value-card {
       background-color: rgba(201, 168, 76, 0.1);
-      border: 1px solid #C9A84C;
+      border: 1px solid #E5C97B;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 30px;
@@ -376,7 +376,7 @@ function generateDossierHTML(
     .market-value-amount {
       font-size: 18px;
       font-weight: 600;
-      color: #C9A84C;
+      color: #E5C97B;
     }
 
     .footer {

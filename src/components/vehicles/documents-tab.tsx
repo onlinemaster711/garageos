@@ -327,13 +327,13 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
 
   return (
     <div className="space-y-8">
-      <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
-        <h3 className="text-lg font-semibold text-[#F0F0F0] mb-4">Dokument hochladen</h3>
+      <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
+        <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4">Dokument hochladen</h3>
         <form onSubmit={handleUpload} className="space-y-4">
           <div>
             <Label className="text-gray-300 mb-2 block">Kategorie</Label>
             <Select value={formData.category} onValueChange={(v) => setFormData({ ...formData, category: v })}>
-              <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+              <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -350,7 +350,7 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
               placeholder="z.B. Kaufvertrag_2024"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+              className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
             />
           </div>
 
@@ -361,7 +361,7 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
                 id="file-input"
                 type="file"
                 onChange={(e) => setFormData({ ...formData, file: e.target.files?.[0] || null })}
-                className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#C9A84C] file:text-[#0A0A0A] hover:file:bg-[#B89A3C]"
+                className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#E5C97B] file:text-[#0A1A2F] hover:file:bg-[#B89A3C]"
                 accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png,.gif"
               />
             </div>
@@ -371,7 +371,7 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
           <Button
             type="submit"
             disabled={uploading || documents.length >= 20}
-            className="w-full bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C] disabled:opacity-50"
+            className="w-full bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C] disabled:opacity-50"
           >
             {uploading ? (
               <>
@@ -390,10 +390,10 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
         </div>
       ) : documents.length === 0 ? (
-        <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 text-center">
+        <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 text-center">
           <FileText className="h-12 w-12 text-gray-500 mx-auto mb-3 opacity-50" />
           <p className="text-gray-400">Keine Dokumente hochgeladen</p>
           <p className="text-gray-500 text-sm mt-1">Kategorien: Kaufvertrag, Zulassung, TÜV-Papiere, Versicherung, Wartung/Rechnung, Sonstiges</p>
@@ -401,12 +401,12 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
       ) : (
         <div className="space-y-3">
           {documents.map(doc => (
-            <div key={doc.id} className="bg-[#1E1E1E] rounded-lg p-5 border border-gray-700 flex items-center justify-between hover:border-[#C9A84C] transition-colors">
+            <div key={doc.id} className="bg-[#2A2D30] rounded-lg p-5 border border-gray-700 flex items-center justify-between hover:border-[#E5C97B] transition-colors">
               <div className="flex items-center gap-4 flex-1 min-w-0">
-                <FileText className="h-5 w-5 text-[#C9A84C] flex-shrink-0" />
+                <FileText className="h-5 w-5 text-[#E5C97B] flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1">
-                    <h4 className="text-sm font-semibold text-[#F0F0F0] truncate">{doc.name}</h4>
+                    <h4 className="text-sm font-semibold text-[#E6E6E6] truncate">{doc.name}</h4>
                     <span className={`flex-shrink-0 px-2 py-0.5 rounded text-xs font-medium ${getCategoryColor(doc.category)}`}>
                       {getCategoryLabel(doc.category)}
                     </span>
@@ -419,7 +419,7 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
 
               <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                 <a href={doc.file_url} download target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="sm" className="text-[#C9A84C] hover:bg-[#C9A84C]/10">
+                  <Button variant="ghost" size="sm" className="text-[#E5C97B] hover:bg-[#E5C97B]/10">
                     <Download className="h-4 w-4" />
                   </Button>
                 </a>
@@ -444,10 +444,10 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Insurance Modal */}
       <Dialog open={isInsuranceModalOpen} onOpenChange={setIsInsuranceModalOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#F0F0F0]">
-              <Shield className="h-5 w-5 text-[#C9A84C]" />
+            <DialogTitle className="flex items-center gap-2 text-[#E6E6E6]">
+              <Shield className="h-5 w-5 text-[#E5C97B]" />
               Versicherung für Autos
             </DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -458,7 +458,7 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
           <div className="space-y-3 max-h-96 overflow-y-auto py-4">
             {loadingVehicles ? (
               <div className="flex justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]" />
+                <Loader2 className="h-6 w-6 animate-spin text-[#E5C97B]" />
               </div>
             ) : allVehicles.length === 0 ? (
               <p className="text-gray-400 text-sm text-center py-4">Keine Fahrzeuge vorhanden</p>
@@ -466,16 +466,16 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
               allVehicles.map(vehicle => (
                 <label
                   key={vehicle.id}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-gray-700 hover:border-[#C9A84C] cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-[#0A1A2F] border border-gray-700 hover:border-[#E5C97B] cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedVehicles.has(vehicle.id)}
                     onChange={() => handleToggleVehicle(vehicle.id)}
-                    className="w-4 h-4 rounded bg-[#0A0A0A] border-gray-600 accent-[#C9A84C] cursor-pointer"
+                    className="w-4 h-4 rounded bg-[#0A1A2F] border-gray-600 accent-[#E5C97B] cursor-pointer"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#F0F0F0] truncate">
+                    <p className="text-sm font-medium text-[#E6E6E6] truncate">
                       {vehicle.make} {vehicle.model}
                     </p>
                     <p className="text-xs text-gray-500">{vehicle.year}</p>
@@ -497,7 +497,7 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
             <Button
               onClick={handleSaveInsurance}
               disabled={savingInsurance || selectedVehicles.size === 0}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C] disabled:opacity-50"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C] disabled:opacity-50"
             >
               {savingInsurance ? (
                 <>

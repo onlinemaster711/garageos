@@ -185,7 +185,7 @@ export function RolesManager({ userId }: { userId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
@@ -195,7 +195,7 @@ export function RolesManager({ userId }: { userId: string }) {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-[#F0F0F0] mb-2">
+          <h1 className="text-3xl font-bold text-[#E6E6E6] mb-2">
             Rollen & Zugänge
           </h1>
           <p className="text-gray-400">
@@ -207,7 +207,7 @@ export function RolesManager({ userId }: { userId: string }) {
         <div className="flex justify-end">
           <Button
             onClick={() => setIsAddDialogOpen(true)}
-            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
           >
             <Plus className="h-4 w-4 mr-2" />
             Benutzer einladen
@@ -216,7 +216,7 @@ export function RolesManager({ userId }: { userId: string }) {
 
         {/* Members List */}
         {roles.length === 0 ? (
-          <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+          <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
             <Users className="h-12 w-12 text-gray-600 mb-4" />
             <p className="text-gray-400 mb-2">Noch keine Benutzer eingeladen</p>
             <p className="text-sm text-gray-500">
@@ -228,14 +228,14 @@ export function RolesManager({ userId }: { userId: string }) {
             {roles.map((role) => (
               <div
                 key={role.id}
-                className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700 flex justify-between items-center"
+                className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700 flex justify-between items-center"
               >
                 <div className="flex-1">
-                  <p className="text-lg font-semibold text-[#F0F0F0] mb-1">
+                  <p className="text-lg font-semibold text-[#E6E6E6] mb-1">
                     {role.member_email}
                   </p>
                   <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 bg-[#C9A84C] bg-opacity-20 text-[#C9A84C] rounded text-sm font-medium">
+                    <span className="px-3 py-1 bg-[#E5C97B] bg-opacity-20 text-[#E5C97B] rounded text-sm font-medium">
                       {getRoleLabel(role.role as string)}
                     </span>
                     <p className="text-sm text-gray-500">
@@ -264,10 +264,10 @@ export function RolesManager({ userId }: { userId: string }) {
 
       {/* Add Role Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-[#C9A84C]" />
+              <Users className="h-5 w-5 text-[#E5C97B]" />
               Benutzer einladen
             </DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -288,7 +288,7 @@ export function RolesManager({ userId }: { userId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -305,10 +305,10 @@ export function RolesManager({ userId }: { userId: string }) {
                   })
                 }
               >
-                <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+                <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1E1E1E] border-gray-600">
+                <SelectContent className="bg-[#2A2D30] border-gray-600">
                   <SelectItem value="assistant">
                     Assistent (Lesen & Ändern)
                   </SelectItem>
@@ -336,7 +336,7 @@ export function RolesManager({ userId }: { userId: string }) {
             <Button
               onClick={handleAddRole}
               disabled={isAdding}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
             >
               {isAdding ? 'Wird eingeladen...' : 'Einladen'}
             </Button>
@@ -346,7 +346,7 @@ export function RolesManager({ userId }: { userId: string }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />

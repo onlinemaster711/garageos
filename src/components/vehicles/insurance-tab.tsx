@@ -240,7 +240,7 @@ export function InsuranceTab({
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
@@ -288,19 +288,19 @@ export function InsuranceTab({
         {/* Stats */}
         {policies.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+            <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
               <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
                 Gesamtjährliche Prämie
               </p>
-              <p className="text-2xl font-bold text-[#C9A84C]">
+              <p className="text-2xl font-bold text-[#E5C97B]">
                 €{totalAnnualPremium.toLocaleString('de-DE')}
               </p>
             </div>
-            <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+            <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
               <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
                 Anzahl der Policen
               </p>
-              <p className="text-2xl font-bold text-[#F0F0F0]">{policies.length}</p>
+              <p className="text-2xl font-bold text-[#E6E6E6]">{policies.length}</p>
             </div>
           </div>
         )}
@@ -308,7 +308,7 @@ export function InsuranceTab({
         <div className="flex justify-end">
           <Button
             onClick={() => setIsAddDialogOpen(true)}
-            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
           >
             <Plus className="h-4 w-4 mr-2" />
             Versicherung hinzufügen
@@ -316,7 +316,7 @@ export function InsuranceTab({
         </div>
 
         {policies.length === 0 ? (
-          <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+          <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
             <Shield className="h-12 w-12 text-gray-600 mb-4" />
             <p className="text-gray-400 mb-2">Noch keine Versicherungen</p>
             <p className="text-sm text-gray-500">
@@ -337,15 +337,15 @@ export function InsuranceTab({
                   className={`rounded-lg p-6 border flex justify-between items-start ${
                     isExpiringSoon
                       ? 'bg-amber-950 border-amber-700'
-                      : 'bg-[#1E1E1E] border-gray-700'
+                      : 'bg-[#2A2D30] border-gray-700'
                   }`}
                 >
                   <div className="flex-1">
                     <div className="flex items-baseline gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-[#F0F0F0]">
+                      <h3 className="text-lg font-semibold text-[#E6E6E6]">
                         {policy.provider}
                       </h3>
-                      <span className="px-2 py-1 bg-[#C9A84C] bg-opacity-20 text-[#C9A84C] rounded text-xs font-medium">
+                      <span className="px-2 py-1 bg-[#E5C97B] bg-opacity-20 text-[#E5C97B] rounded text-xs font-medium">
                         {typeLabels[policy.type]}
                       </span>
                       {isExpiringSoon && (
@@ -437,10 +437,10 @@ export function InsuranceTab({
 
       {/* Add Insurance Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-[#C9A84C]" />
+              <Shield className="h-5 w-5 text-[#E5C97B]" />
               Versicherung hinzufügen
             </DialogTitle>
           </DialogHeader>
@@ -457,7 +457,7 @@ export function InsuranceTab({
                 onChange={(e) =>
                   setFormData({ ...formData, provider: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -472,7 +472,7 @@ export function InsuranceTab({
                 onChange={(e) =>
                   setFormData({ ...formData, policy_number: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -489,10 +489,10 @@ export function InsuranceTab({
                   })
                 }
               >
-                <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+                <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1E1E1E] border-gray-600">
+                <SelectContent className="bg-[#2A2D30] border-gray-600">
                   <SelectItem value="haftpflicht">Haftpflicht</SelectItem>
                   <SelectItem value="teilkasko">Teilkasko</SelectItem>
                   <SelectItem value="vollkasko">Vollkasko</SelectItem>
@@ -517,7 +517,7 @@ export function InsuranceTab({
                       insured_value: e.target.value,
                     })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
 
@@ -537,7 +537,7 @@ export function InsuranceTab({
                       annual_premium: e.target.value,
                     })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
             </div>
@@ -554,7 +554,7 @@ export function InsuranceTab({
                   onChange={(e) =>
                     setFormData({ ...formData, start_date: e.target.value })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
 
@@ -569,7 +569,7 @@ export function InsuranceTab({
                   onChange={(e) =>
                     setFormData({ ...formData, end_date: e.target.value })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
             </div>
@@ -585,7 +585,7 @@ export function InsuranceTab({
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-20"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20"
               />
             </div>
           </div>
@@ -601,7 +601,7 @@ export function InsuranceTab({
             <Button
               onClick={handleAddPolicy}
               disabled={isAddingPolicy}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
             >
               {isAddingPolicy ? 'Wird hinzugefügt...' : 'Hinzufügen'}
             </Button>
@@ -611,7 +611,7 @@ export function InsuranceTab({
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />

@@ -18,7 +18,7 @@ export default async function VehiclesLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-[#0A1A2F]">
       <Header user={user.email || ''} />
       <main>{children}</main>
       <VoiceInputButton />

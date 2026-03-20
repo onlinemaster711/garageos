@@ -206,9 +206,9 @@ export function VoiceCommandDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-[#333333] bg-[#1E1E1E]">
+      <DialogContent className="border-[#4A5260] bg-[#2A2D30]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-[#F0F0F0]">
+          <DialogTitle className="flex items-center gap-2 text-[#E6E6E6]">
             <span>{typeInfo.icon}</span>
             {typeInfo.de}
           </DialogTitle>
@@ -221,14 +221,14 @@ export function VoiceCommandDialog({
           {/* Vehicle Selection (except for unknown type) */}
           {command.type !== 'unknown' && (
             <div className="space-y-2">
-              <Label htmlFor="vehicle" className="text-[#F0F0F0]">
+              <Label htmlFor="vehicle" className="text-[#E6E6E6]">
                 Fahrzeug
               </Label>
               <select
                 id="vehicle"
                 value={selectedVehicleId}
                 onChange={e => setSelectedVehicleId(e.target.value)}
-                className="w-full rounded-lg border border-[#333333] bg-[#0A0A0A] px-3 py-2 text-[#F0F0F0] placeholder-[#666666] focus:border-[#C9A84C] focus:outline-none focus:ring-1 focus:ring-[#C9A84C]"
+                className="w-full rounded-lg border border-[#4A5260] bg-[#0A1A2F] px-3 py-2 text-[#E6E6E6] placeholder-[#666666] focus:border-[#E5C97B] focus:outline-none focus:ring-1 focus:ring-[#E5C97B]"
               >
                 <option value="">Fahrzeug wählen...</option>
                 {vehicles.map(v => (
@@ -248,14 +248,14 @@ export function VoiceCommandDialog({
           {/* Title (for maintenance, reminder) */}
           {(command.type === 'maintenance' || command.type === 'reminder') && (
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-[#F0F0F0]">
+              <Label htmlFor="title" className="text-[#E6E6E6]">
                 Titel
               </Label>
               <Input
                 id="title"
                 value={formData.title || ''}
                 onChange={e => setFormData({ ...formData, title: e.target.value })}
-                className="border-[#333333] bg-[#0A0A0A] text-[#F0F0F0] placeholder-[#666666]"
+                className="border-[#4A5260] bg-[#0A1A2F] text-[#E6E6E6] placeholder-[#666666]"
                 placeholder="z.B. Ölwechsel"
               />
             </div>
@@ -264,7 +264,7 @@ export function VoiceCommandDialog({
           {/* Cost (for maintenance) */}
           {command.type === 'maintenance' && (
             <div className="space-y-2">
-              <Label htmlFor="cost" className="text-[#F0F0F0]">
+              <Label htmlFor="cost" className="text-[#E6E6E6]">
                 Kosten (€)
               </Label>
               <Input
@@ -273,7 +273,7 @@ export function VoiceCommandDialog({
                 step="0.01"
                 value={formData.cost || ''}
                 onChange={e => setFormData({ ...formData, cost: e.target.value ? parseFloat(e.target.value) : undefined })}
-                className="border-[#333333] bg-[#0A0A0A] text-[#F0F0F0] placeholder-[#666666]"
+                className="border-[#4A5260] bg-[#0A1A2F] text-[#E6E6E6] placeholder-[#666666]"
                 placeholder="z.B. 50"
               />
             </div>
@@ -282,7 +282,7 @@ export function VoiceCommandDialog({
           {/* Kilometers (for drive) */}
           {command.type === 'drive' && (
             <div className="space-y-2">
-              <Label htmlFor="km" className="text-[#F0F0F0]">
+              <Label htmlFor="km" className="text-[#E6E6E6]">
                 Kilometer
               </Label>
               <Input
@@ -290,7 +290,7 @@ export function VoiceCommandDialog({
                 type="number"
                 value={formData.km || ''}
                 onChange={e => setFormData({ ...formData, km: e.target.value ? parseInt(e.target.value, 10) : undefined })}
-                className="border-[#333333] bg-[#0A0A0A] text-[#F0F0F0] placeholder-[#666666]"
+                className="border-[#4A5260] bg-[#0A1A2F] text-[#E6E6E6] placeholder-[#666666]"
                 placeholder="z.B. 50"
               />
             </div>
@@ -299,7 +299,7 @@ export function VoiceCommandDialog({
           {/* Mileage (for mileage update) */}
           {command.type === 'mileage' && (
             <div className="space-y-2">
-              <Label htmlFor="mileage" className="text-[#F0F0F0]">
+              <Label htmlFor="mileage" className="text-[#E6E6E6]">
                 Kilometerstand
               </Label>
               <Input
@@ -307,7 +307,7 @@ export function VoiceCommandDialog({
                 type="number"
                 value={formData.mileage || ''}
                 onChange={e => setFormData({ ...formData, mileage: e.target.value ? parseInt(e.target.value, 10) : undefined })}
-                className="border-[#333333] bg-[#0A0A0A] text-[#F0F0F0] placeholder-[#666666]"
+                className="border-[#4A5260] bg-[#0A1A2F] text-[#E6E6E6] placeholder-[#666666]"
                 placeholder="z.B. 150000"
               />
             </div>
@@ -316,7 +316,7 @@ export function VoiceCommandDialog({
           {/* Date (for all except unknown) */}
           {command.type !== 'unknown' && (
             <div className="space-y-2">
-              <Label htmlFor="date" className="text-[#F0F0F0]">
+              <Label htmlFor="date" className="text-[#E6E6E6]">
                 Datum
               </Label>
               <Input
@@ -324,7 +324,7 @@ export function VoiceCommandDialog({
                 type="date"
                 value={formData.date || ''}
                 onChange={e => setFormData({ ...formData, date: e.target.value })}
-                className="border-[#333333] bg-[#0A0A0A] text-[#F0F0F0] placeholder-[#666666]"
+                className="border-[#4A5260] bg-[#0A1A2F] text-[#E6E6E6] placeholder-[#666666]"
               />
             </div>
           )}
@@ -332,14 +332,14 @@ export function VoiceCommandDialog({
           {/* Notes (for all except unknown) */}
           {command.type !== 'unknown' && (
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-[#F0F0F0]">
+              <Label htmlFor="notes" className="text-[#E6E6E6]">
                 Notizen (optional)
               </Label>
               <Textarea
                 id="notes"
                 value={formData.notes || ''}
                 onChange={e => setFormData({ ...formData, notes: e.target.value })}
-                className="border-[#333333] bg-[#0A0A0A] text-[#F0F0F0] placeholder-[#666666]"
+                className="border-[#4A5260] bg-[#0A1A2F] text-[#E6E6E6] placeholder-[#666666]"
                 placeholder="Zusätzliche Informationen..."
                 rows={3}
               />
@@ -349,8 +349,8 @@ export function VoiceCommandDialog({
           {/* Raw transcript for unknown type */}
           {command.type === 'unknown' && (
             <div className="space-y-2">
-              <Label className="text-[#F0F0F0]">Erkannter Text</Label>
-              <div className="rounded-lg border border-[#333333] bg-[#0A0A0A] px-3 py-2 text-[#F0F0F0]">
+              <Label className="text-[#E6E6E6]">Erkannter Text</Label>
+              <div className="rounded-lg border border-[#4A5260] bg-[#0A1A2F] px-3 py-2 text-[#E6E6E6]">
                 {command.raw}
               </div>
               <p className="text-sm text-[#888888]">
@@ -364,14 +364,14 @@ export function VoiceCommandDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="border-[#333333] text-[#F0F0F0] hover:bg-[#1E1E1E]"
+            className="border-[#4A5260] text-[#E6E6E6] hover:bg-[#2A2D30]"
           >
             Abbrechen
           </Button>
           <Button
             onClick={handleSave}
             disabled={isLoading || (command.type === 'unknown')}
-            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B8963D]"
+            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B8963D]"
           >
             {isLoading ? 'Speichern...' : 'Speichern'}
           </Button>

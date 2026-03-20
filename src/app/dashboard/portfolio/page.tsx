@@ -90,14 +90,14 @@ export default function PortfolioPage() {
   const sortedVehicles = sortVehicles(vehicles);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#F0F0F0] p-8">
+    <div className="min-h-screen bg-[#0A1A2F] text-[#E6E6E6] p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-5xl md:text-6xl font-bold mb-3 tracking-tight">
             Meine Autosammlung
           </h1>
-          <p className="text-[#C9A84C] text-lg font-medium">
+          <p className="text-[#E5C97B] text-lg font-medium">
             {sortedVehicles.length} {sortedVehicles.length === 1 ? 'Fahrzeug' : 'Fahrzeuge'}
           </p>
         </div>
@@ -105,14 +105,14 @@ export default function PortfolioPage() {
         {/* Sorting Controls */}
         <div className="mb-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="w-full sm:w-auto">
-            <label htmlFor="sort" className="text-sm font-semibold text-[#C9A84C] block mb-2">
+            <label htmlFor="sort" className="text-sm font-semibold text-[#E5C97B] block mb-2">
               Sortierung:
             </label>
             <select
               id="sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="w-full sm:w-64 px-4 py-2 rounded-lg bg-[#1E1E1E] text-[#F0F0F0] border border-[#2A2A2A] focus:border-[#C9A84C] focus:outline-none"
+              className="w-full sm:w-64 px-4 py-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] border border-[#3D4450] focus:border-[#E5C97B] focus:outline-none"
             >
               <option value="price-desc">Preis (↓ teuer)</option>
               <option value="price-asc">Preis (↑ günstig)</option>
@@ -127,7 +127,7 @@ export default function PortfolioPage() {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <p className="text-[#C9A84C]">Lädt Fahrzeuge...</p>
+            <p className="text-[#E5C97B]">Lädt Fahrzeuge...</p>
           </div>
         )}
 
@@ -140,7 +140,7 @@ export default function PortfolioPage() {
 
         {/* Empty State */}
         {!loading && !error && sortedVehicles.length === 0 && (
-          <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-12 text-center">
+          <div className="bg-[#2A2D30] border border-[#3D4450] rounded-lg p-12 text-center">
             <p className="text-[#808080] text-lg">Keine Fahrzeuge gefunden.</p>
           </div>
         )}
@@ -151,9 +151,9 @@ export default function PortfolioPage() {
             {sortedVehicles.map((vehicle) => (
               <Link key={vehicle.id} href={`/vehicles/${vehicle.id}`}>
                 <div className="group cursor-pointer h-full">
-                  <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl overflow-hidden hover:border-[#C9A84C] transition-all duration-300 hover:shadow-xl hover:shadow-[#C9A84C]/20 transform hover:scale-105 h-full flex flex-col">
+                  <div className="bg-[#2A2D30] border border-[#3D4450] rounded-xl overflow-hidden hover:border-[#E5C97B] transition-all duration-300 hover:shadow-xl hover:shadow-[#E5C97B]/20 transform hover:scale-105 h-full flex flex-col">
                     {/* Image Container */}
-                    <div className="relative w-full h-80 bg-[#0A0A0A] overflow-hidden">
+                    <div className="relative w-full h-80 bg-[#0A1A2F] overflow-hidden">
                       {vehicle.cover_photo_url ? (
                         <Image
                           src={vehicle.cover_photo_url}
@@ -174,7 +174,7 @@ export default function PortfolioPage() {
                     {/* Content */}
                     <div className="p-6 flex flex-col flex-grow">
                       {/* Make + Model */}
-                      <h3 className="text-2xl font-bold text-[#F0F0F0] mb-3 group-hover:text-[#C9A84C] transition-colors">
+                      <h3 className="text-2xl font-bold text-[#E6E6E6] mb-3 group-hover:text-[#E5C97B] transition-colors">
                         {vehicle.make} {vehicle.model}
                       </h3>
 
@@ -193,7 +193,7 @@ export default function PortfolioPage() {
                         {vehicle.purchase_price && (
                           <div className="mb-2">
                             <p className="text-[#808080] text-sm">Kaufpreis</p>
-                            <p className="text-xl font-bold text-[#C9A84C]">
+                            <p className="text-xl font-bold text-[#E5C97B]">
                               € {vehicle.purchase_price.toLocaleString('de-DE')}
                             </p>
                           </div>
@@ -201,8 +201,8 @@ export default function PortfolioPage() {
                       </div>
 
                       {/* CTA Button */}
-                      <div className="mt-6 pt-4 border-t border-[#2A2A2A]">
-                        <p className="text-sm font-semibold text-[#C9A84C] group-hover:text-white transition-colors">
+                      <div className="mt-6 pt-4 border-t border-[#3D4450]">
+                        <p className="text-sm font-semibold text-[#E5C97B] group-hover:text-white transition-colors">
                           Details anzeigen →
                         </p>
                       </div>

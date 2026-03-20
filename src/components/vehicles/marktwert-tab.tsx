@@ -139,7 +139,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
@@ -158,21 +158,21 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Purchase Price */}
-          <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+          <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
               Kaufpreis
             </p>
-            <p className="text-2xl font-bold text-[#F0F0F0]">
+            <p className="text-2xl font-bold text-[#E6E6E6]">
               {purchasePrice ? `€ ${purchasePrice.toLocaleString('de-DE')}` : '-'}
             </p>
           </div>
 
           {/* Current Market Value */}
-          <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+          <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
               Aktueller Marktwert
             </p>
-            <p className="text-2xl font-bold text-[#F0F0F0]">
+            <p className="text-2xl font-bold text-[#E6E6E6]">
               {latestValue
                 ? `€ ${latestValue.estimated_value.toLocaleString('de-DE')}`
                 : '-'}
@@ -185,7 +185,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
           </div>
 
           {/* Difference */}
-          <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+          <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
               Differenz
             </p>
@@ -202,7 +202,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
           </div>
 
           {/* Return Percentage */}
-          <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+          <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
               Rendite
             </p>
@@ -224,7 +224,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
         <div className="flex justify-end">
           <Button
             onClick={() => setIsAddDialogOpen(true)}
-            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
           >
             <Plus className="h-4 w-4 mr-2" />
             Marktwert hinzufügen
@@ -233,7 +233,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
 
         {/* History */}
         {history.length === 0 ? (
-          <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+          <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
             <TrendingUp className="h-12 w-12 text-gray-600 mb-4" />
             <p className="text-gray-400 mb-2">Noch keine Marktwerte</p>
             <p className="text-sm text-gray-500">
@@ -245,12 +245,12 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
             {history.map((value) => (
               <div
                 key={value.id}
-                className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700"
+                className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700"
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-baseline gap-3 mb-2">
-                      <p className="text-lg font-semibold text-[#F0F0F0]">
+                      <p className="text-lg font-semibold text-[#E6E6E6]">
                         € {value.estimated_value.toLocaleString('de-DE')}
                       </p>
                       <span className="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs font-medium">
@@ -290,10 +290,10 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
 
       {/* Add Market Value Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-[#C9A84C]" />
+              <TrendingUp className="h-5 w-5 text-[#E5C97B]" />
               Marktwert hinzufügen
             </DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -315,7 +315,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, estimatedValue: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -332,10 +332,10 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
                   })
                 }
               >
-                <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+                <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1E1E1E] border-gray-600">
+                <SelectContent className="bg-[#2A2D30] border-gray-600">
                   <SelectItem value="manual">Manuell</SelectItem>
                   <SelectItem value="mobile_de">Mobile.de</SelectItem>
                   <SelectItem value="autoscout24">AutoScout24</SelectItem>
@@ -354,7 +354,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-20"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20"
               />
             </div>
           </div>
@@ -370,7 +370,7 @@ export function MarktwertTab({ vehicleId, purchasePrice }: MarktwertTabProps) {
             <Button
               onClick={handleAddValue}
               disabled={isAdding}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
             >
               {isAdding ? 'Wird hinzugefügt...' : 'Hinzufügen'}
             </Button>

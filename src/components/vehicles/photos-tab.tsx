@@ -258,7 +258,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
@@ -280,7 +280,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
             <Button
               asChild
               disabled={isUploading}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C] cursor-pointer"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C] cursor-pointer"
             >
               <span>
                 <Plus className="h-4 w-4 mr-2" />
@@ -292,7 +292,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
 
         {/* Photos */}
         {photos.length === 0 ? (
-          <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+          <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
             <Camera className="h-12 w-12 text-gray-600 mb-4" />
             <p className="text-gray-400 mb-2">Noch keine Fotos</p>
             <p className="text-sm text-gray-500">
@@ -304,8 +304,8 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
             {/* Cover Photo */}
             {photos.find((p) => p.is_cover) && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-[#F0F0F0] flex items-center gap-2">
-                  <Star className="h-5 w-5 text-[#C9A84C]" />
+                <h3 className="text-lg font-semibold text-[#E6E6E6] flex items-center gap-2">
+                  <Star className="h-5 w-5 text-[#E5C97B]" />
                   Abdeckungsfoto
                 </h3>
                 <div className="relative group rounded-lg overflow-hidden border border-gray-700 h-64 bg-gray-900">
@@ -335,7 +335,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
             {/* Other Photos */}
             {photos.filter((p) => !p.is_cover).length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-[#F0F0F0]">
+                <h3 className="text-lg font-semibold text-[#E6E6E6]">
                   Weitere Fotos
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -361,7 +361,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
                               handleSetCover(photo.id)
                             }}
                             disabled={isSettingCover}
-                            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+                            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
                           >
                             <Star className="h-3 w-3 mr-1" />
                             Cover
@@ -390,7 +390,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Photo Lightbox */}
       <Dialog open={!!selectedPhoto} onOpenChange={() => setSelectedPhoto(null)}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-3xl max-h-[90vh]">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-3xl max-h-[90vh]">
           {selectedPhoto && (
             <div className="relative">
               <img
@@ -406,7 +406,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />

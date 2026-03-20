@@ -64,7 +64,7 @@ export function StandzeitWarnings() {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold text-[#F0F0F0] flex items-center gap-2">
+      <h2 className="text-lg font-semibold text-[#E6E6E6] flex items-center gap-2">
         <AlertTriangle className="h-5 w-5 text-[#F97316]" />
         Standzeit-Warnungen
       </h2>
@@ -73,11 +73,11 @@ export function StandzeitWarnings() {
           <button
             key={v.id}
             onClick={() => router.push(`/vehicles/${v.id}`)}
-            className="w-full text-left rounded-lg border border-[#F97316]/30 bg-[#1E1E1E] p-4 hover:border-[#F97316]/60 transition-colors"
+            className="w-full text-left rounded-lg border border-[#F97316]/30 bg-[#2A2D30] p-4 hover:border-[#F97316]/60 transition-colors"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-medium text-[#F0F0F0]">
+                <p className="font-medium text-[#E6E6E6]">
                   {v.make} {v.model}
                   {v.plate && (
                     <span className="ml-2 text-xs text-[#808080]">({v.plate})</span>

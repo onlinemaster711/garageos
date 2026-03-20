@@ -98,7 +98,7 @@ export function ReminderList() {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-[#333333] bg-[#1E1E1E] p-6">
+      <div className="rounded-lg border border-[#4A5260] bg-[#2A2D30] p-6">
         <p className="text-sm text-[#EF4444]">{error}</p>
       </div>
     )
@@ -107,15 +107,15 @@ export function ReminderList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#C9A84C] border-t-transparent"></div>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#E5C97B] border-t-transparent"></div>
       </div>
     )
   }
 
   if (reminders.length === 0) {
     return (
-      <div className="rounded-lg border border-[#333333] bg-[#1E1E1E] p-8 text-center">
-        <p className="text-[#F0F0F0]">
+      <div className="rounded-lg border border-[#4A5260] bg-[#2A2D30] p-8 text-center">
+        <p className="text-[#E6E6E6]">
           Keine offenen Erinnerungen — alles im grünen Bereich!
         </p>
       </div>
@@ -141,7 +141,7 @@ export function ReminderList() {
               onClick={() => handleReminderClick(reminder.vehicle_id)}
               className="w-full text-left transition-all hover:bg-[#2a2a2a]"
             >
-              <div className="flex items-start gap-3 rounded-lg border border-[#333333] bg-[#1E1E1E] p-3 hover:border-[#C9A84C]/30">
+              <div className="flex items-start gap-3 rounded-lg border border-[#4A5260] bg-[#2A2D30] p-3 hover:border-[#E5C97B]/30">
                 {/* Urgency dot */}
                 <div
                   className="h-3 w-3 rounded-full flex-shrink-0 mt-1"
@@ -151,7 +151,7 @@ export function ReminderList() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-[#F0F0F0]">
+                    <p className="text-sm font-medium text-[#E6E6E6]">
                       {reminder.vehicles?.make} {reminder.vehicles?.model}
                     </p>
                     {reminder.vehicles?.plate && (
@@ -160,7 +160,7 @@ export function ReminderList() {
                   </div>
 
                   <div className="mt-1 flex items-center gap-2">
-                    <span className="inline-block rounded bg-[#C9A84C]/20 px-2 py-0.5 text-xs font-medium text-[#C9A84C]">
+                    <span className="inline-block rounded bg-[#E5C97B]/20 px-2 py-0.5 text-xs font-medium text-[#E5C97B]">
                       {getReminderTypeLabel(reminder.type)}
                     </span>
                   </div>

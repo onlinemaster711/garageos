@@ -330,7 +330,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
@@ -351,7 +351,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
               setEditingTire(null)
               setIsAddDialogOpen(true)
             }}
-            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
           >
             <Plus className="h-4 w-4 mr-2" />
             Reifen hinzufügen
@@ -359,7 +359,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
         </div>
 
         {tires.length === 0 ? (
-          <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+          <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
             <Gauge className="h-12 w-12 text-gray-600 mb-4" />
             <p className="text-gray-400 mb-2">Noch keine Reifen hinzugefügt</p>
             <p className="text-sm text-gray-500">
@@ -371,8 +371,8 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
             {/* Sommerreifen */}
             {tiresByType.summer.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold text-[#F0F0F0] mb-4 flex items-center gap-2">
-                  <Gauge className="h-5 w-5 text-[#C9A84C]" />
+                <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4 flex items-center gap-2">
+                  <Gauge className="h-5 w-5 text-[#E5C97B]" />
                   {TIRE_TYPE_LABELS.summer}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -394,8 +394,8 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
             {/* Winterreifen */}
             {tiresByType.winter.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold text-[#F0F0F0] mb-4 flex items-center gap-2">
-                  <Gauge className="h-5 w-5 text-[#C9A84C]" />
+                <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4 flex items-center gap-2">
+                  <Gauge className="h-5 w-5 text-[#E5C97B]" />
                   {TIRE_TYPE_LABELS.winter}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -417,8 +417,8 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
             {/* Ganzjahresreifen */}
             {tiresByType.allseason.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold text-[#F0F0F0] mb-4 flex items-center gap-2">
-                  <Gauge className="h-5 w-5 text-[#C9A84C]" />
+                <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4 flex items-center gap-2">
+                  <Gauge className="h-5 w-5 text-[#E5C97B]" />
                   {TIRE_TYPE_LABELS.allseason}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -452,10 +452,10 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
           }
         }}
       >
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Gauge className="h-5 w-5 text-[#C9A84C]" />
+              <Gauge className="h-5 w-5 text-[#E5C97B]" />
               {editingTire ? 'Reifen bearbeiten' : 'Reifen hinzufügen'}
             </DialogTitle>
           </DialogHeader>
@@ -471,10 +471,10 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                   setFormData({ ...formData, type: value as any })
                 }
               >
-                <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+                <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1E1E1E] border-gray-600">
+                <SelectContent className="bg-[#2A2D30] border-gray-600">
                   <SelectItem value="summer">Sommerreifen</SelectItem>
                   <SelectItem value="winter">Winterreifen</SelectItem>
                   <SelectItem value="allseason">Ganzjahresreifen</SelectItem>
@@ -493,7 +493,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, brand: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -508,7 +508,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, size: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -522,10 +522,10 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                   setFormData({ ...formData, condition: value as any })
                 }
               >
-                <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+                <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1E1E1E] border-gray-600">
+                <SelectContent className="bg-[#2A2D30] border-gray-600">
                   <SelectItem value="new">Neu</SelectItem>
                   <SelectItem value="good">Gut</SelectItem>
                   <SelectItem value="fair">Befriedigend</SelectItem>
@@ -551,7 +551,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                   onChange={(e) =>
                     setFormData({ ...formData, tread_depth_mm: e.target.value })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
 
@@ -567,7 +567,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                   onChange={(e) =>
                     setFormData({ ...formData, mileage_km: e.target.value })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
             </div>
@@ -583,7 +583,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, purchase_date: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -601,7 +601,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                     last_mounted_date: e.target.value,
                   })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -616,7 +616,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, storage_location: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -631,7 +631,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-20"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20"
               />
             </div>
           </div>
@@ -652,7 +652,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
             <Button
               onClick={editingTire ? handleEditTire : handleAddTire}
               disabled={isAddingTire || isUpdatingTire}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
             >
               {isAddingTire || isUpdatingTire
                 ? 'Wird gespeichert...'
@@ -666,7 +666,7 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />
@@ -710,11 +710,11 @@ function TireCard({ tire, onEdit, onDelete }: TireCardProps) {
   const conditionLabel = CONDITION_LABELS[tire.condition]
 
   return (
-    <div className="bg-[#1E1E1E] rounded-lg p-5 border border-gray-700 hover:border-gray-600 transition-colors">
+    <div className="bg-[#2A2D30] rounded-lg p-5 border border-gray-700 hover:border-gray-600 transition-colors">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h4 className="text-lg font-semibold text-[#F0F0F0]">
+          <h4 className="text-lg font-semibold text-[#E6E6E6]">
             {tire.brand} {tire.size}
           </h4>
           <p className="text-sm text-gray-400">{TIRE_TYPE_LABELS[tire.type]}</p>
@@ -781,7 +781,7 @@ function TireCard({ tire, onEdit, onDelete }: TireCardProps) {
           variant="ghost"
           size="sm"
           onClick={onEdit}
-          className="flex-1 text-[#C9A84C] hover:text-[#C9A84C] hover:bg-[#C9A84C]/10"
+          className="flex-1 text-[#E5C97B] hover:text-[#E5C97B] hover:bg-[#E5C97B]/10"
         >
           <Edit2 className="h-4 w-4 mr-1" />
           Bearbeiten

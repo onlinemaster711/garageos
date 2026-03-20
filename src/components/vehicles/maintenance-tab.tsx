@@ -339,7 +339,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
@@ -355,13 +355,13 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
   const renderRecord = (record: MaintenanceRecord, showActions = true) => (
     <div
       key={record.id}
-      className="bg-[#1E1E1E] rounded-lg p-5 border border-gray-700 flex justify-between items-start"
+      className="bg-[#2A2D30] rounded-lg p-5 border border-gray-700 flex justify-between items-start"
     >
       <div className="flex-1">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-xl">{getTypeIcon(record.type)}</span>
-          <h3 className="text-base font-semibold text-[#F0F0F0]">{record.title}</h3>
-          <span className="text-xs font-medium text-[#C9A84C] bg-[#C9A84C]/20 px-2 py-0.5 rounded">
+          <h3 className="text-base font-semibold text-[#E6E6E6]">{record.title}</h3>
+          <span className="text-xs font-medium text-[#E5C97B] bg-[#E5C97B]/20 px-2 py-0.5 rounded">
             {getTypeLabel(record.type)}
           </span>
           <span className="text-sm text-gray-400">
@@ -452,13 +452,13 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
       <div className="space-y-4">
         {/* Section tabs */}
         <div className="flex items-center justify-between">
-          <div className="flex gap-1 bg-[#1E1E1E] rounded-lg p-1 border border-gray-700">
+          <div className="flex gap-1 bg-[#2A2D30] rounded-lg p-1 border border-gray-700">
             <button
               onClick={() => setActiveSection('planned')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeSection === 'planned'
-                  ? 'bg-[#C9A84C] text-[#0A0A0A]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'bg-[#E5C97B] text-[#0A1A2F]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <Clock className="h-4 w-4 inline mr-1.5 -mt-0.5" />
@@ -468,8 +468,8 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
               onClick={() => setActiveSection('completed')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeSection === 'completed'
-                  ? 'bg-[#C9A84C] text-[#0A0A0A]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'bg-[#E5C97B] text-[#0A1A2F]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <CheckCircle2 className="h-4 w-4 inline mr-1.5 -mt-0.5" />
@@ -479,8 +479,8 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
               onClick={() => setActiveSection('contacts')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeSection === 'contacts'
-                  ? 'bg-[#C9A84C] text-[#0A0A0A]'
-                  : 'text-gray-400 hover:text-[#F0F0F0]'
+                  ? 'bg-[#E5C97B] text-[#0A1A2F]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
               <Building2 className="h-4 w-4 inline mr-1.5 -mt-0.5" />
@@ -497,7 +497,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
                 setIsAddDialogOpen(true)
               }
             }}
-            className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+            className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
           >
             <Plus className="h-4 w-4 mr-2" />
             {activeSection === 'contacts' ? 'Kontakt hinzufügen' : 'Wartung hinzufügen'}
@@ -508,7 +508,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         {activeSection === 'planned' && (
           <div className="space-y-3">
             {plannedRecords.length === 0 ? (
-              <div className="bg-[#1E1E1E] rounded-lg p-10 border border-gray-700 flex flex-col items-center text-center">
+              <div className="bg-[#2A2D30] rounded-lg p-10 border border-gray-700 flex flex-col items-center text-center">
                 <Clock className="h-10 w-10 text-gray-600 mb-3" />
                 <p className="text-gray-400 mb-1">Keine geplanten Wartungen</p>
                 <p className="text-sm text-gray-500">Planen Sie Ihre nächsten Wartungstermine</p>
@@ -523,7 +523,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         {activeSection === 'completed' && (
           <div className="space-y-3">
             {completedRecords.length === 0 ? (
-              <div className="bg-[#1E1E1E] rounded-lg p-10 border border-gray-700 flex flex-col items-center text-center">
+              <div className="bg-[#2A2D30] rounded-lg p-10 border border-gray-700 flex flex-col items-center text-center">
                 <CheckCircle2 className="h-10 w-10 text-gray-600 mb-3" />
                 <p className="text-gray-400 mb-1">Keine erledigten Wartungen</p>
                 <p className="text-sm text-gray-500">Abgeschlossene Wartungen erscheinen hier</p>
@@ -538,7 +538,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         {activeSection === 'contacts' && (
           <div className="space-y-3">
             {serviceContacts.length === 0 ? (
-              <div className="bg-[#1E1E1E] rounded-lg p-10 border border-gray-700 flex flex-col items-center text-center">
+              <div className="bg-[#2A2D30] rounded-lg p-10 border border-gray-700 flex flex-col items-center text-center">
                 <Building2 className="h-10 w-10 text-gray-600 mb-3" />
                 <p className="text-gray-400 mb-1">Keine Service-Kontakte</p>
                 <p className="text-sm text-gray-500">Speichern Sie Werkstätten und Dienstleister</p>
@@ -547,12 +547,12 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
               serviceContacts.map((contact) => (
                 <div
                   key={contact.id}
-                  className="bg-[#1E1E1E] rounded-lg p-5 border border-gray-700 flex justify-between items-start"
+                  className="bg-[#2A2D30] rounded-lg p-5 border border-gray-700 flex justify-between items-start"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <Building2 className="h-4 w-4 text-[#C9A84C]" />
-                      <h3 className="text-base font-semibold text-[#F0F0F0]">{contact.name}</h3>
+                      <Building2 className="h-4 w-4 text-[#E5C97B]" />
+                      <h3 className="text-base font-semibold text-[#E6E6E6]">{contact.name}</h3>
                       {contact.specialization && (
                         <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full">
                           {contact.specialization}
@@ -593,7 +593,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
                           setEmailData({ subject: '', body: '' })
                           setIsEmailDialogOpen(true)
                         }}
-                        className="text-[#C9A84C] hover:text-[#E0BC5A] hover:bg-[#C9A84C]/10"
+                        className="text-[#E5C97B] hover:text-[#E0BC5A] hover:bg-[#E5C97B]/10"
                         title="E-Mail senden"
                       >
                         <Send className="h-4 w-4" />
@@ -617,10 +617,10 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Add Maintenance Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Wrench className="h-5 w-5 text-[#C9A84C]" />
+              <Wrench className="h-5 w-5 text-[#E5C97B]" />
               Wartung hinzufügen
             </DialogTitle>
           </DialogHeader>
@@ -633,8 +633,8 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
                   onClick={() => setFormData({ ...formData, type: 'maintenance' })}
                   className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors ${
                     formData.type === 'maintenance'
-                      ? 'bg-[#C9A84C] text-[#0A0A0A]'
-                      : 'bg-[#0A0A0A] text-[#F0F0F0] border border-gray-600 hover:border-[#C9A84C]'
+                      ? 'bg-[#E5C97B] text-[#0A1A2F]'
+                      : 'bg-[#0A1A2F] text-[#E6E6E6] border border-gray-600 hover:border-[#E5C97B]'
                   }`}
                 >
                   🔧 Wartung
@@ -643,8 +643,8 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
                   onClick={() => setFormData({ ...formData, type: 'reminder' })}
                   className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors ${
                     formData.type === 'reminder'
-                      ? 'bg-[#C9A84C] text-[#0A0A0A]'
-                      : 'bg-[#0A0A0A] text-[#F0F0F0] border border-gray-600 hover:border-[#C9A84C]'
+                      ? 'bg-[#E5C97B] text-[#0A1A2F]'
+                      : 'bg-[#0A1A2F] text-[#E6E6E6] border border-gray-600 hover:border-[#E5C97B]'
                   }`}
                 >
                   🛒 Reminder
@@ -655,7 +655,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
             <div>
               <Label className="text-gray-300">Status</Label>
               <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v as 'planned' | 'completed' })}>
-                <SelectTrigger className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]">
+                <SelectTrigger className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -667,22 +667,22 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
             <div>
               <Label className="text-gray-300">Datum</Label>
-              <Input type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
 
             <div>
               <Label className="text-gray-300">Titel *</Label>
-              <Input placeholder="z.B. Ölwechsel" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="z.B. Ölwechsel" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
 
             <div>
               <Label className="text-gray-300">Beschreibung</Label>
-              <Textarea placeholder="Details zur Wartung..." value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-20" />
+              <Textarea placeholder="Details zur Wartung..." value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20" />
             </div>
 
             <div>
               <Label className="text-gray-300">Werkstatt</Label>
-              <Input placeholder="Name der Werkstatt (optional)" value={formData.workshop} onChange={(e) => setFormData({ ...formData, workshop: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="Name der Werkstatt (optional)" value={formData.workshop} onChange={(e) => setFormData({ ...formData, workshop: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
 
             {formData.status === 'planned' && (
@@ -692,7 +692,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
                   id="has_appointment"
                   checked={formData.has_appointment}
                   onChange={(e) => setFormData({ ...formData, has_appointment: e.target.checked })}
-                  className="h-4 w-4 rounded border-gray-600 bg-[#0A0A0A] text-[#C9A84C] focus:ring-[#C9A84C]"
+                  className="h-4 w-4 rounded border-gray-600 bg-[#0A1A2F] text-[#E5C97B] focus:ring-[#E5C97B]"
                 />
                 <Label htmlFor="has_appointment" className="text-gray-300 cursor-pointer">
                   Termin steht bereits
@@ -703,18 +703,18 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-gray-300">Kosten (€)</Label>
-                <Input type="number" step="0.01" placeholder="0,00" value={formData.cost} onChange={(e) => setFormData({ ...formData, cost: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+                <Input type="number" step="0.01" placeholder="0,00" value={formData.cost} onChange={(e) => setFormData({ ...formData, cost: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
               </div>
               <div>
                 <Label className="text-gray-300">Kilometerstand</Label>
-                <Input type="number" placeholder="km" value={formData.mileage} onChange={(e) => setFormData({ ...formData, mileage: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+                <Input type="number" placeholder="km" value={formData.mileage} onChange={(e) => setFormData({ ...formData, mileage: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
               </div>
             </div>
           </div>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="border-gray-600">Abbrechen</Button>
-            <Button onClick={handleAddRecord} disabled={isAddingRecord} className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]">
+            <Button onClick={handleAddRecord} disabled={isAddingRecord} className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]">
               {isAddingRecord ? 'Wird hinzugefügt...' : 'Hinzufügen'}
             </Button>
           </DialogFooter>
@@ -723,10 +723,10 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Add Service Contact Dialog */}
       <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-[#C9A84C]" />
+              <Building2 className="h-5 w-5 text-[#E5C97B]" />
               Service-Kontakt hinzufügen
             </DialogTitle>
           </DialogHeader>
@@ -734,33 +734,33 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
           <div className="space-y-4">
             <div>
               <Label className="text-gray-300">Name *</Label>
-              <Input placeholder="z.B. Porsche Zentrum München" value={contactFormData.name} onChange={(e) => setContactFormData({ ...contactFormData, name: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="z.B. Porsche Zentrum München" value={contactFormData.name} onChange={(e) => setContactFormData({ ...contactFormData, name: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
             <div>
               <Label className="text-gray-300">E-Mail</Label>
-              <Input type="email" placeholder="info@werkstatt.de" value={contactFormData.email} onChange={(e) => setContactFormData({ ...contactFormData, email: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input type="email" placeholder="info@werkstatt.de" value={contactFormData.email} onChange={(e) => setContactFormData({ ...contactFormData, email: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
             <div>
               <Label className="text-gray-300">Telefon</Label>
-              <Input placeholder="+49 89 123456" value={contactFormData.phone} onChange={(e) => setContactFormData({ ...contactFormData, phone: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="+49 89 123456" value={contactFormData.phone} onChange={(e) => setContactFormData({ ...contactFormData, phone: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
             <div>
               <Label className="text-gray-300">Adresse</Label>
-              <Input placeholder="Straße, PLZ Ort" value={contactFormData.address} onChange={(e) => setContactFormData({ ...contactFormData, address: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="Straße, PLZ Ort" value={contactFormData.address} onChange={(e) => setContactFormData({ ...contactFormData, address: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
             <div>
               <Label className="text-gray-300">Spezialisierung</Label>
-              <Input placeholder="z.B. Oldtimer, Porsche, Lack" value={contactFormData.specialization} onChange={(e) => setContactFormData({ ...contactFormData, specialization: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="z.B. Oldtimer, Porsche, Lack" value={contactFormData.specialization} onChange={(e) => setContactFormData({ ...contactFormData, specialization: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
             <div>
               <Label className="text-gray-300">Notizen</Label>
-              <Textarea placeholder="Weitere Informationen..." value={contactFormData.notes} onChange={(e) => setContactFormData({ ...contactFormData, notes: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-16" />
+              <Textarea placeholder="Weitere Informationen..." value={contactFormData.notes} onChange={(e) => setContactFormData({ ...contactFormData, notes: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-16" />
             </div>
           </div>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsContactDialogOpen(false)} className="border-gray-600">Abbrechen</Button>
-            <Button onClick={handleAddContact} disabled={isAddingContact} className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]">
+            <Button onClick={handleAddContact} disabled={isAddingContact} className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]">
               {isAddingContact ? 'Wird hinzugefügt...' : 'Hinzufügen'}
             </Button>
           </DialogFooter>
@@ -769,10 +769,10 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Email Dialog */}
       <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-lg">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5 text-[#C9A84C]" />
+              <Mail className="h-5 w-5 text-[#E5C97B]" />
               E-Mail an {emailTarget?.name}
             </DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -783,17 +783,17 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
           <div className="space-y-4">
             <div>
               <Label className="text-gray-300">Betreff *</Label>
-              <Input placeholder="z.B. Terminanfrage für Inspektion" value={emailData.subject} onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]" />
+              <Input placeholder="z.B. Terminanfrage für Inspektion" value={emailData.subject} onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]" />
             </div>
             <div>
               <Label className="text-gray-300">Nachricht *</Label>
-              <Textarea placeholder="Ihre Nachricht..." value={emailData.body} onChange={(e) => setEmailData({ ...emailData, body: e.target.value })} className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-32" />
+              <Textarea placeholder="Ihre Nachricht..." value={emailData.body} onChange={(e) => setEmailData({ ...emailData, body: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-32" />
             </div>
           </div>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEmailDialogOpen(false)} className="border-gray-600">Abbrechen</Button>
-            <Button onClick={handleSendEmail} disabled={isSendingEmail} className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]">
+            <Button onClick={handleSendEmail} disabled={isSendingEmail} className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]">
               {isSendingEmail ? 'Wird gesendet...' : 'Senden'}
               <Send className="h-4 w-4 ml-2" />
             </Button>
@@ -803,7 +803,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />
@@ -824,7 +824,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Delete Contact Confirmation Dialog */}
       <Dialog open={deleteContactConfirm} onOpenChange={setDeleteContactConfirm}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />

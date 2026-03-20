@@ -177,14 +177,14 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
         <MileageChart vehicleId={vehicleId} />
 
         {/* Add Drive Form */}
-        <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+        <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-[#F0F0F0]">
+            <h3 className="text-lg font-semibold text-[#E6E6E6]">
               Neue Fahrt hinzufügen
             </h3>
             <Button
               onClick={() => setIsAddDialogOpen(true)}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
             >
               <Plus className="h-4 w-4 mr-2" />
               Fahrt hinzufügen
@@ -194,12 +194,12 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
 
         {/* Recent Drives */}
         <div>
-          <h3 className="text-lg font-semibold text-[#F0F0F0] mb-4">
+          <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4">
             Letzte Fahrten
           </h3>
 
           {drives.length === 0 ? (
-            <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+            <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
               <Loader2 className="h-12 w-12 text-gray-600 mb-4 opacity-50" />
               <p className="text-gray-400 mb-2">Noch keine Fahrten erfasst</p>
               <p className="text-sm text-gray-500">
@@ -211,7 +211,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
               {drives.map((drive) => (
                 <div
                   key={drive.id}
-                  className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700 flex justify-between items-start"
+                  className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700 flex justify-between items-start"
                 >
                   <div className="flex-1">
                     <div className="flex items-baseline gap-3 mb-2">
@@ -266,7 +266,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Add Drive Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700 max-w-md">
+        <DialogContent className="bg-[#2A2D30] border-gray-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               Fahrt hinzufügen
@@ -285,7 +285,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, date: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
               />
             </div>
 
@@ -302,7 +302,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
                   onChange={(e) =>
                     setFormData({ ...formData, km_driven: e.target.value })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
 
@@ -321,7 +321,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
                       mileage_after: e.target.value,
                     })
                   }
-                  className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0]"
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6]"
                 />
               </div>
             </div>
@@ -337,7 +337,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="bg-[#0A0A0A] border-gray-600 text-[#F0F0F0] min-h-20"
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20"
               />
             </div>
           </div>
@@ -353,7 +353,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
             <Button
               onClick={handleAddDrive}
               disabled={isAddingDrive}
-              className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+              className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
             >
               {isAddingDrive ? 'Wird hinzugefügt...' : 'Hinzufügen'}
             </Button>
@@ -363,7 +363,7 @@ export function MileageTab({ vehicleId }: { vehicleId: string }) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-[#1E1E1E] border-gray-700">
+        <DialogContent className="bg-[#2A2D30] border-gray-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />

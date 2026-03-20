@@ -55,7 +55,7 @@ export function DossierButton({ vehicleId, vehicleName }: DossierButtonProps) {
     <Button
       onClick={handleDownload}
       disabled={isLoading}
-      className="bg-[#C9A84C] text-[#0A0A0A] hover:bg-[#B89A3C]"
+      className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C]"
     >
       {isLoading ? (
         <>

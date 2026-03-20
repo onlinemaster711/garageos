@@ -11,7 +11,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0A0A0A' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#0A1A2F' }}>
       <Header user={user.email || ''} />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         {children}

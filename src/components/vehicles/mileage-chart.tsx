@@ -127,14 +127,14 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
       </div>
     )
   }
 
   if (dataPoints.length === 0) {
     return (
-      <div className="bg-[#1E1E1E] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
+      <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 flex flex-col items-center justify-center text-center">
         <TrendingUp className="h-12 w-12 text-gray-600 mb-4" />
         <p className="text-gray-400 mb-2">
           Noch keine Fahrten oder Wartungseinträge mit Kilometerstand vorhanden
@@ -189,7 +189,7 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
   return (
     <div className="space-y-6">
       {/* SVG Chart */}
-      <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700 overflow-x-auto">
+      <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700 overflow-x-auto">
         <svg
           ref={svgRef}
           width={width}
@@ -253,7 +253,7 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
           <path
             d={pathD}
             fill="none"
-            stroke="#C9A84C"
+            stroke="#E5C97B"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -266,7 +266,7 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
               cx={point.x}
               cy={point.y}
               r="4"
-              fill="#C9A84C"
+              fill="#E5C97B"
               onMouseEnter={() => setHoveredPoint(i)}
               onMouseLeave={() => setHoveredPoint(null)}
               className="cursor-pointer transition-all"
@@ -285,8 +285,8 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
                 y={points[hoveredPoint].y - 40}
                 width="140"
                 height="35"
-                fill="#0A0A0A"
-                stroke="#C9A84C"
+                fill="#0A1A2F"
+                stroke="#E5C97B"
                 strokeWidth="1"
                 rx="4"
               />
@@ -294,7 +294,7 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
                 x={points[hoveredPoint].x}
                 y={points[hoveredPoint].y - 22}
                 textAnchor="middle"
-                className="text-xs fill-[#C9A84C] font-semibold"
+                className="text-xs fill-[#E5C97B] font-semibold"
               >
                 {points[hoveredPoint].date.toLocaleDateString('de-DE')}
               </text>
@@ -341,11 +341,11 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+        <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
             Gesamtkilometer
           </p>
-          <p className="text-2xl font-bold text-[#C9A84C]">
+          <p className="text-2xl font-bold text-[#E5C97B]">
             {totalKilometers.toLocaleString('de-DE')} km
           </p>
           <p className="text-xs text-gray-500 mt-2">
@@ -354,11 +354,11 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
           </p>
         </div>
 
-        <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+        <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
             Durchschnitt pro Monat
           </p>
-          <p className="text-2xl font-bold text-[#F0F0F0]">
+          <p className="text-2xl font-bold text-[#E6E6E6]">
             {avgKmPerMonth.toLocaleString('de-DE', {
               maximumFractionDigits: 0,
             })}{' '}
@@ -366,11 +366,11 @@ export function MileageChart({ vehicleId }: { vehicleId: string }) {
           </p>
         </div>
 
-        <div className="bg-[#1E1E1E] rounded-lg p-6 border border-gray-700">
+        <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
             Durchschnitt pro Jahr
           </p>
-          <p className="text-2xl font-bold text-[#F0F0F0]">
+          <p className="text-2xl font-bold text-[#E6E6E6]">
             {avgKmPerYear.toLocaleString('de-DE', { maximumFractionDigits: 0 })}{' '}
             km
           </p>
