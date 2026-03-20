@@ -66,13 +66,6 @@ export function Header({ user }: HeaderProps) {
             >
               Termine
             </Link>
-            <Link
-              href="/portfolio"
-              className="text-sm font-medium transition-colors hover:opacity-80"
-              style={{ color: '#E6E6E6' }}
-            >
-              Portfolio
-            </Link>
           </nav>
 
           {/* User Menu & Mobile Menu */}
@@ -181,13 +174,6 @@ export function Header({ user }: HeaderProps) {
               style={{ backgroundColor: '#3D4450', color: '#E6E6E6' }}
             >
               Termine
-            </Link>
-            <Link
-              href="/portfolio"
-              className="block px-3 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
-              style={{ backgroundColor: '#3D4450', color: '#E6E6E6' }}
-            >
-              Portfolio
             </Link>
             <button
               onClick={handleLogout}

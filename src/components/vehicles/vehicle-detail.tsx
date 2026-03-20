@@ -61,7 +61,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const router = useRouter()
   const supabase = createClient()
   const { toast } = useToast()
-  const [activeTab, setActiveTab] = useState<TabType>('schedule')
+  const [activeTab, setActiveTab] = useState<TabType>('overview')
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
