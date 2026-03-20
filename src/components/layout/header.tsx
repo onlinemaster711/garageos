@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
+import { User, LogOut, Settings } from 'lucide-react'
 
 interface HeaderProps {
   user: string
@@ -81,41 +82,84 @@ export function Header({ user }: HeaderProps) {
             </Link>
           </nav>
 
-          {/* User Menu */}
-          <div className="relative">
-            {/* Desktop User Menu */}
-            <div className="hidden md:flex items-center gap-4">
+          {/* User Menu & Mobile Menu */}
+          <div className="flex items-center gap-4">
+            {/* User Icon Dropdown */}
+            <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-md transition-all hover:opacity-80"
-                style={{ backgroundColor: '#2A2A2A', color: '#F0F0F0' }}
+                className="p-2 rounded-lg transition-all"
+                style={{
+                  color: '#F0F0F0',
+                  backgroundColor: isDropdownOpen ? '#2A2A2A' : 'transparent',
+                }}
+                title="Benutzer Menü"
               >
-                <span className="text-sm">{user}</span>
-                <svg
-                  className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
+                <User className="w-5 h-5" />
               </button>
 
+              {/* Dropdown Menu */}
               {isDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-12 w-48 rounded-lg shadow-lg border"
-                  style={{ backgroundColor: '#1E1E1E', borderColor: '#333333' }}
+                  className="absolute right-0 mt-2 w-56 rounded-lg shadow-xl border z-50"
+                  style={{ backgroundColor: '#1E1E1E', borderColor: '#444444' }}
                 >
-                  <div className="px-4 py-3 border-b" style={{ borderColor: '#333333', color: '#A0A0A0' }}>
-                    <p className="text-sm font-medium">{user}</p>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm transition-colors hover:opacity-80"
-                    style={{ color: '#FF6B6B' }}
+                  {/* Profil Header */}
+                  <div
+                    className="px-4 py-3 border-b"
+                    style={{ borderColor: '#333333' }}
                   >
-                    Abmelden
-                  </button>
+                    <p className="text-xs uppercase tracking-wide" style={{ color: '#808080' }}>
+                      Profil
+                    </p>
+                    <p className="text-sm font-medium mt-1" style={{ color: '#F0F0F0' }}>
+                      {user}
+                    </p>
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="py-2">
+                    {/* Settings */}
+                    <Link
+                      href="/settings"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-sm transition-colors"
+                      style={{ color: '#F0F0F0' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#2A2A2A'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent'
+                      }}
+                    >
+                      <Settings className="w-4 h-4" style={{ color: '#C9A84C' }} />
+                      <span>Einstellungen</span>
+                    </Link>
+                  </div>
+
+                  {/* Logout Footer */}
+                  <div
+                    className="px-4 py-2 border-t"
+                    style={{ borderColor: '#333333' }}
+                  >
+                    <button
+                      onClick={() => {
+                        setIsDropdownOpen(false)
+                        handleLogout()
+                      }}
+                      className="flex items-center gap-3 w-full text-sm transition-colors py-1.5"
+                      style={{ color: '#FF6B6B' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.opacity = '0.8'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.opacity = '1'
+                      }}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Abmelden</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -123,7 +167,7 @@ export function Header({ user }: HeaderProps) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2"
+              className="md:hidden p-2 rounded-lg transition-colors"
               style={{ color: '#F0F0F0' }}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
