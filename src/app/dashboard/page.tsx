@@ -74,139 +74,135 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#0A1A2F] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="flex flex-col gap-6 mb-8">
-          <div className="flex items-center justify-between gap-4">
-            {/* Title + Count */}
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6E6]">
-                Meine Fahrzeuge ({vehicles.length})
-              </h1>
-            </div>
+        {/* Header Section - Inline */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+          {/* Left: Title + Count */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#E6E6E6]">
+            Meine Fahrzeuge ({vehicles.length})
+          </h1>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3">
-              {/* Sortierung Dropdown */}
-              {vehicles.length > 0 && (
-                <div className="relative">
-                  <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="p-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] hover:bg-[#3D4450] transition-colors border border-[#4A5260]"
-                    title="Sortierung"
-                  >
-                    <Sliders className="h-4 w-4" />
-                  </button>
+          {/* Middle & Right: Buttons */}
+          <div className="flex items-center gap-3">
+            {/* Add Vehicle Button */}
+            <Link
+              href="/vehicles/new"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
+            >
+              <Plus className="h-4 w-4" />
+              Fahrzeug hinzufügen
+            </Link>
 
-                  {/* Dropdown Menu */}
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-[#2A2D30] border border-[#4A5260] rounded-lg shadow-xl z-50">
-                      <div className="p-2">
-                        <button
-                          onClick={() => {
-                            setSortBy('recent')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'recent'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Hinzugefügt (Neu zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('value-high')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'value-high'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Wert (Teuer zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('value-low')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'value-low'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Wert (Günstig zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('age-new')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'age-new'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Baujahr (Neu zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('age-old')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'age-old'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Baujahr (Alt zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('category')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'category'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Kategorie
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('name')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'name'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Name (A-Z)
-                        </button>
-                      </div>
+            {/* Sortierung Dropdown */}
+            {vehicles.length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="p-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] hover:bg-[#3D4450] transition-colors border border-[#4A5260]"
+                  title="Sortierung"
+                >
+                  <Sliders className="h-4 w-4" />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-[#2A2D30] border border-[#4A5260] rounded-lg shadow-xl z-50">
+                    <div className="p-2">
+                      <button
+                        onClick={() => {
+                          setSortBy('recent')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'recent'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Hinzugefügt (Neu zuerst)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('value-high')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'value-high'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Wert (Teuer zuerst)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('value-low')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'value-low'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Wert (Günstig zuerst)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('age-new')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'age-new'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Baujahr (Neu zuerst)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('age-old')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'age-old'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Baujahr (Alt zuerst)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('category')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'category'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Kategorie
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('name')
+                          setIsDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          sortBy === 'name'
+                            ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                            : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                        }`}
+                      >
+                        Name (A-Z)
+                      </button>
                     </div>
-                  )}
-                </div>
-              )}
-
-              {/* Add Vehicle Button */}
-              <Link
-                href="/vehicles/new"
-                className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
-              >
-                <Plus className="h-4 w-4" />
-                Fahrzeug hinzufügen
-              </Link>
-            </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
