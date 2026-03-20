@@ -80,11 +80,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
 
       const vehicleId = vehicle?.id
       if (!vehicleId) {
-        toast({
-          title: 'Hinweis',
-          description: 'Bitte speichern Sie das Fahrzeug zuerst, bevor Sie Fotos hochladen.',
-          variant: 'destructive',
-        })
         setIsUploadingPhoto(false)
         return
       }
@@ -582,7 +577,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
       </div>
 
       {/* Fotos */}
-      {vehicle?.id && (
+      {(
         <div className="space-y-4 mb-8">
           <Label className="text-[#F0F0F0] text-lg font-semibold flex items-center gap-2">
             <Camera className="h-5 w-5 text-[#C9A84C]" />
