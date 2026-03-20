@@ -52,6 +52,7 @@ export default function SettingsPage() {
   const [newUserValidUntil, setNewUserValidUntil] = useState(
     new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   )
+  const [newUserForever, setNewUserForever] = useState(false)
 
   useEffect(() => {
     loadSettings()
@@ -226,10 +227,57 @@ export default function SettingsPage() {
 
   // Benutzer hinzufügen
   const handleAddUser = async () => {
-    if (!newUserEmail.trim()) {
+    // Detailliertes Logging & Validierung
+    const trimmedEmail = newUserEmail.trim()
+
+    console.log('=== ADD USER FORM DATA ===')
+    console.log('Email:', trimmedEmail)
+    console.log('Permissions:', newUserPermissions)
+    console.log('Valid From:', newUserValidFrom)
+    console.log('Valid Until:', newUserValidUntil)
+    console.log('Forever Enabled:', newUserForever)
+
+    // Validierung: Email
+    if (!trimmedEmail) {
+      console.error('Validation Error: Email ist leer')
       toast({
         title: 'Fehler',
         description: 'Email ist erforderlich.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    // Validierung: Email Format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(trimmedEmail)) {
+      console.error('Validation Error: Email Format ungültig -', trimmedEmail)
+      toast({
+        title: 'Fehler',
+        description: 'Bitte gib eine gültige Email ein.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    // Validierung: Mindestens eine Permission
+    const hasPermissions = Object.values(newUserPermissions).some(p => p)
+    if (!hasPermissions) {
+      console.error('Validation Error: Keine Berechtigung ausgewählt')
+      toast({
+        title: 'Fehler',
+        description: 'Mindestens eine Berechtigung ist erforderlich.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    // Validierung: Datum Logik
+    if (!newUserForever && newUserValidUntil <= newUserValidFrom) {
+      console.error('Validation Error: Bis-Datum muss nach Ab-Datum liegen')
+      toast({
+        title: 'Fehler',
+        description: 'Das Bis-Datum muss nach dem Ab-Datum liegen.',
         variant: 'destructive',
       })
       return
@@ -239,19 +287,41 @@ export default function SettingsPage() {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      if (!user?.id) return
 
-      const { error } = await supabase.from('user_permissions').insert({
+      if (!user?.id) {
+        console.error('Auth Error: user.id ist null oder undefined')
+        throw new Error('User nicht authentifiziert')
+      }
+
+      console.log('Current User ID:', user.id)
+
+      const insertData = {
         owner_id: user.id,
-        guest_email: newUserEmail.toLowerCase(),
+        guest_email: trimmedEmail.toLowerCase(),
         vehicle_id: null,
         permissions: newUserPermissions,
         valid_from: newUserValidFrom,
-        valid_until: newUserValidUntil,
-      })
+        valid_until: newUserForever ? null : newUserValidUntil,
+      }
 
-      if (error) throw error
+      console.log('=== INSERTING DATA ===')
+      console.log('Insert Data:', JSON.stringify(insertData, null, 2))
 
+      const { error } = await supabase.from('user_permissions').insert(insertData)
+
+      if (error) {
+        console.error('=== SUPABASE ERROR ===')
+        console.error('Error Code:', error.code)
+        console.error('Error Message:', error.message)
+        console.error('Error Details:', error.details)
+        console.error('Error Hint:', error.hint)
+        console.error('Full Error Object:', JSON.stringify(error, null, 2))
+        throw error
+      }
+
+      console.log('✓ User erfolgreich hinzugefügt')
+
+      // Reset Form
       setNewUserEmail('')
       setNewUserPermissions({
         termine: false,
@@ -262,18 +332,32 @@ export default function SettingsPage() {
       setNewUserValidUntil(
         new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
       )
+      setNewUserForever(false)
       setAddModalOpen(false)
 
       await loadSharedUsers()
 
       toast({
         title: 'Erfolg',
-        description: 'Benutzer hinzugefügt.',
+        description: `Benutzer ${trimmedEmail} hinzugefügt.`,
       })
     } catch (err) {
+      console.error('=== EXCEPTION ===')
+      if (err instanceof Error) {
+        console.error('Exception Message:', err.message)
+        console.error('Exception Stack:', err.stack)
+      } else {
+        console.error('Unknown Error:', err)
+      }
+
+      const errorMessage = err instanceof Error ? err.message : 'Benutzer konnte nicht hinzugefügt werden.'
       toast({
         title: 'Fehler',
-        description: 'Benutzer konnte nicht hinzugefügt werden.',
+        description: errorMessage.includes('RLS')
+          ? 'RLS-Richtlinie blockiert. Bitte prüfe deine Einstellungen.'
+          : errorMessage.includes('duplicate')
+          ? 'Benutzer existiert bereits.'
+          : errorMessage,
         variant: 'destructive',
       })
     }
@@ -643,6 +727,16 @@ export default function SettingsPage() {
                     <div className="space-y-3 border-t border-[#3D4450] pt-4">
                       <p className="text-sm font-medium text-[#E6E6E6]">Zeitbegrenzung</p>
 
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={newUserForever}
+                          onChange={(e) => setNewUserForever(e.target.checked)}
+                          className="w-4 h-4 rounded accent-[#E5C97B]"
+                        />
+                        <span className="text-sm text-[#E6E6E6]">Für immer (unbegrenzt)</span>
+                      </label>
+
                       <div>
                         <label className="block text-xs font-medium text-[#9B9B9B] mb-1">
                           Ab
@@ -664,7 +758,10 @@ export default function SettingsPage() {
                           type="date"
                           value={newUserValidUntil}
                           onChange={(e) => setNewUserValidUntil(e.target.value)}
-                          className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm"
+                          disabled={newUserForever}
+                          className={`w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm transition-opacity ${
+                            newUserForever ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
                           placeholder="dd.mm.yyyy"
                         />
                       </div>
