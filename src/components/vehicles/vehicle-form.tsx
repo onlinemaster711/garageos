@@ -73,16 +73,116 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     const files = e.target.files
     if (!files || files.length === 0) return
 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+    for (const file of Array.from(files)) {
+      // Größen-Check
+      if (file.size > MAX_FILE_SIZE) {
+        toast({
+          title: 'Datei zu groß',
+          description: `${file.name} ist größer als 5MB. Bitte komprimieren Sie das Bild.`,
+          variant: 'destructive',
+        })
+        continue
+      }
+
+      // Format-Check
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        toast({
+          title: 'Falsches Format',
+          description: `${file.name} muss JPG, PNG oder WebP sein.`,
+          variant: 'destructive',
+        })
+        continue
+      }
+    }
+
     setIsUploadingPhoto(true)
     try {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) throw new Error('Nicht authentifiziert')
 
+      // Wenn kein vehicle?.id, speicher die Datei lokal bis nach dem Save
       const vehicleId = vehicle?.id
       if (!vehicleId) {
+        // Speichere für späteren Upload
+        const newPhotos = Array.from(files).map(file => ({
+          id: Date.now().toString(),
+          file_url: URL.createObjectURL(file),
+          file_name: file.name,
+          is_cover: photos.length === 0,
+          isNew: true,
+          file: file,
+        }))
+        setPhotos([...photos, ...newPhotos])
         setIsUploadingPhoto(false)
+        toast({
+          title: 'Bilder hinzugefügt',
+          description: 'Die Bilder werden nach dem Speichern hochgeladen.',
+        })
         return
       }
+
+      for (const file of Array.from(files)) {
+        const fileName = `${Date.now()}_${file.name}`
+        const filePath = `${userData.user.id}/${vehicleId}/${fileName}`
+
+        const { error: uploadError } = await supabase.storage
+          .from('vehicle-photos')
+          .upload(filePath, file)
+
+        if (uploadError) throw uploadError
+
+        const { data: publicData } = supabase.storage
+          .from('vehicle-photos')
+          .getPublicUrl(filePath)
+
+        const isCover = photos.length === 0
+        const { data: newPhoto, error: insertError } = await supabase
+          .from('vehicle_photos')
+          .insert([{
+            vehicle_id: vehicleId,
+            user_id: userData.user.id,
+            file_name: file.name,
+            file_url: publicData.publicUrl,
+            is_cover: isCover,
+          }])
+          .select()
+          .single()
+
+        if (insertError) throw insertError
+
+        if (isCover) {
+          await supabase
+            .from('vehicles')
+            .update({ cover_photo_url: publicData.publicUrl })
+            .eq('id', vehicleId)
+        }
+
+        setPhotos([...photos, newPhoto])
+      }
+
+      toast({
+        title: 'Erfolg',
+        description: 'Fotos wurden hochgeladen.',
+      })
+
+      if (photoInputRef.current) {
+        photoInputRef.current.value = ''
+      }
+    } catch (err) {
+      toast({
+        title: 'Fehler',
+        description: 'Fehler beim Upload der Fotos.',
+        variant: 'destructive',
+      })
+      console.error('Photo upload error:', err)
+    } finally {
+      setIsUploadingPhoto(false)
+    }
+  }
+
 
       for (const file of Array.from(files)) {
         const fileName = `${Date.now()}_${file.name}`
