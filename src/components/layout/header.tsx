@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
-import { User, LogOut } from 'lucide-react'
+import { User, LogOut, Settings } from 'lucide-react'
 
 interface HeaderProps {
   user: string
@@ -110,17 +110,32 @@ export function Header({ user }: HeaderProps) {
                     </p>
                   </div>
 
-                  {/* Logout Footer */}
+                  {/* Settings & Logout Footer */}
                   <div
-                    className="px-4 py-2 border-t"
+                    className="px-4 py-2 border-t space-y-1"
                     style={{ borderColor: '#3D4450' }}
                   >
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 w-full text-sm transition-colors py-1.5 rounded"
+                      style={{ color: '#E6E6E6' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.opacity = '0.8'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.opacity = '1'
+                      }}
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span>Einstellungen</span>
+                    </Link>
                     <button
                       onClick={() => {
                         setIsDropdownOpen(false)
                         handleLogout()
                       }}
-                      className="flex items-center gap-3 w-full text-sm transition-colors py-1.5"
+                      className="flex items-center gap-3 w-full text-sm transition-colors py-1.5 rounded"
                       style={{ color: '#E6E6E6' }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.opacity = '0.8'

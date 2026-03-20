@@ -96,21 +96,15 @@ export default function DashboardPage() {
             <div className="flex flex-wrap items-center gap-4 text-sm sm:text-base">
               {vehicles.length > 0 ? (
                 <>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg sm:text-xl">🏛️</span>
-                    <span className="text-gray-300">
-                      <span className="font-semibold text-[#E5C97B]">{oldtimerCount}</span>
-                      <span className="text-gray-400"> Oldtimer</span>
-                    </span>
-                  </div>
+                  <span className="text-gray-300">
+                    <span className="font-semibold text-[#E5C97B]">{oldtimerCount}</span>
+                    <span className="text-gray-400"> Oldtimer</span>
+                  </span>
                   <span className="text-gray-500">·</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg sm:text-xl">🏎️</span>
-                    <span className="text-gray-300">
-                      <span className="font-semibold text-[#E5C97B]">{modernCount}</span>
-                      <span className="text-gray-400"> Modern</span>
-                    </span>
-                  </div>
+                  <span className="text-gray-300">
+                    <span className="font-semibold text-[#E5C97B]">{modernCount}</span>
+                    <span className="text-gray-400"> Modern</span>
+                  </span>
                 </>
               ) : (
                 <span className="text-gray-400">Keine Fahrzeuge</span>
