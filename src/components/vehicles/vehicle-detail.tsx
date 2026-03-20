@@ -30,6 +30,7 @@ import { MaintenanceTab } from './maintenance-tab'
 import { DocumentsTab } from './documents-tab'
 import { PhotosTab } from './photos-tab'
 import { TiresTab } from './tires-tab'
+import { DrivesTab } from './drives-tab'
 import type { InsurancePolicy } from '@/lib/types'
 
 interface Vehicle {
@@ -52,7 +53,7 @@ interface Vehicle {
   created_at: string
 }
 
-type TabType = 'overview' | 'maintenance' | 'documents' | 'photos' | 'tires'
+type TabType = 'overview' | 'maintenance' | 'documents' | 'photos' | 'tires' | 'drives'
 
 export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const router = useRouter()
@@ -260,6 +261,17 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               🛞
               Reifen
             </button>
+            <button
+              onClick={() => setActiveTab('drives')}
+              className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+                activeTab === 'drives'
+                  ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
+                  : 'text-gray-400 hover:text-[#E6E6E6]'
+              }`}
+            >
+              🚗
+              Fahrten
+            </button>
           </div>
         </div>
 
@@ -373,6 +385,13 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           {activeTab === 'tires' && (
             <div className="max-w-7xl mx-auto">
               <TiresTab vehicleId={vehicle.id} />
+            </div>
+          )}
+
+          {/* Drives Tab */}
+          {activeTab === 'drives' && (
+            <div className="max-w-7xl mx-auto">
+              <DrivesTab vehicleId={vehicle.id} />
             </div>
           )}
         </div>
