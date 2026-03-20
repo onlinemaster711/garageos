@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 export function ScreenshotSection() {
   return (
     <section
@@ -35,46 +37,27 @@ export function ScreenshotSection() {
         </p>
 
         {/* Screenshot Container */}
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl mx-auto max-w-4xl">
-          <div
-            className="aspect-video w-full flex items-center justify-center relative"
-            style={{
-              backgroundColor: '#0A1A2F',
-              border: '2px solid #E5C97B',
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl mx-auto max-w-4xl border" style={{ borderColor: '#E5C97B', borderWidth: '2px' }}>
+          <Image
+            src="/screenshots/feature-overview.png"
+            alt="GarageOS Full Dashboard — Complete Vehicle Management Overview"
+            width={1000}
+            height={600}
+            className="w-full h-auto"
+            priority={false}
+            onError={(result) => {
+              console.error('Screenshot failed to load:', result)
             }}
-          >
-            {/* Placeholder */}
-            <div className="text-center">
-              <div className="text-6xl mb-6">📊</div>
-              <p
-                className="text-lg font-semibold mb-2"
-                style={{ color: '#E5C97B' }}
-              >
-                GarageOS Dashboard
-              </p>
-              <p
-                className="text-sm"
-                style={{ color: '#9B9B9B' }}
-              >
-                Großer Screenshot vom Dashboard
-              </p>
-              <p
-                className="text-xs mt-3"
-                style={{ color: '#9B9B9B' }}
-              >
-                Ersetze mit: public/screenshots/hero-dashboard.png
-              </p>
-            </div>
+          />
 
-            {/* Glow Effect */}
-            <div
-              className="absolute inset-0 rounded-2xl pointer-events-none"
-              style={{
-                background:
-                  'radial-gradient(circle at top right, rgba(229, 201, 123, 0.1), transparent 70%)',
-              }}
-            />
-          </div>
+          {/* Glow Effect */}
+          <div
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(circle at top right, rgba(229, 201, 123, 0.1), transparent 70%)',
+            }}
+          />
 
           {/* Floating Decoration */}
           <div

@@ -122,34 +122,18 @@ export function HeroSection() {
                 boxShadow: '0 20px 60px rgba(229, 201, 123, 0.15)',
               }}
             >
-              {/* Placeholder für echtes Screenshot */}
-              <div
-                className="aspect-video w-full flex items-center justify-center"
-                style={{ backgroundColor: '#2A2D30' }}
-              >
-                <div className="text-center">
-                  <div
-                    className="text-6xl mb-4"
-                  >
-                    📱
-                  </div>
-                  <p
-                    className="text-lg font-semibold mb-2"
-                    style={{ color: '#E5C97B' }}
-                  >
-                    GarageOS Dashboard
-                  </p>
-                  <p style={{ color: '#9B9B9B' }}>
-                    Ersetze mit echtem App-Screenshot
-                  </p>
-                  <p
-                    className="text-sm mt-4"
-                    style={{ color: '#9B9B9B' }}
-                  >
-                    public/screenshots/hero-dashboard.png
-                  </p>
-                </div>
-              </div>
+              {/* Hero Dashboard Screenshot */}
+              <Image
+                src="/screenshots/feature-overview.png"
+                alt="GarageOS Dashboard — Fahrzeug-Management System"
+                width={800}
+                height={500}
+                className="w-full h-auto"
+                priority={true}
+                onError={(result) => {
+                  console.error('Image failed to load:', result)
+                }}
+              />
 
               {/* Glow Effect */}
               <div
