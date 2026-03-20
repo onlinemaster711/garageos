@@ -41,6 +41,9 @@ export default function SettingsPage() {
   const [editingUser, setEditingUser] = useState<SharedUser | null>(null)
   const [usersLoading, setUsersLoading] = useState(false)
   const [newUserEmail, setNewUserEmail] = useState('')
+  const [newUserVehicleId, setNewUserVehicleId] = useState('')
+  const [userVehicles, setUserVehicles] = useState<Array<{ id: string; make: string; model: string }>>([])
+  const [vehiclesLoading, setVehiclesLoading] = useState(false)
   const [newUserPermissions, setNewUserPermissions] = useState({
     termine: false,
     fahrten: false,
@@ -57,6 +60,13 @@ export default function SettingsPage() {
   useEffect(() => {
     loadSettings()
   }, [])
+
+  // Lade Autos wenn Modal geöffnet wird
+  useEffect(() => {
+    if (addModalOpen) {
+      loadUserVehicles()
+    }
+  }, [addModalOpen])
 
   const loadSettings = async () => {
     try {
@@ -105,6 +115,36 @@ export default function SettingsPage() {
       console.error('Error loading shared users:', err)
     } finally {
       setUsersLoading(false)
+    }
+  }
+
+  const loadUserVehicles = async () => {
+    try {
+      setVehiclesLoading(true)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (user?.id) {
+        const { data, error } = await supabase
+          .from('vehicles')
+          .select('id, make, model')
+          .eq('user_id', user.id)
+          .order('make', { ascending: true })
+
+        if (error) {
+          console.error('Error loading vehicles:', error)
+          setUserVehicles([])
+          return
+        }
+
+        setUserVehicles(data || [])
+      }
+    } catch (err) {
+      console.error('Exception loading vehicles:', err)
+      setUserVehicles([])
+    } finally {
+      setVehiclesLoading(false)
     }
   }
 
@@ -232,6 +272,7 @@ export default function SettingsPage() {
 
     console.log('=== ADD USER FORM DATA ===')
     console.log('Email:', trimmedEmail)
+    console.log('Vehicle ID:', newUserVehicleId)
     console.log('Permissions:', newUserPermissions)
     console.log('Valid From:', newUserValidFrom)
     console.log('Valid Until:', newUserValidUntil)
@@ -239,7 +280,7 @@ export default function SettingsPage() {
 
     // Validierung: Email
     if (!trimmedEmail) {
-      console.error('Validation Error: Email ist leer')
+      console.error('❌ Validation Failed: Email ist leer')
       toast({
         title: 'Fehler',
         description: 'Email ist erforderlich.',
@@ -251,7 +292,7 @@ export default function SettingsPage() {
     // Validierung: Email Format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(trimmedEmail)) {
-      console.error('Validation Error: Email Format ungültig -', trimmedEmail)
+      console.error('❌ Validation Failed: Email Format ungültig -', trimmedEmail)
       toast({
         title: 'Fehler',
         description: 'Bitte gib eine gültige Email ein.',
@@ -260,10 +301,21 @@ export default function SettingsPage() {
       return
     }
 
+    // Validierung: Vehicle ID
+    if (!newUserVehicleId.trim()) {
+      console.error('❌ Validation Failed: Auto nicht ausgewählt')
+      toast({
+        title: 'Fehler',
+        description: 'Bitte wähle ein Auto aus.',
+        variant: 'destructive',
+      })
+      return
+    }
+
     // Validierung: Mindestens eine Permission
     const hasPermissions = Object.values(newUserPermissions).some(p => p)
     if (!hasPermissions) {
-      console.error('Validation Error: Keine Berechtigung ausgewählt')
+      console.error('❌ Validation Failed: Keine Berechtigung ausgewählt')
       toast({
         title: 'Fehler',
         description: 'Mindestens eine Berechtigung ist erforderlich.',
@@ -274,7 +326,7 @@ export default function SettingsPage() {
 
     // Validierung: Datum Logik
     if (!newUserForever && newUserValidUntil <= newUserValidFrom) {
-      console.error('Validation Error: Bis-Datum muss nach Ab-Datum liegen')
+      console.error('❌ Validation Failed: Bis-Datum muss nach Ab-Datum liegen')
       toast({
         title: 'Fehler',
         description: 'Das Bis-Datum muss nach dem Ab-Datum liegen.',
@@ -283,13 +335,15 @@ export default function SettingsPage() {
       return
     }
 
+    console.log('✓ Alle Validierungen bestanden')
+
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser()
 
       if (!user?.id) {
-        console.error('Auth Error: user.id ist null oder undefined')
+        console.error('❌ Auth Error: user.id ist null oder undefined')
         throw new Error('User nicht authentifiziert')
       }
 
@@ -298,7 +352,7 @@ export default function SettingsPage() {
       const insertData = {
         owner_id: user.id,
         guest_email: trimmedEmail.toLowerCase(),
-        vehicle_id: null,
+        vehicle_id: newUserVehicleId,
         permissions: newUserPermissions,
         valid_from: newUserValidFrom,
         valid_until: newUserForever ? null : newUserValidUntil,
@@ -323,6 +377,7 @@ export default function SettingsPage() {
 
       // Reset Form
       setNewUserEmail('')
+      setNewUserVehicleId('')
       setNewUserPermissions({
         termine: false,
         fahrten: false,
@@ -668,7 +723,9 @@ export default function SettingsPage() {
                       Benutzer hinzufügen
                     </h3>
                     <button
-                      onClick={() => setAddModalOpen(false)}
+                      onClick={() => {
+                        setAddModalOpen(false)
+                      }}
                       className="text-[#9B9B9B] hover:text-[#E6E6E6]"
                     >
                       <X className="w-5 h-5" />
@@ -687,6 +744,27 @@ export default function SettingsPage() {
                         className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm"
                         placeholder="benutzer@beispiel.de"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-[#E6E6E6] mb-2">
+                        Fahrzeug
+                      </label>
+                      <select
+                        value={newUserVehicleId}
+                        onChange={(e) => setNewUserVehicleId(e.target.value)}
+                        disabled={vehiclesLoading}
+                        className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm disabled:opacity-50"
+                      >
+                        <option value="">
+                          {vehiclesLoading ? 'Lädt...' : 'Auto auswählen...'}
+                        </option>
+                        {userVehicles.map((vehicle) => (
+                          <option key={vehicle.id} value={vehicle.id}>
+                            {vehicle.make} {vehicle.model}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div className="space-y-3 border-t border-[#3D4450] pt-4">
