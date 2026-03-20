@@ -27,6 +27,9 @@ interface Tire {
   id: string
   vehicle_id: string
   user_id: string
+  brand: 'michelin' | 'pirelli' | 'goodyear' | 'continental' | 'bridgestone' | 'dunlop' | 'falken' | 'nokian' | 'hankook' | 'cooper' | 'custom'
+  brand_custom?: string
+  model?: string
   type: 'summer' | 'winter' | 'allseason'
   size: string
   purchase_date: string | null
@@ -36,6 +39,9 @@ interface Tire {
 type TireType = 'summer' | 'winter' | 'allseason'
 
 interface FormDataState {
+  brand: 'michelin' | 'pirelli' | 'goodyear' | 'continental' | 'bridgestone' | 'dunlop' | 'falken' | 'nokian' | 'hankook' | 'cooper' | 'custom'
+  brand_custom: string
+  model: string
   type: TireType
   size: string
   purchase_date: string
@@ -57,6 +63,9 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
   const [editingTire, setEditingTire] = useState<Tire | null>(null)
 
   const [formData, setFormData] = useState<FormDataState>({
+    brand: 'michelin',
+    brand_custom: '',
+    model: '',
     type: 'summer',
     size: '',
     purchase_date: new Date().toISOString().split('T')[0],
@@ -93,6 +102,9 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
 
   const resetFormData = () => {
     setFormData({
+      brand: 'michelin',
+      brand_custom: '',
+      model: '',
       type: 'summer',
       size: '',
       purchase_date: new Date().toISOString().split('T')[0],
@@ -117,6 +129,9 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
       const tireData = {
         vehicle_id: vehicleId,
         user_id: userData.user.id,
+        brand: formData.brand,
+        brand_custom: formData.brand === 'custom' ? formData.brand_custom : null,
+        model: formData.model || null,
         type: formData.type,
         size: formData.size,
         purchase_date: formData.purchase_date || null,
@@ -166,6 +181,9 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
     setIsUpdatingTire(true)
     try {
       const tireData = {
+        brand: formData.brand,
+        brand_custom: formData.brand === 'custom' ? formData.brand_custom : null,
+        model: formData.model || null,
         type: formData.type,
         size: formData.size,
         purchase_date: formData.purchase_date || null,
@@ -237,6 +255,9 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
   const openEditDialog = (tire: Tire) => {
     setEditingTire(tire)
     setFormData({
+      brand: tire.brand,
+      brand_custom: tire.brand_custom || '',
+      model: tire.model || '',
       type: tire.type,
       size: tire.size || '',
       purchase_date: tire.purchase_date || new Date().toISOString().split('T')[0],
@@ -373,6 +394,66 @@ export function TiresTab({ vehicleId }: { vehicleId: string }) {
           </DialogHeader>
 
           <div className="space-y-5">
+            {/* Brand Selection */}
+            <div>
+              <Label className="text-gray-300 mb-3 block font-medium">
+                Herstellermarke *
+              </Label>
+              <select
+                value={formData.brand}
+                onChange={(e) =>
+                  setFormData({ ...formData, brand: e.target.value as any })
+                }
+                className="w-full bg-[#0A1A2F] border border-gray-600 text-[#E6E6E6] rounded px-3 py-2"
+              >
+                <option value="michelin">Michelin</option>
+                <option value="pirelli">Pirelli</option>
+                <option value="goodyear">Goodyear</option>
+                <option value="continental">Continental</option>
+                <option value="bridgestone">Bridgestone</option>
+                <option value="dunlop">Dunlop</option>
+                <option value="falken">Falken</option>
+                <option value="nokian">Nokian</option>
+                <option value="hankook">Hankook</option>
+                <option value="cooper">Cooper</option>
+                <option value="custom">Andere</option>
+              </select>
+            </div>
+
+            {/* Brand Custom Input - Show when "Andere" selected */}
+            {formData.brand === 'custom' && (
+              <div>
+                <Label htmlFor="brand_custom" className="text-gray-300 font-medium">
+                  Herstellername *
+                </Label>
+                <Input
+                  id="brand_custom"
+                  placeholder="z.B. Toyo, Kumho, Vredestein"
+                  value={formData.brand_custom}
+                  onChange={(e) =>
+                    setFormData({ ...formData, brand_custom: e.target.value })
+                  }
+                  className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] mt-2"
+                />
+              </div>
+            )}
+
+            {/* Model Input */}
+            <div>
+              <Label htmlFor="model" className="text-gray-300 font-medium">
+                Modellbezeichnung (optional)
+              </Label>
+              <Input
+                id="model"
+                placeholder="z.B. Pilot Sport 4"
+                value={formData.model}
+                onChange={(e) =>
+                  setFormData({ ...formData, model: e.target.value })
+                }
+                className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] mt-2"
+              />
+            </div>
+
             {/* Type Selection */}
             <div>
               <Label className="text-gray-300 mb-3 block font-medium">
@@ -530,13 +611,33 @@ const TIRE_TYPE_LABELS: Record<TireType, string> = {
   allseason: 'Ganzjahresreifen',
 }
 
+const TIRE_BRAND_LABELS: Record<string, string> = {
+  michelin: 'Michelin',
+  pirelli: 'Pirelli',
+  goodyear: 'Goodyear',
+  continental: 'Continental',
+  bridgestone: 'Bridgestone',
+  dunlop: 'Dunlop',
+  falken: 'Falken',
+  nokian: 'Nokian',
+  hankook: 'Hankook',
+  cooper: 'Cooper',
+  custom: 'Andere',
+}
+
 function TireCard({ tire, onEdit, onDelete }: TireCardProps) {
+  const brandLabel = tire.brand === 'custom' ? tire.brand_custom : TIRE_BRAND_LABELS[tire.brand]
+
   return (
     <div className="bg-[#2A2D30] rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <h4 className="text-base font-semibold text-[#E6E6E6]">{tire.size}</h4>
-          <p className="text-sm text-gray-400">{TIRE_TYPE_LABELS[tire.type]}</p>
+          <div className="space-y-1">
+            <p className="text-sm text-gray-400">{TIRE_TYPE_LABELS[tire.type]}</p>
+            {brandLabel && <p className="text-sm text-[#E5C97B]">{brandLabel}</p>}
+            {tire.model && <p className="text-xs text-gray-500">{tire.model}</p>}
+          </div>
         </div>
       </div>
 
