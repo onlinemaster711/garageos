@@ -4,221 +4,130 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Vehicle, Maintenance } from '@/lib/types';
+import type { Vehicle } from '@/lib/types';
 
-interface VehicleWithMaintenance extends Vehicle {
-  nextMaintenances: Maintenance[];
-}
+type SortBy = 'price-desc' | 'price-asc' | 'year-desc' | 'year-asc' | 'category' | 'name-asc';
 
 export default function PortfolioPage() {
-  const [mostExpensive, setMostExpensive] = useState<VehicleWithMaintenance | null>(null);
-  const [cheapest, setCheapest] = useState<VehicleWithMaintenance | null>(null);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [sortBy, setSortBy] = useState<SortBy>('price-desc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const supabase = createClient();
 
   useEffect(() => {
-    loadPortfolio();
+    loadVehicles();
   }, []);
 
-  const loadPortfolio = async () => {
+  const loadVehicles = async () => {
     try {
       setLoading(true);
-
-      // Load all vehicles sorted by purchase_price
-      const { data: vehicles, error: vehiclesError } = await supabase
+      const { data, error: vehiclesError } = await supabase
         .from('vehicles')
         .select(
           `id, user_id, make, model, year, plate, vin, color, country_code, category,
           purchase_date, purchase_price, current_mileage, last_driven_date,
           max_standzeit_weeks, location_id, cover_photo_url, notes, location_name,
           storage_address, created_at`
-        )
-        .order('purchase_price', { ascending: false });
+        );
 
       if (vehiclesError) throw vehiclesError;
 
-      const typedVehicles = (vehicles || []) as Vehicle[];
-
-      // Get most expensive
-      if (typedVehicles.length > 0) {
-        const expensive = typedVehicles[0];
-        const maintenances = await loadMaintenances(expensive.id);
-        setMostExpensive({
-          ...expensive,
-          nextMaintenances: maintenances,
-        });
-      }
-
-      // Get cheapest
-      if (typedVehicles.length > 0) {
-        const cheap = typedVehicles[typedVehicles.length - 1];
-        const maintenances = await loadMaintenances(cheap.id);
-        setCheapest({
-          ...cheap,
-          nextMaintenances: maintenances,
-        });
-      }
-
+      const typedVehicles = (data || []) as Vehicle[];
+      setVehicles(typedVehicles);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Fehler beim Laden des Portfolios');
-      console.error('Error loading portfolio:', err);
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der Fahrzeuge');
+      console.error('Error loading vehicles:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadMaintenances = async (vehicleId: string): Promise<Maintenance[]> => {
-    try {
-      const { data, error: maintenanceError } = await supabase
-        .from('maintenance')
-        .select(
-          `id, vehicle_id, user_id, date, title, description, workshop, cost, mileage,
-          type, status, created_at`
-        )
-        .eq('vehicle_id', vehicleId)
-        .eq('status', 'planned')
-        .order('date', { ascending: true })
-        .limit(3);
-
-      if (maintenanceError) throw maintenanceError;
-
-      return (data || []).map((item) => ({
-        ...item,
-        type: (item.type || 'maintenance') as 'maintenance' | 'reminder',
-        status: (item.status || 'planned') as 'planned' | 'completed',
-      })) as Maintenance[];
-    } catch (err) {
-      console.error('Error loading maintenances:', err);
-      return [];
+  const sortVehicles = (items: Vehicle[]): Vehicle[] => {
+    const sorted = [...items];
+    switch (sortBy) {
+      case 'price-desc':
+        return sorted.sort((a, b) => (b.purchase_price || 0) - (a.purchase_price || 0));
+      case 'price-asc':
+        return sorted.sort((a, b) => (a.purchase_price || 0) - (b.purchase_price || 0));
+      case 'year-desc':
+        return sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
+      case 'year-asc':
+        return sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
+      case 'category':
+        return sorted.sort((a, b) => a.category.localeCompare(b.category));
+      case 'name-asc':
+        return sorted.sort((a, b) => `${a.make} ${a.model}`.localeCompare(`${b.make} ${b.model}`));
+      default:
+        return sorted;
     }
   };
 
-  const getTypeIcon = (type: string): string => {
-    return type === 'reminder' ? '🛒' : '🔧';
+  const getCategoryLabel = (category: string): string => {
+    const labels: { [key: string]: string } = {
+      oldtimer: 'Oldtimer',
+      youngtimer: 'Youngtimer',
+      modern: 'Modern',
+    };
+    return labels[category] || category;
   };
 
-  const getTypeLabel = (type: string): string => {
-    return type === 'reminder' ? 'Reminder' : 'Wartung';
+  const getCategoryBadgeColor = (category: string): string => {
+    switch (category) {
+      case 'oldtimer':
+        return 'bg-purple-900/30 text-purple-400';
+      case 'youngtimer':
+        return 'bg-blue-900/30 text-blue-400';
+      case 'modern':
+        return 'bg-green-900/30 text-green-400';
+      default:
+        return 'bg-gray-900/30 text-gray-400';
+    }
   };
 
-  const VehicleCard = ({ vehicle, title }: { vehicle: VehicleWithMaintenance; title: string }) => (
-    <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg overflow-hidden hover:border-[#C9A84C] transition-colors">
-      {/* Vehicle Image */}
-      <div className="relative w-full h-64 bg-[#0A0A0A]">
-        {vehicle.cover_photo_url ? (
-          <Image
-            src={vehicle.cover_photo_url}
-            alt={`${vehicle.make} ${vehicle.model}`}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[#808080]">
-            Kein Bild verfügbar
-          </div>
-        )}
-        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4">
-          <p className="text-[#C9A84C] text-sm font-semibold">{title}</p>
-        </div>
-      </div>
-
-      {/* Vehicle Details */}
-      <div className="p-6">
-        <Link
-          href={`/vehicles/${vehicle.id}`}
-          className="group"
-        >
-          <h3 className="text-2xl font-bold text-[#F0F0F0] group-hover:text-[#C9A84C] transition-colors mb-2">
-            {vehicle.make} {vehicle.model}
-          </h3>
-        </Link>
-
-        <div className="space-y-3 mb-6 text-sm">
-          <div className="flex justify-between">
-            <span className="text-[#808080]">Baujahr:</span>
-            <span className="text-[#F0F0F0] font-medium">{vehicle.year}</span>
-          </div>
-          {vehicle.purchase_price && (
-            <div className="flex justify-between">
-              <span className="text-[#808080]">Kaufpreis:</span>
-              <span className="text-[#C9A84C] font-medium">
-                € {vehicle.purchase_price.toLocaleString('de-DE')}
-              </span>
-            </div>
-          )}
-          {vehicle.current_mileage && (
-            <div className="flex justify-between">
-              <span className="text-[#808080]">Kilometerstand:</span>
-              <span className="text-[#F0F0F0] font-medium">
-                {vehicle.current_mileage.toLocaleString('de-DE')} km
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Edit Button */}
-        <Link
-          href={`/vehicles/${vehicle.id}`}
-          className="block w-full px-4 py-2 bg-[#C9A84C] text-[#0A0A0A] rounded-lg font-medium hover:bg-[#B8961F] transition-colors mb-6 text-center"
-        >
-          Bearbeiten
-        </Link>
-
-        {/* Next Maintenances */}
-        <div className="border-t border-[#2A2A2A] pt-6">
-          <h4 className="text-sm font-semibold text-[#C9A84C] mb-4">Nächste Termine</h4>
-          {vehicle.nextMaintenances.length === 0 ? (
-            <p className="text-[#808080] text-sm">Keine geplanten Wartungen</p>
-          ) : (
-            <div className="space-y-3">
-              {vehicle.nextMaintenances.map((maintenance) => (
-                <div
-                  key={maintenance.id}
-                  className="bg-[#0A0A0A] rounded p-3 border border-[#2A2A2A]"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{getTypeIcon(maintenance.type)}</span>
-                      <span className="text-xs font-medium text-[#C9A84C] bg-[#C9A84C]/20 px-2 py-0.5 rounded">
-                        {getTypeLabel(maintenance.type)}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-[#F0F0F0] font-medium text-sm mb-1">
-                    {maintenance.title}
-                  </p>
-                  <p className="text-[#808080] text-xs">
-                    📅 {new Date(maintenance.date).toLocaleDateString('de-DE', {
-                      weekday: 'short',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const sortedVehicles = sortVehicles(vehicles);
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-[#F0F0F0] p-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Fahrzeug Portfolio</h1>
-          <p className="text-[#C9A84C]">Übersicht deiner Fahrzeuge und nächsten Wartungen</p>
+          <h1 className="text-5xl md:text-6xl font-bold mb-3 tracking-tight">
+            Meine Autosammlung
+          </h1>
+          <p className="text-[#C9A84C] text-lg font-medium">
+            {sortedVehicles.length} {sortedVehicles.length === 1 ? 'Fahrzeug' : 'Fahrzeuge'}
+          </p>
+        </div>
+
+        {/* Sorting Controls */}
+        <div className="mb-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="w-full sm:w-auto">
+            <label htmlFor="sort" className="text-sm font-semibold text-[#C9A84C] block mb-2">
+              Sortierung:
+            </label>
+            <select
+              id="sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortBy)}
+              className="w-full sm:w-64 px-4 py-2 rounded-lg bg-[#1E1E1E] text-[#F0F0F0] border border-[#2A2A2A] focus:border-[#C9A84C] focus:outline-none"
+            >
+              <option value="price-desc">Preis (↓ teuer)</option>
+              <option value="price-asc">Preis (↑ günstig)</option>
+              <option value="year-desc">Baujahr (↓ neu)</option>
+              <option value="year-asc">Baujahr (↑ alt)</option>
+              <option value="category">Kategorie</option>
+              <option value="name-asc">Name (A-Z)</option>
+            </select>
+          </div>
         </div>
 
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <p className="text-[#C9A84C]">Lädt Portfolio...</p>
+            <p className="text-[#C9A84C]">Lädt Fahrzeuge...</p>
           </div>
         )}
 
@@ -230,24 +139,78 @@ export default function PortfolioPage() {
         )}
 
         {/* Empty State */}
-        {!loading && !error && !mostExpensive && !cheapest && (
-          <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-8 text-center">
-            <p className="text-[#808080]">Keine Fahrzeuge gefunden.</p>
+        {!loading && !error && sortedVehicles.length === 0 && (
+          <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-lg p-12 text-center">
+            <p className="text-[#808080] text-lg">Keine Fahrzeuge gefunden.</p>
           </div>
         )}
 
-        {/* Portfolio Cards */}
-        {!loading && !error && (mostExpensive || cheapest) && (
+        {/* Vehicles Grid */}
+        {!loading && !error && sortedVehicles.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {mostExpensive && (
-              <VehicleCard vehicle={mostExpensive} title="💎 Teuerstes Auto" />
-            )}
-            {cheapest && mostExpensive && cheapest.id !== mostExpensive.id && (
-              <VehicleCard vehicle={cheapest} title="💰 Günstigstes Auto" />
-            )}
-            {cheapest && !mostExpensive && (
-              <VehicleCard vehicle={cheapest} title="💰 Günstigstes Auto" />
-            )}
+            {sortedVehicles.map((vehicle) => (
+              <Link key={vehicle.id} href={`/vehicles/${vehicle.id}`}>
+                <div className="group cursor-pointer h-full">
+                  <div className="bg-[#1E1E1E] border border-[#2A2A2A] rounded-xl overflow-hidden hover:border-[#C9A84C] transition-all duration-300 hover:shadow-xl hover:shadow-[#C9A84C]/20 transform hover:scale-105 h-full flex flex-col">
+                    {/* Image Container */}
+                    <div className="relative w-full h-80 bg-[#0A0A0A] overflow-hidden">
+                      {vehicle.cover_photo_url ? (
+                        <Image
+                          src={vehicle.cover_photo_url}
+                          alt={`${vehicle.make} ${vehicle.model}`}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[#808080]">
+                          <div className="text-center">
+                            <p className="text-sm">Kein Bild</p>
+                          </div>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/60"></div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex flex-col flex-grow">
+                      {/* Make + Model */}
+                      <h3 className="text-2xl font-bold text-[#F0F0F0] mb-3 group-hover:text-[#C9A84C] transition-colors">
+                        {vehicle.make} {vehicle.model}
+                      </h3>
+
+                      {/* Year + Category */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-sm text-[#808080]">
+                          {vehicle.year}
+                        </span>
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getCategoryBadgeColor(vehicle.category)}`}>
+                          {getCategoryLabel(vehicle.category)}
+                        </span>
+                      </div>
+
+                      {/* Details */}
+                      <div className="flex-grow">
+                        {vehicle.purchase_price && (
+                          <div className="mb-2">
+                            <p className="text-[#808080] text-sm">Kaufpreis</p>
+                            <p className="text-xl font-bold text-[#C9A84C]">
+                              € {vehicle.purchase_price.toLocaleString('de-DE')}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="mt-6 pt-4 border-t border-[#2A2A2A]">
+                        <p className="text-sm font-semibold text-[#C9A84C] group-hover:text-white transition-colors">
+                          Details anzeigen →
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
       </div>
