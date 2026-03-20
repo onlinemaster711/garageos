@@ -207,7 +207,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
         has_appointment: false,
       })
       setIsAddDialogOpen(false)
-      toast({ title: 'Erfolg', description: 'Wartungseintrag hinzugefügt' })
+      toast({ title: 'Erfolg', description: 'Termin hinzugefügt' })
     } catch (error) {
       toast({
         title: 'Fehler',
@@ -257,7 +257,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
       setRecords(records.filter((r) => r.id !== recordToDelete))
       setDeleteConfirmOpen(false)
       setRecordToDelete(null)
-      toast({ title: 'Erfolg', description: 'Wartungseintrag gelöscht' })
+      toast({ title: 'Erfolg', description: 'Termin gelöscht' })
     } catch {
       toast({ title: 'Fehler', description: 'Konnte nicht gelöscht werden', variant: 'destructive' })
     } finally {
@@ -505,7 +505,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
             className="bg-[#E5C97B] text-[#0A1A2F] hover:bg-[#B89A3C] w-full md:w-auto"
           >
             <Plus className="h-4 w-4 mr-2" />
-            {activeSection === 'contacts' ? 'Kontakt hinzufügen' : 'Wartung hinzufügen'}
+            {activeSection === 'contacts' ? 'Kontakt hinzufügen' : 'Termin hinzufügen'}
           </Button>
         </div>
 
@@ -515,8 +515,8 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
             {plannedRecords.length === 0 ? (
               <div className="bg-[#2A2D30] rounded-lg px-5 py-4 border border-gray-700 flex flex-col items-center text-center">
                 <Clock className="h-10 w-10 text-gray-600 mb-3" />
-                <p className="text-gray-400 mb-1">Keine geplanten Wartungen</p>
-                <p className="text-sm text-gray-500">Planen Sie Ihre nächsten Wartungstermine</p>
+                <p className="text-gray-400 mb-1">Keine geplanten Termine</p>
+                <p className="text-sm text-gray-500">Planen Sie Ihre nächsten Termine</p>
               </div>
             ) : (
               plannedRecords.map((r) => renderRecord(r))
@@ -530,7 +530,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
             {completedRecords.length === 0 ? (
               <div className="bg-[#2A2D30] rounded-lg px-5 py-4 border border-gray-700 flex flex-col items-center text-center">
                 <CheckCircle2 className="h-10 w-10 text-gray-600 mb-3" />
-                <p className="text-gray-400 mb-1">Keine erledigten Wartungen</p>
+                <p className="text-gray-400 mb-1">Keine erledigten Termine</p>
                 <p className="text-sm text-gray-500">Abgeschlossene Wartungen erscheinen hier</p>
               </div>
             ) : (
@@ -626,13 +626,13 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Wrench className="h-5 w-5 text-[#E5C97B]" />
-              Wartung hinzufügen
+              Termin hinzufügen
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
             <div>
-              <Label className="text-gray-300">Wartungstyp</Label>
+              <Label className="text-gray-300">Termintyp</Label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setFormData({ ...formData, type: 'maintenance' })}
@@ -642,7 +642,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
                       : 'bg-[#0A1A2F] text-[#E6E6E6] border border-gray-600 hover:border-[#E5C97B]'
                   }`}
                 >
-                  🔧 Wartung
+                  🔧 Termin
                 </button>
                 <button
                   onClick={() => setFormData({ ...formData, type: 'reminder' })}
@@ -682,7 +682,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
 
             <div>
               <Label className="text-gray-300">Beschreibung</Label>
-              <Textarea placeholder="Details zur Wartung..." value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20" />
+              <Textarea placeholder="Details zum Termin..." value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="bg-[#0A1A2F] border-gray-600 text-[#E6E6E6] min-h-20" />
             </div>
 
             <div>
@@ -812,10 +812,10 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-400">
               <AlertTriangle className="h-5 w-5" />
-              Wartungseintrag löschen
+              Termin löschen
             </DialogTitle>
             <DialogDescription className="text-gray-400">
-              Sind Sie sicher, dass Sie diesen Wartungseintrag löschen möchten?
+              Sind Sie sicher, dass Sie diesen Termin löschen möchten?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

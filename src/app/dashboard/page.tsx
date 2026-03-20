@@ -78,7 +78,7 @@ export default function DashboardPage() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
           {/* Left: Title + Count */}
           <h1 className="text-2xl sm:text-3xl font-bold text-[#E6E6E6]">
-            Meine Fahrzeuge ({vehicles.length})
+            Meine Sammlung ({vehicles.length})
           </h1>
 
           {/* Middle & Right: Buttons */}

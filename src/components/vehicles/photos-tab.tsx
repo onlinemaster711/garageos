@@ -178,7 +178,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
 
       toast({
         title: 'Erfolg',
-        description: 'Abdeckungsfoto aktualisiert',
+        description: 'Titelbild aktualisiert',
       })
 
       // Refresh the page to show the new cover
@@ -189,7 +189,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
         description:
           error instanceof Error
             ? error.message
-            : 'Abdeckungsfoto konnte nicht aktualisiert werden',
+            : 'Titelbild konnte nicht aktualisiert werden',
         variant: 'destructive',
       })
     } finally {
@@ -306,7 +306,7 @@ export function PhotosTab({ vehicleId }: { vehicleId: string }) {
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-[#E6E6E6] flex items-center gap-2">
                   <Star className="h-5 w-5 text-[#E5C97B]" />
-                  Abdeckungsfoto
+                  Titelbild
                 </h3>
                 <div className="relative group rounded-lg overflow-hidden border border-gray-700 h-64 bg-gray-900">
                   <img
