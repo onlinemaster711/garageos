@@ -66,7 +66,7 @@ interface ServiceContact {
   created_at: string
 }
 
-export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
+export function ScheduleTab({ vehicleId }: { vehicleId: string }) {
   const supabase = createClient()
   const { toast } = useToast()
 

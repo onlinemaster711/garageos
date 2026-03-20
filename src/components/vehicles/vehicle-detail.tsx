@@ -28,7 +28,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { MaintenanceTab } from './maintenance-tab'
+import { ScheduleTab } from './schedule-tab'
 import { DocumentsTab } from './documents-tab'
 import { PhotosTab } from './photos-tab'
 import { TiresTab } from './tires-tab'
@@ -55,13 +55,13 @@ interface Vehicle {
   created_at: string
 }
 
-type TabType = 'overview' | 'maintenance' | 'documents' | 'photos' | 'tires' | 'drives'
+type TabType = 'overview' | 'schedule' | 'documents' | 'photos' | 'tires' | 'drives'
 
 export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
   const router = useRouter()
   const supabase = createClient()
   const { toast } = useToast()
-  const [activeTab, setActiveTab] = useState<TabType>('maintenance')
+  const [activeTab, setActiveTab] = useState<TabType>('schedule')
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
@@ -283,15 +283,15 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               Übersicht
             </button>
             <button
-              onClick={() => setActiveTab('maintenance')}
+              onClick={() => setActiveTab('schedule')}
               className={`py-3 px-1 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
-                activeTab === 'maintenance'
+                activeTab === 'schedule'
                   ? 'text-[#E5C97B] border-b-2 border-[#E5C97B]'
                   : 'text-gray-400 hover:text-[#E6E6E6]'
               }`}
             >
-              <Wrench className={`h-4 w-4 ${activeTab === 'maintenance' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
-              Wartung
+              <Wrench className={`h-4 w-4 ${activeTab === 'schedule' ? 'text-[#E5C97B]' : 'text-[#E6E6E6]'}`} />
+              Termine
             </button>
             <button
               onClick={() => setActiveTab('documents')}
@@ -440,10 +440,10 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
             </div>
           )}
 
-          {/* Maintenance Tab - Full Width */}
-          {activeTab === 'maintenance' && (
+          {/* Schedule Tab - Full Width */}
+          {activeTab === 'schedule' && (
             <div className="max-w-7xl mx-auto">
-              <MaintenanceTab vehicleId={vehicle.id} />
+              <ScheduleTab vehicleId={vehicle.id} />
             </div>
           )}
 

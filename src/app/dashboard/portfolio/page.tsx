@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FileText, X, ArrowRight } from 'lucide-react';
 import type { Vehicle } from '@/lib/types';
 
 type SortBy = 'price-desc' | 'price-asc' | 'year-desc' | 'year-asc' | 'category' | 'name-asc';
@@ -13,6 +14,7 @@ export default function PortfolioPage() {
   const [sortBy, setSortBy] = useState<SortBy>('price-desc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -149,68 +151,152 @@ export default function PortfolioPage() {
         {!loading && !error && sortedVehicles.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {sortedVehicles.map((vehicle) => (
-              <Link key={vehicle.id} href={`/vehicles/${vehicle.id}`}>
-                <div className="group cursor-pointer h-full">
-                  <div className="bg-[#2A2D30] border border-[#3D4450] rounded-xl overflow-hidden hover:border-[#E5C97B] transition-all duration-300 hover:shadow-xl hover:shadow-[#E5C97B]/20 transform hover:scale-105 h-full flex flex-col">
-                    {/* Image Container */}
-                    <div className="relative w-full h-80 bg-[#0A1A2F] overflow-hidden">
-                      {vehicle.cover_photo_url ? (
-                        <Image
-                          src={vehicle.cover_photo_url}
-                          alt={`${vehicle.make} ${vehicle.model}`}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#808080]">
-                          <div className="text-center">
-                            <p className="text-sm">Kein Bild</p>
-                          </div>
+              <div key={vehicle.id} className="group cursor-pointer h-full" onClick={() => setSelectedVehicleId(vehicle.id)}>
+                <div className="bg-[#2A2D30] border border-[#3D4450] rounded-xl overflow-hidden hover:border-[#E5C97B] transition-all duration-300 hover:shadow-xl hover:shadow-[#E5C97B]/20 transform hover:scale-105 h-full flex flex-col">
+                  {/* Image Container */}
+                  <div className="relative w-full h-80 bg-[#0A1A2F] overflow-hidden">
+                    {vehicle.cover_photo_url ? (
+                      <Image
+                        src={vehicle.cover_photo_url}
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[#808080]">
+                        <div className="text-center">
+                          <p className="text-sm">Kein Bild</p>
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/60"></div>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/60"></div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 flex flex-col flex-grow">
+                    {/* Make + Model */}
+                    <h3 className="text-2xl font-bold text-[#E6E6E6] mb-3 group-hover:text-[#E5C97B] transition-colors">
+                      {vehicle.make} {vehicle.model}
+                    </h3>
+
+                    {/* Year + Category */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-sm text-[#808080]">
+                        {vehicle.year}
+                      </span>
+                      <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getCategoryBadgeColor(vehicle.category)}`}>
+                        {getCategoryLabel(vehicle.category)}
+                      </span>
                     </div>
 
-                    {/* Content */}
-                    <div className="p-6 flex flex-col flex-grow">
-                      {/* Make + Model */}
-                      <h3 className="text-2xl font-bold text-[#E6E6E6] mb-3 group-hover:text-[#E5C97B] transition-colors">
-                        {vehicle.make} {vehicle.model}
-                      </h3>
+                    {/* Details */}
+                    <div className="flex-grow">
+                      {vehicle.purchase_price && (
+                        <div className="mb-2">
+                          <p className="text-[#808080] text-sm">Kaufpreis</p>
+                          <p className="text-xl font-bold text-[#E5C97B]">
+                            € {vehicle.purchase_price.toLocaleString('de-DE')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
 
-                      {/* Year + Category */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="text-sm text-[#808080]">
-                          {vehicle.year}
-                        </span>
-                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getCategoryBadgeColor(vehicle.category)}`}>
-                          {getCategoryLabel(vehicle.category)}
-                        </span>
-                      </div>
-
-                      {/* Details */}
-                      <div className="flex-grow">
-                        {vehicle.purchase_price && (
-                          <div className="mb-2">
-                            <p className="text-[#808080] text-sm">Kaufpreis</p>
-                            <p className="text-xl font-bold text-[#E5C97B]">
-                              € {vehicle.purchase_price.toLocaleString('de-DE')}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* CTA Button */}
-                      <div className="mt-6 pt-4 border-t border-[#3D4450]">
-                        <p className="text-sm font-semibold text-[#E5C97B] group-hover:text-white transition-colors">
-                          Details anzeigen →
-                        </p>
-                      </div>
+                    {/* CTA Button */}
+                    <div className="mt-6 pt-4 border-t border-[#3D4450]">
+                      <p className="text-sm font-semibold text-[#E5C97B] group-hover:text-white transition-colors">
+                        Details anzeigen →
+                      </p>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
+          </div>
+        )}
+
+        {/* Vehicle Detail Modal */}
+        {selectedVehicleId && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setSelectedVehicleId(null)}>
+            <div className="bg-[#2A2D30] border border-[#3D4450] rounded-xl max-w-md w-full max-h-screen overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              {/* Close Button */}
+              <div className="flex justify-end p-4 border-b border-[#3D4450]">
+                <button
+                  onClick={() => setSelectedVehicleId(null)}
+                  className="p-1 hover:bg-[#3D4450] rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-[#E6E6E6]" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 space-y-4">
+                {/* Image */}
+                {selectedVehicleId && sortedVehicles.find(v => v.id === selectedVehicleId)?.cover_photo_url && (
+                  <div className="relative w-full h-48 bg-[#0A1A2F] rounded-lg overflow-hidden">
+                    <Image
+                      src={sortedVehicles.find(v => v.id === selectedVehicleId)?.cover_photo_url || ''}
+                      alt={`${sortedVehicles.find(v => v.id === selectedVehicleId)?.make} ${sortedVehicles.find(v => v.id === selectedVehicleId)?.model}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Vehicle Info */}
+                {selectedVehicleId && sortedVehicles.find(v => v.id === selectedVehicleId) && (
+                  <>
+                    <div>
+                      <h2 className="text-3xl font-bold text-[#E6E6E6]">
+                        {sortedVehicles.find(v => v.id === selectedVehicleId)?.make} {sortedVehicles.find(v => v.id === selectedVehicleId)?.model}
+                      </h2>
+                      <p className="text-sm text-[#808080] mt-1">
+                        {sortedVehicles.find(v => v.id === selectedVehicleId)?.year}
+                      </p>
+                    </div>
+
+                    {/* Purchase Price */}
+                    {sortedVehicles.find(v => v.id === selectedVehicleId)?.purchase_price && (
+                      <div className="pt-4 border-t border-[#3D4450]">
+                        <p className="text-sm text-[#808080] mb-1">Kaufpreis</p>
+                        <p className="text-2xl font-bold text-[#E5C97B]">
+                          € {sortedVehicles.find(v => v.id === selectedVehicleId)?.purchase_price?.toLocaleString('de-DE')}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Purchase Date */}
+                    {sortedVehicles.find(v => v.id === selectedVehicleId)?.purchase_date && (
+                      <div className="pt-3 border-t border-[#3D4450]">
+                        <p className="text-sm text-[#808080] mb-1">Kaufdatum</p>
+                        <p className="text-base text-[#E6E6E6]">
+                          {new Date(sortedVehicles.find(v => v.id === selectedVehicleId)?.purchase_date || '').toLocaleDateString('de-DE')}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 pt-4 border-t border-[#3D4450]">
+                      <Link href={`/vehicles/${selectedVehicleId}`} className="flex-1">
+                        <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#E5C97B] hover:bg-[#B8961F] text-[#0A1A2F] font-medium rounded-lg transition-colors">
+                          <span>Details anzeigen</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setSelectedVehicleId(null);
+                          window.location.href = `/vehicles/${selectedVehicleId}#dokumente`;
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#3D4450] hover:bg-[#4A5260] text-[#E6E6E6] font-medium rounded-lg transition-colors"
+                      >
+                        <FileText className="w-4 h-4" />
+                        <span>Dokumente</span>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
