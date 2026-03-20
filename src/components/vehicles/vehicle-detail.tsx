@@ -387,13 +387,14 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
               {/* Delete Button Section */}
               {isOwner && (
-                <div className="pt-4">
+                <div className="pt-6 flex justify-end">
                   <Button
-                    variant="destructive"
-                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                    variant="ghost"
+                    size="sm"
+                    className="text-[#9B9B9B] hover:text-[#E6E6E6] hover:bg-[#9B9B9B]/10"
                     onClick={() => setIsDeleteDialogOpen(true)}
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="h-4 w-4 mr-1" />
                     Fahrzeug löschen
                   </Button>
                 </div>
