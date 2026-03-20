@@ -10,6 +10,8 @@ export default function PortfolioPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [isOwner, setIsOwner] = useState(false)
+  const [vehicles, setVehicles] = useState<any[]>([])
+  const [vehiclesLoading, setVehiclesLoading] = useState(false)
 
   useEffect(() => {
     checkAccess()
@@ -39,11 +41,52 @@ export default function PortfolioPage() {
       }
 
       setIsOwner(true)
+      // Load vehicles for owner
+      await loadVehicles(user.id)
     } catch (err) {
       // No permission found, so this is the owner
       setIsOwner(true)
+      // Load vehicles anyway (will need user ID)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user?.id) {
+        await loadVehicles(user.id)
+      }
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadVehicles = async (userId: string) => {
+    try {
+      setVehiclesLoading(true)
+      console.log('=== LOADING PORTFOLIO VEHICLES ===')
+      console.log('User ID:', userId)
+
+      const { data, error: vehiclesError } = await supabase
+        .from('vehicles')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+
+      if (vehiclesError) {
+        console.error('Error loading vehicles:', {
+          code: vehiclesError.code,
+          message: vehiclesError.message,
+          details: vehiclesError.details,
+        })
+        setVehicles([])
+        return
+      }
+
+      console.log(`✓ ${data?.length || 0} vehicle(s) loaded`)
+      setVehicles(data || [])
+    } catch (err) {
+      console.error('Exception loading vehicles:', err)
+      setVehicles([])
+    } finally {
+      setVehiclesLoading(false)
     }
   }
 
@@ -78,14 +121,57 @@ export default function PortfolioPage() {
           Portfolio
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Placeholder - Erweiterbar mit echtem Portfolio-Content */}
+        {vehiclesLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <p className="text-[#9B9B9B]">Lädt Fahrzeuge...</p>
+          </div>
+        ) : vehicles.length === 0 ? (
           <div className="bg-[#2A2D30] border border-[#3D4450] rounded-lg p-6">
             <p className="text-[#9B9B9B] text-center py-16">
               Dein Portfolio ist noch leer.
             </p>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {vehicles.map((vehicle) => (
+              <div
+                key={vehicle.id}
+                className="bg-[#2A2D30] border border-[#3D4450] rounded-lg overflow-hidden hover:border-[#E5C97B] transition-colors"
+              >
+                {vehicle.image_url && (
+                  <div className="aspect-video bg-[#1A2332] overflow-hidden">
+                    <img
+                      src={vehicle.image_url}
+                      alt={`${vehicle.make} ${vehicle.model}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-[#E6E6E6] mb-1">
+                    {vehicle.make} {vehicle.model}
+                  </h3>
+                  <p className="text-sm text-[#9B9B9B] mb-3">
+                    {vehicle.year} • {vehicle.category}
+                  </p>
+                  {vehicle.description && (
+                    <p className="text-sm text-[#B0B0B0] line-clamp-2">
+                      {vehicle.description}
+                    </p>
+                  )}
+                  {vehicle.purchase_price && (
+                    <div className="mt-3 pt-3 border-t border-[#3D4450]">
+                      <p className="text-xs text-[#9B9B9B] mb-1">Wert</p>
+                      <p className="text-lg font-semibold text-[#E5C97B]">
+                        €{vehicle.purchase_price.toLocaleString('de-DE')}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
