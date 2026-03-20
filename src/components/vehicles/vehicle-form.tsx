@@ -51,11 +51,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
   const [photosLoaded, setPhotosLoaded] = useState(false)
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
   const photoInputRef = useRef<HTMLInputElement>(null)
-  
 
-  
-
-  // Load existing photos for edit mode
   if (vehicle?.id && !photosLoaded) {
     setPhotosLoaded(true)
     supabase
@@ -73,11 +69,10 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     const files = e.target.files
     if (!files || files.length === 0) return
 
-    const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+    const MAX_FILE_SIZE = 5 * 1024 * 1024
     const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
     for (const file of Array.from(files)) {
-      // Größen-Check
       if (file.size > MAX_FILE_SIZE) {
         toast({
           title: 'Datei zu groß',
@@ -87,7 +82,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         continue
       }
 
-      // Format-Check
       if (!ALLOWED_TYPES.includes(file.type)) {
         toast({
           title: 'Falsches Format',
@@ -103,10 +97,8 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) throw new Error('Nicht authentifiziert')
 
-      // Wenn kein vehicle?.id, speicher die Datei lokal bis nach dem Save
       const vehicleId = vehicle?.id
       if (!vehicleId) {
-        // Speichere für späteren Upload
         const newPhotos = Array.from(files).map(file => ({
           id: Date.now().toString(),
           file_url: URL.createObjectURL(file),
@@ -183,14 +175,23 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     }
   }
 
+  const uploadPendingPhotos = async (vehicleId: string) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) throw new Error('Nicht authentifiziert')
 
-      for (const file of Array.from(files)) {
-        const fileName = `${Date.now()}_${file.name}`
+      const newPhotos = photos.filter(p => p.isNew && p.file)
+      if (newPhotos.length === 0) return
+
+      for (const photo of newPhotos) {
+        if (!photo.file) continue
+
+        const fileName = `${Date.now()}_${photo.file_name}`
         const filePath = `${userData.user.id}/${vehicleId}/${fileName}`
 
         const { error: uploadError } = await supabase.storage
           .from('vehicle-photos')
-          .upload(filePath, file)
+          .upload(filePath, photo.file)
 
         if (uploadError) throw uploadError
 
@@ -198,41 +199,36 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           .from('vehicle-photos')
           .getPublicUrl(filePath)
 
-        const isCover = photos.length === 0
         const { data: newPhoto, error: insertError } = await supabase
           .from('vehicle_photos')
           .insert([{
             vehicle_id: vehicleId,
             user_id: userData.user.id,
-            file_name: file.name,
+            file_name: photo.file_name,
             file_url: publicData.publicUrl,
-            is_cover: isCover,
+            is_cover: photo.is_cover,
           }])
           .select()
           .single()
 
         if (insertError) throw insertError
 
-        if (isCover) {
+        if (photo.is_cover) {
           await supabase
             .from('vehicles')
             .update({ cover_photo_url: publicData.publicUrl })
             .eq('id', vehicleId)
         }
 
-        setPhotos(prev => [...prev, newPhoto])
+        setPhotos(prev =>
+          prev.map(p =>
+            p.id === photo.id ? { ...newPhoto, isNew: false } : p
+          )
+        )
       }
-
-      toast({ title: 'Erfolg', description: 'Foto(s) hochgeladen' })
     } catch (error) {
-      toast({
-        title: 'Fehler',
-        description: error instanceof Error ? error.message : 'Upload fehlgeschlagen',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsUploadingPhoto(false)
-      if (photoInputRef.current) photoInputRef.current.value = ''
+      console.error('Fehler beim Upload der Fotos:', error)
+      throw error
     }
   }
 
@@ -320,7 +316,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validation
     if (!formData.make.trim() || !formData.model.trim()) {
       toast({
         title: 'Fehler',
@@ -370,7 +365,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
       }
 
       if (vehicle?.id) {
-        // Update existing vehicle
         const { error } = await supabase
           .from('vehicles')
           .update(vehicleData)
@@ -397,7 +391,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           router.push(`/vehicles/${vehicle.id}`)
         }
       } else {
-        // Create new vehicle
         const { data, error } = await supabase
           .from('vehicles')
           .insert([vehicleData])
@@ -413,6 +406,19 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           return
         }
 
+        const newVehicleId = data[0].id
+
+        try {
+          await uploadPendingPhotos(newVehicleId)
+        } catch (photoError) {
+          console.error('Fehler beim Photo Upload:', photoError)
+          toast({
+            title: 'Warnung',
+            description: 'Fahrzeug erstellt, aber Fotos konnten nicht hochgeladen werden.',
+            variant: 'destructive',
+          })
+        }
+
         toast({
           title: 'Erfolg',
           description: 'Fahrzeug wurde erstellt.',
@@ -421,7 +427,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         if (onSuccess) {
           onSuccess()
         } else {
-          router.push(`/vehicles/${data[0].id}`)
+          router.push(`/vehicles/${newVehicleId}`)
         }
       }
     } catch (error) {
@@ -438,7 +444,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Marke */}
         <div className="space-y-2">
           <Label htmlFor="make" className="text-[#F0F0F0]">
             Marke *
@@ -455,7 +460,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           </Select>
         </div>
 
-        {/* Modell */}
         <div className="space-y-2">
           <Label htmlFor="model" className="text-[#F0F0F0]">
             Modell *
@@ -471,7 +475,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Baujahr */}
         <div className="space-y-2">
           <Label htmlFor="year" className="text-[#F0F0F0]">
             Baujahr
@@ -488,7 +491,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Farbe */}
         <div className="space-y-2">
           <Label htmlFor="color" className="text-[#F0F0F0]">
             Farbe
@@ -503,7 +505,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Fahrgestellnummer */}
         <div className="space-y-2">
           <Label htmlFor="vin" className="text-[#F0F0F0]">
             Fahrgestellnummer (VIN)
@@ -518,7 +519,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Kennzeichen */}
         <div className="space-y-2">
           <Label htmlFor="plate" className="text-[#F0F0F0]">
             Kennzeichen
@@ -533,7 +533,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Kategorie */}
         <div className="space-y-2">
           <Label htmlFor="category" className="text-[#F0F0F0]">
             Kategorie
@@ -550,7 +549,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           </Select>
         </div>
 
-        {/* Land */}
         <div className="space-y-2">
           <Label htmlFor="country_code" className="text-[#F0F0F0]">
             Land
@@ -584,7 +582,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           </Select>
         </div>
 
-        {/* Kaufdatum */}
         <div className="space-y-2">
           <Label htmlFor="purchase_date" className="text-[#F0F0F0]">
             Kaufdatum
@@ -598,7 +595,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Kaufpreis */}
         <div className="space-y-2">
           <Label htmlFor="purchase_price" className="text-[#F0F0F0]">
             Kaufpreis (€)
@@ -615,7 +611,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Aktueller Kilometerstand */}
         <div className="space-y-2">
           <Label htmlFor="current_mileage" className="text-[#F0F0F0]">
             Aktueller Kilometerstand
@@ -630,7 +625,7 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
             min="0"
           />
         </div>
-        {/* Standort */}
+
         <div className="space-y-2">
           <Label htmlFor="location_name" className="text-[#F0F0F0]">
             Standort
@@ -645,7 +640,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
           />
         </div>
 
-        {/* Stellplatz-Adresse */}
         <div className="space-y-2">
           <Label htmlFor="storage_address" className="text-[#F0F0F0]">
             Stellplatz / Adresse
@@ -661,7 +655,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
       </div>
 
-      {/* Notizen */}
       <div className="space-y-2 mb-8">
         <Label htmlFor="notes" className="text-[#F0F0F0]">
           Notizen
@@ -676,7 +669,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         />
       </div>
 
-      {/* Fotos */}
       {(
         <div className="space-y-4 mb-8">
           <Label className="text-[#F0F0F0] text-lg font-semibold flex items-center gap-2">
@@ -726,7 +718,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
               </div>
             ))}
 
-            {/* Upload-Kachel */}
             <label className="relative rounded-lg border-2 border-dashed border-gray-600 hover:border-[#C9A84C] aspect-square flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#1E1E1E] hover:bg-[#252525]">
               <input
                 ref={photoInputRef}
@@ -743,9 +734,9 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
                 <>
                   <Plus className="h-8 w-8 text-gray-500 mb-1" />
                   <span className="text-xs text-gray-500">Foto hinzufügen</span>
-            <p className="text-xs text-gray-500 mt-2">
-              Max. 5MB • JPG, PNG oder WebP
-            </p>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Max. 5MB • JPG, PNG oder WebP
+                  </p>
                 </>
               )}
             </label>
@@ -759,7 +750,6 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
         </div>
       )}
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={loading}
