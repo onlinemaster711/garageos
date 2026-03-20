@@ -82,6 +82,31 @@ export default function PortfolioPage() {
       }
 
       console.log(`✓ ${data?.length || 0} vehicle(s) loaded`)
+
+      // DEBUG: Inspect first vehicle structure
+      if (data && data.length > 0) {
+        const firstVehicle = data[0]
+        console.log('=== FIRST VEHICLE STRUCTURE ===')
+        console.log('Vehicle ID:', firstVehicle.id)
+        console.log('Make/Model:', `${firstVehicle.make} ${firstVehicle.model}`)
+
+        // Check for photo fields
+        console.log('--- PHOTO FIELDS ---')
+        console.log('cover_photo_url:', firstVehicle.cover_photo_url)
+        console.log('image_url:', firstVehicle.image_url)
+        console.log('image_url_2:', firstVehicle.image_url_2)
+        console.log('image_url_3:', firstVehicle.image_url_3)
+        console.log('image_url_4:', firstVehicle.image_url_4)
+
+        // Check for all keys
+        console.log('--- ALL KEYS ---')
+        console.log(Object.keys(firstVehicle))
+
+        // Log full first vehicle
+        console.log('--- FULL VEHICLE ---')
+        console.log(JSON.stringify(firstVehicle, null, 2))
+      }
+
       setVehicles(data || [])
 
       // Initialize carousel indices
@@ -118,14 +143,15 @@ export default function PortfolioPage() {
     setCarouselIndices({ ...carouselIndices, [vehicleId]: newIndex })
   }
 
-  // Get images array for vehicle
+  // Get images array for vehicle - cover_photo_url primary
   const getVehicleImages = (vehicle: any) => {
-    const images = []
-    if (vehicle.image_url) images.push(vehicle.image_url)
-    if (vehicle.image_url_2) images.push(vehicle.image_url_2)
-    if (vehicle.image_url_3) images.push(vehicle.image_url_3)
-    if (vehicle.image_url_4) images.push(vehicle.image_url_4)
-    return images.length > 0 ? images : ['/placeholder.jpg']
+    // Use cover_photo_url if available
+    if (vehicle.cover_photo_url && vehicle.cover_photo_url.trim()) {
+      return [vehicle.cover_photo_url]
+    }
+
+    // No image available - will use onError handler
+    return []
   }
 
   if (loading) {
@@ -209,12 +235,34 @@ export default function PortfolioPage() {
                   className="group bg-[#2A2D30] border border-[#3D4450] rounded-lg overflow-hidden hover:border-[#E5C97B] hover:shadow-lg hover:shadow-[#E5C97B]/10 transition-all duration-300"
                 >
                   {/* Image Carousel */}
-                  <div className="relative aspect-video bg-[#1A2332] overflow-hidden">
-                    <img
-                      src={currentImage}
-                      alt={`${vehicle.make} ${vehicle.model}`}
-                      className="w-full h-full object-cover transition-opacity duration-300"
-                    />
+                  <div className="relative aspect-video bg-[#1A2332] overflow-hidden flex items-center justify-center">
+                    {currentImage ? (
+                      <img
+                        src={currentImage}
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        className="w-full h-full object-cover transition-opacity duration-300"
+                        onError={(e) => {
+                          e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%232A2D30"/%3E%3Ctext x="200" y="150" font-family="sans-serif" font-size="18" fill="%239B9B9B" text-anchor="middle" dominant-baseline="middle"%3EKein Bild%3C/text%3E%3C/svg%3E'
+                        }}
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center w-full h-full bg-[#2A2D30]">
+                        <svg
+                          className="w-16 h-16 text-[#9B9B9B] mb-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <p className="text-[#9B9B9B] text-sm">Kein Bild</p>
+                      </div>
+                    )}
 
                     {/* Carousel Controls */}
                     {images.length > 1 && (
