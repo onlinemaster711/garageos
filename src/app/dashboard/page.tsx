@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { VehicleCard } from '@/components/vehicles/vehicle-card'
 import Link from 'next/link'
-import { Plus, Car, ChevronDown } from 'lucide-react'
+import { Plus, Car, Sliders } from 'lucide-react'
 
 type SortOption = 'recent' | 'value-high' | 'value-low' | 'age-new' | 'age-old' | 'category' | 'name'
 
@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [vehicles, setVehicles] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<SortOption>('recent')
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   useEffect(() => {
     loadVehicles()
@@ -57,48 +58,157 @@ export default function DashboardPage() {
 
   const sortedVehicles = sortVehicles(vehicles)
 
+  const getSortLabel = (option: SortOption): string => {
+    const labels: Record<SortOption, string> = {
+      recent: 'Hinzugefügt (Neu zuerst)',
+      'value-high': 'Wert (Teuer zuerst)',
+      'value-low': 'Wert (Günstig zuerst)',
+      'age-new': 'Baujahr (Neu zuerst)',
+      'age-old': 'Baujahr (Alt zuerst)',
+      category: 'Kategorie',
+      name: 'Name (A-Z)',
+    }
+    return labels[option]
+  }
+
   return (
     <div className="min-h-screen bg-[#0A1A2F] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-start justify-between gap-4 mb-8 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6E6]">
-              Meine Fahrzeuge
-            </h1>
-            <p className="text-sm sm:text-base text-[#9B9B9B] mt-1">
-              {vehicles.length} Fahrzeug{vehicles.length !== 1 ? 'e' : ''}
-            </p>
-          </div>
-          <Link
-            href="/vehicles/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2.5 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
-          >
-            <Plus className="h-4 w-4" />
-            Fahrzeug hinzufügen
-          </Link>
-        </div>
+        {/* Header Section */}
+        <div className="flex flex-col gap-6 mb-8">
+          <div className="flex items-center justify-between gap-4">
+            {/* Title + Count */}
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6E6]">
+                Meine Fahrzeuge ({vehicles.length})
+              </h1>
+            </div>
 
-        {vehicles.length > 0 && (
-          <div className="mb-6 flex items-center gap-3">
-            <span className="text-sm text-[#9B9B9B]">Sortierung:</span>
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none bg-[#2A2D30] border border-[#4A5260] text-[#E6E6E6] px-4 py-2 rounded-lg text-sm cursor-pointer hover:border-[#E5C97B] transition-colors pr-8"
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              {/* Sortierung Dropdown */}
+              {vehicles.length > 0 && (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="p-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] hover:bg-[#3D4450] transition-colors border border-[#4A5260]"
+                    title="Sortierung"
+                  >
+                    <Sliders className="h-4 w-4" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-[#2A2D30] border border-[#4A5260] rounded-lg shadow-xl z-50">
+                      <div className="p-2">
+                        <button
+                          onClick={() => {
+                            setSortBy('recent')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'recent'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Hinzugefügt (Neu zuerst)
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy('value-high')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'value-high'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Wert (Teuer zuerst)
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy('value-low')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'value-low'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Wert (Günstig zuerst)
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy('age-new')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'age-new'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Baujahr (Neu zuerst)
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy('age-old')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'age-old'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Baujahr (Alt zuerst)
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy('category')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'category'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Kategorie
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSortBy('name')
+                            setIsDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                            sortBy === 'name'
+                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
+                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
+                          }`}
+                        >
+                          Name (A-Z)
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Add Vehicle Button */}
+              <Link
+                href="/vehicles/new"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
               >
-                <option value="recent">Hinzugefügt (Neu zuerst)</option>
-                <option value="value-high">Wert (Teuer zuerst)</option>
-                <option value="value-low">Wert (Günstig zuerst)</option>
-                <option value="age-new">Baujahr (Neu zuerst)</option>
-                <option value="age-old">Baujahr (Alt zuerst)</option>
-                <option value="category">Kategorie</option>
-                <option value="name">Name (A-Z)</option>
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9B9B9B] pointer-events-none" />
+                <Plus className="h-4 w-4" />
+                Fahrzeug hinzufügen
+              </Link>
             </div>
           </div>
-        )}
+        </div>
 
         {!loading && vehicles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
