@@ -452,7 +452,7 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: string }) {
       <div className="space-y-4">
         {/* Section tabs */}
         <div className="flex items-center justify-between">
-          <div className="flex gap-1 bg-[#2A2D30] rounded-lg p-1 border border-gray-700">
+          <div className="flex flex-wrap gap-1 bg-[#2A2D30] rounded-lg p-1 border border-gray-700">
             <button
               onClick={() => setActiveSection('planned')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
