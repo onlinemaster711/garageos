@@ -206,8 +206,8 @@ export function VehicleForm({ vehicle, onSuccess }: VehicleFormProps) {
     purchase_date: vehicle?.purchase_date || '',
     purchase_price: vehicle?.purchase_price?.toString() || '',
     current_mileage: vehicle?.current_mileage?.toString() || '',
-    location_name: ((vehicle as unknown as Record<string, unknown>)?.location_name as string) || '',
-    storage_address: ((vehicle as unknown as Record<string, unknown>)?.storage_address as string) || '',
+    location_name: (vehicle?.location_name) || '',
+    storage_address: (vehicle?.storage_address) || '',
     notes: vehicle?.notes || '',
   })
 

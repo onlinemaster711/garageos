@@ -1,4 +1,6 @@
 export interface Vehicle {
+  location_name: string | null;
+  storage_address: string | null;
   id: string
   user_id: string
   make: string
