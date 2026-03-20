@@ -41,7 +41,7 @@ export default function SettingsPage() {
   const [editingUser, setEditingUser] = useState<SharedUser | null>(null)
   const [usersLoading, setUsersLoading] = useState(false)
   const [newUserEmail, setNewUserEmail] = useState('')
-  const [newUserVehicleId, setNewUserVehicleId] = useState('')
+  const [newUserVehicleIds, setNewUserVehicleIds] = useState<string[]>([])
   const [userVehicles, setUserVehicles] = useState<Array<{ id: string; make: string; model: string }>>([])
   const [vehiclesLoading, setVehiclesLoading] = useState(false)
   const [newUserPermissions, setNewUserPermissions] = useState({
@@ -272,7 +272,7 @@ export default function SettingsPage() {
 
     console.log('=== ADD USER FORM DATA ===')
     console.log('Email:', trimmedEmail)
-    console.log('Vehicle ID:', newUserVehicleId)
+    console.log('Vehicle IDs (selected):', newUserVehicleIds)
     console.log('Permissions:', newUserPermissions)
     console.log('Valid From:', newUserValidFrom)
     console.log('Valid Until:', newUserValidUntil)
@@ -301,16 +301,18 @@ export default function SettingsPage() {
       return
     }
 
-    // Validierung: Vehicle ID
-    if (!newUserVehicleId.trim()) {
-      console.error('❌ Validation Failed: Auto nicht ausgewählt')
+    // Validierung: Mindestens 1 Auto selected
+    if (newUserVehicleIds.length === 0) {
+      console.error('❌ Validation Failed: Kein Auto ausgewählt')
       toast({
         title: 'Fehler',
-        description: 'Bitte wähle ein Auto aus.',
+        description: 'Bitte wähle mindestens ein Auto aus.',
         variant: 'destructive',
       })
       return
     }
+
+    console.log(`✓ ${newUserVehicleIds.length} Auto(s) ausgewählt`)
 
     // Validierung: Mindestens eine Permission
     const hasPermissions = Object.values(newUserPermissions).some(p => p)
@@ -349,19 +351,23 @@ export default function SettingsPage() {
 
       console.log('Current User ID:', user.id)
 
-      const insertData = {
+      // Erstelle einen Insert für jedes selected Auto
+      const insertDataArray = newUserVehicleIds.map((vehicleId) => ({
         owner_id: user.id,
         guest_email: trimmedEmail.toLowerCase(),
-        vehicle_id: newUserVehicleId,
+        vehicle_id: vehicleId,
         permissions: newUserPermissions,
         valid_from: newUserValidFrom,
         valid_until: newUserForever ? null : newUserValidUntil,
-      }
+      }))
 
-      console.log('=== INSERTING DATA ===')
-      console.log('Insert Data:', JSON.stringify(insertData, null, 2))
+      console.log('=== INSERTING DATA (MULTIPLE) ===')
+      console.log(`Erstelle ${insertDataArray.length} Permission(s) für:`, trimmedEmail)
+      insertDataArray.forEach((data, idx) => {
+        console.log(`  [${idx + 1}] Auto ID: ${data.vehicle_id}`)
+      })
 
-      const { error } = await supabase.from('user_permissions').insert(insertData)
+      const { error } = await supabase.from('user_permissions').insert(insertDataArray)
 
       if (error) {
         console.error('=== SUPABASE ERROR ===')
@@ -373,11 +379,11 @@ export default function SettingsPage() {
         throw error
       }
 
-      console.log('✓ User erfolgreich hinzugefügt')
+      console.log(`✓ User erfolgreich hinzugefügt für ${insertDataArray.length} Auto(s)`)
 
       // Reset Form
       setNewUserEmail('')
-      setNewUserVehicleId('')
+      setNewUserVehicleIds([])
       setNewUserPermissions({
         termine: false,
         fahrten: false,
@@ -462,7 +468,7 @@ export default function SettingsPage() {
             { id: 'profil', label: 'Profil', icon: User },
             { id: 'passwort', label: 'Passwort', icon: Lock },
             { id: 'konto', label: 'Konto', icon: Key },
-            { id: 'benutzer', label: 'Benutzer', icon: Users },
+            { id: 'benutzer', label: 'Benutzer hinzufügen', icon: Users },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -746,25 +752,40 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-[#E6E6E6] mb-2">
-                        Fahrzeug
-                      </label>
-                      <select
-                        value={newUserVehicleId}
-                        onChange={(e) => setNewUserVehicleId(e.target.value)}
-                        disabled={vehiclesLoading}
-                        className="w-full px-3 py-2 bg-[#1A2332] border border-[#4A5260] rounded-lg text-[#E6E6E6] focus:outline-none focus:border-[#E5C97B] text-sm disabled:opacity-50"
-                      >
-                        <option value="">
-                          {vehiclesLoading ? 'Lädt...' : 'Auto auswählen...'}
-                        </option>
-                        {userVehicles.map((vehicle) => (
-                          <option key={vehicle.id} value={vehicle.id}>
-                            {vehicle.make} {vehicle.model}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="space-y-3 border-t border-[#3D4450] pt-4">
+                      <p className="text-sm font-medium text-[#E6E6E6]">Fahrzeuge</p>
+                      {vehiclesLoading ? (
+                        <p className="text-xs text-[#9B9B9B]">Lädt...</p>
+                      ) : userVehicles.length === 0 ? (
+                        <p className="text-xs text-[#9B9B9B]">Keine Fahrzeuge verfügbar</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {userVehicles.map((vehicle) => (
+                            <label
+                              key={vehicle.id}
+                              className="flex items-center gap-3 cursor-pointer p-2 hover:bg-[#1A2332] rounded transition-colors"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={newUserVehicleIds.includes(vehicle.id)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setNewUserVehicleIds([...newUserVehicleIds, vehicle.id])
+                                  } else {
+                                    setNewUserVehicleIds(
+                                      newUserVehicleIds.filter((id) => id !== vehicle.id)
+                                    )
+                                  }
+                                }}
+                                className="w-4 h-4 rounded accent-[#E5C97B]"
+                              />
+                              <span className="text-sm text-[#E6E6E6]">
+                                {vehicle.make} {vehicle.model}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-3 border-t border-[#3D4450] pt-4">
