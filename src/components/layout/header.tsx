@@ -121,7 +121,7 @@ export function Header({ user }: HeaderProps) {
                         handleLogout()
                       }}
                       className="flex items-center gap-3 w-full text-sm transition-colors py-1.5"
-                      style={{ color: '#E5799F' }}
+                      style={{ color: '#E6E6E6' }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.opacity = '0.8'
                       }}
@@ -177,7 +177,7 @@ export function Header({ user }: HeaderProps) {
             <button
               onClick={handleLogout}
               className="w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
-              style={{ backgroundColor: '#E5799F20', color: '#E5799F' }}
+              style={{ backgroundColor: '#3D4450', color: '#E6E6E6' }}
             >
               Abmelden
             </button>
