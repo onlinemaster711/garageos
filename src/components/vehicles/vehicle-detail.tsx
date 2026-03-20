@@ -99,7 +99,16 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         `)
         .eq('vehicle_id', vehicle.id)
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase Error loading insurances:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+        })
+        setInsurances([])
+        return
+      }
 
       const policyData = (data || [])
         .map((item: any) => item.insurance_policies)
@@ -107,7 +116,11 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
       setInsurances(policyData)
     } catch (error) {
-      console.error('Error loading insurances:', error)
+      console.error('Exception loading insurances:', {
+        error,
+        message: error instanceof Error ? error.message : 'Unknown error',
+      })
+      setInsurances([])
     } finally {
       setLoadingInsurances(false)
     }
