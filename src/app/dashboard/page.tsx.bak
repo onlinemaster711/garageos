@@ -60,6 +60,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#0A0A0A] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
+        {/* Header */}
         <div className="flex flex-col items-start justify-between gap-4 mb-8 sm:flex-row sm:items-center">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-[#F0F0F0]">
@@ -78,6 +79,7 @@ export default function DashboardPage() {
           </Link>
         </div>
 
+        {/* Sorting Bar */}
         {vehicles.length > 0 && (
           <div className="mb-6 flex items-center gap-3">
             <span className="text-sm text-[#9B9B9B]">Sortierung:</span>
@@ -85,52 +87,11 @@ export default function DashboardPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none bg-[#1E1E1E] border border-[#333333] text-[#F0F0F0] px-4 py-2 rounded-lg text-sm cursor-pointer hover:border-[#C9A84C] transition-colors pr-8"
-              >
-                <option value="recent">Hinzugefügt (Neu zuerst)</option>
-                <option value="value-high">Wert (Teuer zuerst)</option>
-                <option value="value-low">Wert (Günstig zuerst)</option>
-                <option value="age-new">Baujahr (Neu zuerst)</option>
-                <option value="age-old">Baujahr (Alt zuerst)</option>
-                <option value="category">Kategorie</option>
-                <option value="name">Name (A-Z)</option>
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9B9B9B] pointer-events-none" />
-            </div>
-          </div>
-        )}
 
-        {!loading && vehicles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedVehicles.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} />
-            ))}
-          </div>
-        ) : !loading ? (
-          <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center">
-            <div className="rounded-full bg-[#1E1E1E] p-4 sm:p-6 mb-6">
-              <Car className="h-10 w-10 sm:h-12 sm:w-12 text-[#C9A84C]" />
-            </div>
-            <h2 className="text-lg sm:text-xl font-semibold text-[#F0F0F0] mb-2">
-              Noch keine Fahrzeuge
-            </h2>
-            <p className="text-sm sm:text-base text-[#9B9B9B] mb-6 max-w-md">
-              Füge dein erstes Fahrzeug hinzu und beginne mit der Verwaltung deiner Sammlung.
-            </p>
-            <Link
-              href="/vehicles/new"
-              className="inline-flex items-center gap-2 rounded-lg bg-[#C9A84C] px-4 py-2.5 text-sm font-medium text-[#0A0A0A] hover:bg-[#B8961F] transition-colors duration-200"
-            >
-              <Plus className="h-4 w-4" />
-              Erstes Fahrzeug hinzufügen
-            </Link>
-          </div>
-        ) : (
-          <div className="flex justify-center items-center py-16">
-            <p className="text-[#9B9B9B]">Lädt...</p>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
+
+
+
+
+
+Ctrl+C
+Ctrl+C
