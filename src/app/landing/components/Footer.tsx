@@ -9,8 +9,8 @@ export function Footer() {
     <footer
       className="border-t"
       style={{
-        backgroundColor: '#1A1A2E',
-        borderColor: '#2A2D30',
+        backgroundColor: '#0A1A2F',
+        borderColor: '#1A1A2E',
       }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -109,7 +109,7 @@ export function Footer() {
         {/* Bottom Divider & Credit */}
         <div
           className="pt-8 border-t text-center text-xs"
-          style={{ borderColor: '#2A2D30', color: '#9B9B9B' }}
+          style={{ borderColor: '#1A1A2E', color: '#9B9B9B' }}
         >
           <p>
             Made with care by{' '}

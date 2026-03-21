@@ -127,7 +127,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A1A2F] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0A1A2F] px-4 py-16 sm:py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header Section - Premium Design */}
         <div className="mb-10">
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                 <div className="relative">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="p-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] hover:bg-[#3D4450] transition-colors border border-[#4A5260]"
+                    className="p-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] hover:bg-[#3D4450] hover:shadow-lg transition-all duration-200 border border-[#4A5260]"
                     title="Sortierung"
                   >
                     <Sliders className="h-4 w-4" />
@@ -285,7 +285,7 @@ export default function DashboardPage() {
         </div>
 
         {!loading && vehicles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sortedVehicles.map((vehicle) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} />
             ))}

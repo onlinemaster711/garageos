@@ -345,7 +345,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <div className="max-w-7xl mx-auto space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <DetailCard label="Marke" value={vehicle.make} />
                 <DetailCard label="Modell" value={vehicle.model} />
                 <DetailCard label="Baujahr" value={vehicle.year ? vehicle.year.toString() : '-'} />
@@ -513,8 +513,8 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
 function DetailCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#2A2D30] rounded-lg p-4 border border-gray-700">
-      <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">{label}</p>
+    <div className="bg-[#2A2D30] rounded-lg p-6 border border-[#1A1A2E] shadow-lg hover:shadow-xl transition-shadow duration-200">
+      <p className="text-xs uppercase tracking-wide text-[#9B9B9B] mb-2">{label}</p>
       <p className="text-base font-semibold text-[#E6E6E6] break-words">{value}</p>
     </div>
   )
