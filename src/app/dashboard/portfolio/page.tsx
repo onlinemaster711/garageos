@@ -2,7 +2,6 @@ import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { ArrowLeft } from "lucide-react"
-import { PortfolioOverview } from "@/components/portfolio/portfolio-overview"
 
 export const metadata = {
   title: "Portfolio | GarageOS",
@@ -49,7 +48,54 @@ export default async function PortfolioDashboardPage({
           Zurück zum Portfolio
         </Link>
 
-        <PortfolioOverview vehicle={vehicle} />
+        <div className="space-y-6">
+          <div>
+            <h1 className="font-serif text-4xl italic text-on-surface">
+              {vehicle.make} {vehicle.model}
+            </h1>
+            <p className="mt-2 text-on-surface-variant">
+              {vehicle.year} • {vehicle.category}
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-lg border border-outline-variant/20 bg-surface-container p-6">
+              <h2 className="font-serif text-lg italic text-on-surface">Fahrzeugdetails</h2>
+              <dl className="mt-4 space-y-3">
+                <div>
+                  <dt className="text-sm text-on-surface-variant">Farbe</dt>
+                  <dd className="font-medium text-on-surface">{vehicle.color || "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-on-surface-variant">Fahrzeugnummer</dt>
+                  <dd className="font-mono text-sm text-on-surface">{vehicle.vin || "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-on-surface-variant">Kennzeichen</dt>
+                  <dd className="font-medium text-on-surface">{vehicle.plate || "—"}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="rounded-lg border border-outline-variant/20 bg-surface-container p-6">
+              <h2 className="font-serif text-lg italic text-on-surface">Kaufinformation</h2>
+              <dl className="mt-4 space-y-3">
+                <div>
+                  <dt className="text-sm text-on-surface-variant">Kaufdatum</dt>
+                  <dd className="font-medium text-on-surface">
+                    {vehicle.purchased_at
+                      ? new Date(vehicle.purchased_at).toLocaleDateString("de-DE")
+                      : "—"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-on-surface-variant">Standort</dt>
+                  <dd className="font-medium text-on-surface">{vehicle.location || "—"}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
