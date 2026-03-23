@@ -1,43 +1,104 @@
-import { redirect, notFound } from "next/navigation"
+'use client'
+
+import { useState, useEffect } from "react"
+import { redirect, notFound, useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/client"
 import { TopAppBar } from "@/components/TopAppBar"
 import { BottomNav } from "@/components/BottomNav"
+import { DrivesTab } from "@/components/vehicles/drives-tab"
+import { TiresTab } from "@/components/vehicles/tires-tab"
 import { ArrowLeft, MapPin, FileText, Plus } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export const metadata = {
-  title: "Fahrzeugdetails | GarageOS",
-  description: "Fahrzeugdetails und Wartungshistorie",
+interface Vehicle {
+  id: string
+  make: string
+  model: string
+  year: number
+  category: 'modern' | 'oldtimer' | 'youngtimer'
+  color?: string
+  cover_photo_url?: string
+  user_id: string
 }
 
-export default async function VehicleDetailPage({
+export default function VehicleDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
-  const supabase = await createClient()
+  const router = useRouter()
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("specs")
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  useEffect(() => {
+    const fetchVehicle = async () => {
+      try {
+        const { id } = await params
+        const supabase = createClient()
 
-  if (!user) {
-    redirect("/auth/login")
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+
+        if (!user) {
+          router.push("/auth/login")
+          return
+        }
+
+        const { data, error } = await supabase
+          .from("vehicles")
+          .select("*")
+          .eq("id", id)
+          .eq("user_id", user.id)
+          .single()
+
+        if (error || !data) {
+          router.push("/404")
+          return
+        }
+
+        setVehicle(data)
+      } catch (error) {
+        console.error("Error fetching vehicle:", error)
+        router.push("/404")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchVehicle()
+  }, [params, router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface">
+        <TopAppBar />
+        <main className="mx-auto max-w-7xl px-6 pt-20 pb-32 lg:px-12 lg:pb-12">
+          <div className="flex items-center justify-center py-16">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-2 border-primary border-t-transparent mx-auto mb-4" />
+              <p className="text-on-surface-variant">Laden...</p>
+            </div>
+          </div>
+        </main>
+        <BottomNav />
+      </div>
+    )
   }
 
-  const { id } = await params
-
-  // Fetch vehicle
-  const { data: vehicle, error } = await supabase
-    .from("vehicles")
-    .select("*")
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .single()
-
-  if (error || !vehicle) {
-    notFound()
+  if (!vehicle) {
+    return (
+      <div className="min-h-screen bg-surface">
+        <TopAppBar />
+        <main className="mx-auto max-w-7xl px-6 pt-20 pb-32 lg:px-12 lg:pb-12">
+          <p className="text-center text-on-surface-variant">Fahrzeug nicht gefunden</p>
+        </main>
+        <BottomNav />
+      </div>
+    )
   }
 
   // Mock data for demonstration
@@ -109,7 +170,7 @@ export default async function VehicleDetailPage({
               {/* Action Buttons */}
               <div className="flex flex-col gap-4 sm:flex-row pt-4">
                 <Link
-                  href={`/vehicles/${id}/edit`}
+                  href={`/vehicles/${vehicle.id}/edit`}
                   className="champagne-gradient flex items-center justify-center rounded-lg px-6 py-3 font-medium text-surface-container transition-all duration-300 hover:scale-105"
                 >
                   Fahrzeug bearbeiten
@@ -156,66 +217,88 @@ export default async function VehicleDetailPage({
           </div>
         </section>
 
-        {/* SPECIFICATIONS GRID */}
+        {/* TAB NAVIGATION */}
         <section className="mb-16">
-          <h2 className="mb-8 font-serif text-3xl italic text-on-surface">Technische Daten</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Marke", value: vehicle.make },
-              { label: "Modell", value: vehicle.model },
-              { label: "Baujahr", value: vehicle.year || "N/A" },
-              { label: "Farbe", value: vehicle.color },
-              { label: "VIN", value: "WBADT43452G123456" },
-              { label: "Kennzeichen", value: "HH-GS 2024" },
-              { label: "Kaufdatum", value: "2024-03-15" },
-              { label: "Standort", value: "Hamburg, Deutschland" },
-            ].map((spec) => (
-              <div
-                key={spec.label}
-                className="rounded-lg border border-outline-variant/20 bg-surface-container-low p-4 transition-all duration-300 hover:border-primary/40 hover:bg-primary/[0.02]"
-              >
-                <p className="text-xs text-on-surface-variant uppercase tracking-wider">{spec.label}</p>
-                <p className="mt-2 font-semibold text-on-surface">{spec.value}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+              <TabsTrigger value="specs">Technische Daten</TabsTrigger>
+              <TabsTrigger value="insurance">Versicherung & Dokumente</TabsTrigger>
+              <TabsTrigger value="drives">Fahrten</TabsTrigger>
+              <TabsTrigger value="tires">Reifen</TabsTrigger>
+            </TabsList>
 
-        {/* INSURANCE & ASSETS */}
-        <section>
-          <h2 className="mb-8 font-serif text-3xl italic text-on-surface">Versicherung & Dokumente</h2>
-
-          {/* Insurance Card */}
-          <div className="mb-6 rounded-lg glass-card border border-outline-variant/20 p-6">
-            <div className="flex items-start justify-between">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-semibold text-on-surface">Allianz Luxury Drive</h3>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-                    <span className="text-xs text-on-surface-variant">Aktiv</span>
+            {/* SPECIFICATIONS GRID */}
+            <TabsContent value="specs" className="mt-8 space-y-8">
+              <h2 className="font-serif text-3xl italic text-on-surface">Technische Daten</h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { label: "Marke", value: vehicle.make },
+                  { label: "Modell", value: vehicle.model },
+                  { label: "Baujahr", value: vehicle.year || "N/A" },
+                  { label: "Farbe", value: vehicle.color },
+                  { label: "VIN", value: "WBADT43452G123456" },
+                  { label: "Kennzeichen", value: "HH-GS 2024" },
+                  { label: "Kaufdatum", value: "2024-03-15" },
+                  { label: "Standort", value: "Hamburg, Deutschland" },
+                ].map((spec) => (
+                  <div
+                    key={spec.label}
+                    className="rounded-lg border border-outline-variant/20 bg-surface-container-low p-4 transition-all duration-300 hover:border-primary/40 hover:bg-primary/[0.02]"
+                  >
+                    <p className="text-xs text-on-surface-variant uppercase tracking-wider">{spec.label}</p>
+                    <p className="mt-2 font-semibold text-on-surface">{spec.value}</p>
                   </div>
-                </div>
-                <p className="text-sm text-on-surface-variant">Versicherungsnummer: AL-2024-12345</p>
-                <p className="text-sm text-on-surface-variant">Gültig bis: 2025-03-15</p>
+                ))}
               </div>
-              <button className="rounded-lg border border-primary/40 px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:border-primary hover:bg-primary/5">
-                Dokument hinzufügen
-              </button>
-            </div>
-          </div>
+            </TabsContent>
 
-          {/* Assets Grid */}
-          <div className="grid gap-4 md:grid-cols-2">
-            <button className="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-outline-variant/30 bg-surface-container-low p-8 transition-all duration-300 hover:border-primary hover:bg-primary/[0.02]">
-              <Plus className="h-6 w-6 text-on-surface-variant" />
-              <span className="text-sm font-medium text-on-surface-variant">Dokument hinzufügen</span>
-            </button>
-            <button className="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-outline-variant/30 bg-surface-container-low p-8 transition-all duration-300 hover:border-primary hover:bg-primary/[0.02]">
-              <Plus className="h-6 w-6 text-on-surface-variant" />
-              <span className="text-sm font-medium text-on-surface-variant">Foto hinzufügen</span>
-            </button>
-          </div>
+            {/* INSURANCE & ASSETS */}
+            <TabsContent value="insurance" className="mt-8 space-y-8">
+              <h2 className="font-serif text-3xl italic text-on-surface">Versicherung & Dokumente</h2>
+
+              {/* Insurance Card */}
+              <div className="rounded-lg glass-card border border-outline-variant/20 p-6">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <h3 className="font-semibold text-on-surface">Allianz Luxury Drive</h3>
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+                        <span className="text-xs text-on-surface-variant">Aktiv</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-on-surface-variant">Versicherungsnummer: AL-2024-12345</p>
+                    <p className="text-sm text-on-surface-variant">Gültig bis: 2025-03-15</p>
+                  </div>
+                  <button className="rounded-lg border border-primary/40 px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:border-primary hover:bg-primary/5">
+                    Dokument hinzufügen
+                  </button>
+                </div>
+              </div>
+
+              {/* Assets Grid */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <button className="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-outline-variant/30 bg-surface-container-low p-8 transition-all duration-300 hover:border-primary hover:bg-primary/[0.02]">
+                  <Plus className="h-6 w-6 text-on-surface-variant" />
+                  <span className="text-sm font-medium text-on-surface-variant">Dokument hinzufügen</span>
+                </button>
+                <button className="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-outline-variant/30 bg-surface-container-low p-8 transition-all duration-300 hover:border-primary hover:bg-primary/[0.02]">
+                  <Plus className="h-6 w-6 text-on-surface-variant" />
+                  <span className="text-sm font-medium text-on-surface-variant">Foto hinzufügen</span>
+                </button>
+              </div>
+            </TabsContent>
+
+            {/* DRIVES TAB */}
+            <TabsContent value="drives" className="mt-8">
+              <DrivesTab vehicleId={vehicle.id} />
+            </TabsContent>
+
+            {/* TIRES TAB */}
+            <TabsContent value="tires" className="mt-8">
+              <TiresTab vehicleId={vehicle.id} />
+            </TabsContent>
+          </Tabs>
         </section>
       </main>
 
