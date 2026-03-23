@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Car, Calendar, Settings, Home } from "lucide-react"
+import { Car, Calendar, Settings, Image } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
@@ -10,6 +10,12 @@ const navItems = [
     href: "/dashboard",
     icon: Car,
     label: "Sammlung",
+    exact: true,
+  },
+  {
+    href: "/portfolio",
+    icon: Image,
+    label: "Portfolio",
     exact: true,
   },
   {

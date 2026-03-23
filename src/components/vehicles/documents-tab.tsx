@@ -327,68 +327,8 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
 
   return (
     <div className="space-y-8">
-      {/* Hochgeladene Dokumente Section */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-[#E6E6E6]">Hochgeladene Dokumente</h3>
-
-        {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
-          </div>
-        ) : documents.length === 0 ? (
-          <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 text-center">
-            <FileText className="h-12 w-12 text-gray-500 mx-auto mb-3 opacity-50" />
-            <p className="text-gray-400">Keine Dokumente hochgeladen</p>
-            <p className="text-gray-500 text-sm mt-1">Kategorien: Kaufvertrag, Zulassung, TÜV-Papiere, Versicherung, Wartung/Rechnung, Sonstiges</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {documents.map(doc => (
-              <div key={doc.id} className="bg-[#2A2D30] rounded-lg p-5 border border-gray-700 flex items-center justify-between hover:border-[#E5C97B] transition-colors">
-                <div className="flex items-center gap-4 flex-1 min-w-0">
-                  <FileText className="h-5 w-5 text-[#E5C97B] flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h4 className="text-sm font-semibold text-[#E6E6E6] truncate">{doc.name}</h4>
-                      <span className={`flex-shrink-0 px-2 py-0.5 rounded text-xs font-medium ${getCategoryColor(doc.category)}`}>
-                        {getCategoryLabel(doc.category)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      {new Date(doc.uploaded_at).toLocaleDateString('de-DE')}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                  <a href={doc.file_url} download target="_blank" rel="noopener noreferrer">
-                    <Button variant="ghost" size="sm" className="text-[#E5C97B] hover:bg-[#E5C97B]/10">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </a>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-400 hover:bg-red-400/10"
-                    onClick={() => handleDelete(doc.id)}
-                    disabled={deleting === doc.id}
-                  >
-                    {deleting === doc.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Neues Dokument hochladen Section */}
       <div className="bg-[#2A2D30] rounded-lg p-6 border border-gray-700">
-        <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4">Neues Dokument hochladen</h3>
+        <h3 className="text-lg font-semibold text-[#E6E6E6] mb-4">Dokument hochladen</h3>
         <form onSubmit={handleUpload} className="space-y-4">
           <div>
             <Label className="text-gray-300 mb-2 block">Kategorie</Label>
@@ -447,6 +387,60 @@ export function DocumentsTab({ vehicleId }: { vehicleId: string }) {
           </Button>
         </form>
       </div>
+
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-[#E5C97B]" />
+        </div>
+      ) : documents.length === 0 ? (
+        <div className="bg-[#2A2D30] rounded-lg p-12 border border-gray-700 text-center">
+          <FileText className="h-12 w-12 text-gray-500 mx-auto mb-3 opacity-50" />
+          <p className="text-gray-400">Keine Dokumente hochgeladen</p>
+          <p className="text-gray-500 text-sm mt-1">Kategorien: Kaufvertrag, Zulassung, TÜV-Papiere, Versicherung, Wartung/Rechnung, Sonstiges</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {documents.map(doc => (
+            <div key={doc.id} className="bg-[#2A2D30] rounded-lg p-5 border border-gray-700 flex items-center justify-between hover:border-[#E5C97B] transition-colors">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <FileText className="h-5 w-5 text-[#E5C97B] flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-1">
+                    <h4 className="text-sm font-semibold text-[#E6E6E6] truncate">{doc.name}</h4>
+                    <span className={`flex-shrink-0 px-2 py-0.5 rounded text-xs font-medium ${getCategoryColor(doc.category)}`}>
+                      {getCategoryLabel(doc.category)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {new Date(doc.uploaded_at).toLocaleDateString('de-DE')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                <a href={doc.file_url} download target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="text-[#E5C97B] hover:bg-[#E5C97B]/10">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </a>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-400 hover:bg-red-400/10"
+                  onClick={() => handleDelete(doc.id)}
+                  disabled={deleting === doc.id}
+                >
+                  {deleting === doc.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Insurance Modal */}
       <Dialog open={isInsuranceModalOpen} onOpenChange={setIsInsuranceModalOpen}>
