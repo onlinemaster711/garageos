@@ -1,25 +1,55 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0A1A2F;
-  --color-foreground: #E6E6E6;
-  --color-card: #2A2D30;
-  --color-card-foreground: #E6E6E6;
-  --color-primary: #E5C97B;
-  --color-primary-foreground: #0A1A2F;
-  --color-muted: #3D4450;
-  --color-muted-foreground: #A0A0A0;
-  --color-border: #4A5260;
-  --color-input: #3D4450;
-  --color-ring: #E5C97B;
-  --color-destructive: #DC2626;
-  --color-destructive-foreground: #E6E6E6;
-  --font-sans: var(--font-geist-sans);
+  /* GarageOS Farbpalette */
+  --color-primary: #e9c349;
+  --color-primary-foreground: #0e131e;
+
+  --color-background: #0e131e;
+  --color-surface: #0e131e;
+  --color-surface-container: #1a202a;
+  --color-surface-container-low: #161c26;
+  --color-surface-container-lowest: #080e18;
+  --color-surface-container-high: #242a35;
+
+  --color-foreground: #dde2f1;
+  --color-on-surface: #dde2f1;
+  --color-on-surface-variant: #c6c6cc;
+
+  --color-border: #909096;
+  --color-outline: #909096;
+  --color-outline-variant: #45474b;
+
+  --color-card: #1a202a;
+  --color-card-foreground: #dde2f1;
+  --color-muted: #45474b;
+  --color-muted-foreground: #c6c6cc;
+  --color-input: #161c26;
+  --color-ring: #e9c349;
+
+  --color-secondary: #b39950;
+  --color-secondary-foreground: #0e131e;
+  --color-tertiary: #7a8c4a;
+  --color-tertiary-foreground: #f0f0f0;
+  --color-destructive: #d64545;
+  --color-destructive-foreground: #dde2f1;
+
+  --color-success: #4a9d6f;
+  --color-warning: #d4875a;
+  --color-error: #d64545;
+
+  /* Fonts */
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-newsreader);
   --font-mono: var(--font-geist-mono);
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
+
+  /* Border Radius */
+  --radius-DEFAULT: 0.125rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
+  --radius-full: 9999px;
 }
 
 html {
@@ -34,8 +64,38 @@ body {
   line-height: 1.6;
 }
 
+/* Glass Card Effect */
+.glass-card {
+  background: rgba(47, 53, 64, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Champagne Gradient */
+.champagne-gradient {
+  background: linear-gradient(135deg, #e9c349 0%, #574500 100%);
+}
+
+/* Material Symbols Icons */
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+/* Remove scrollbar but allow scrolling */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Scrollbar styling for dark theme */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0A1A2F; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #555; }
+::-webkit-scrollbar-track { background: var(--color-background); }
+::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }

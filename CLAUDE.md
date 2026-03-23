@@ -1,390 +1,406 @@
-# GarageOS — Projektübergabe
-**Für: Claude Cowork**
-**Stand: März 2026**
+# CLAUDE.md — GarageOS
+
+**Wird vor jeder Aufgabe gelesen.**
 
 ---
 
-## Was ist GarageOS?
+## 📊 Project Status
 
-Eine Web-App für private Fahrzeugsammler die mehrere hochwertige Autos besitzen (typisch 6–15 Fahrzeuge, Portfoliowert 500k–2 Mio. €). Die App löst ein konkretes Problem: Viele Autos zu besitzen ist ein versteckter Vollzeitjob. GarageOS übernimmt diese Arbeit automatisch.
+| Metrik | Status |
+|--------|--------|
+| **Phase** | MVP Phase 1 COMPLETE → **Phase 2 Ready** |
+| **Completion** | **85%** (↑ from 70%) |
+| **Launch** | Q2 2026 (on track) |
+| **Tech Debt** | Low |
+| **Deployment** | Ready for Staging |
 
-**Kernversprechen:** Deine Sammlung auf Autopilot. Zeitersparnis von 7+ Stunden pro Monat. Werterhalt durch Dokumentation und aktive Erinnerungen.
-
----
-
-## Zielgruppe
-
-- **B2C:** Privatpersonen mit 3–15 Fahrzeugen, Portfoliowert 500k–2 Mio. €
-- **B2B:** Händler, Verwalter, Family Offices mit mehreren Fahrzeugen
-- Typischer Nutzer: 45–65 Jahre, kaufkräftig, wenig Zeit, hoher Anspruch
-
----
-
-## Tech Stack (entschieden und final)
-
-| Layer | Technologie |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Styling | Tailwind CSS + shadcn/ui |
-| Backend | Next.js API Routes |
-| Datenbank + Auth + Storage | Supabase |
-| E-Mail | Resend |
-| Deployment | Vercel (Free Tier) |
-| Sprache | Deutsch (primär), Englisch (später) |
-
-**Accounts existieren bereits:** Supabase, Vercel und Resend sind vorhanden.
+**Roadmap:**
+- [x] Phase 1: Auth + Dashboard + Vehicle CRUD + Details + Settings + Guest Invitations
+- [ ] Phase 2: Payment (Stripe) + Guest Dashboard + Photo Uploads
+- [ ] Phase 3: Shared Vehicles Display + Advanced Search + Analytics
+- [ ] Phase 4: Notifications + Mobile App (React Native)
 
 ---
 
-## Alle Features — vollständige Liste
+## 🛠️ Tech Stack
 
-### 1. Fahrzeugakte
-- Marke, Modell, Baujahr, Farbe, Fahrgestellnummer, Kennzeichen
-- Kaufdatum, Kaufpreis, aktueller Kilometerstand
-- Fahrzeugkategorie: Oldtimer / Youngtimer / Modern
-- Land (für länderspezifische Fristen)
-- Versicherungsnummer, Hauptfahrer, Notizen
-
-### 2. Reifenmanagement
-- Sommer- und Winterreifen separat pro Auto
-- Reifenmarke, Größe, Kaufdatum, Zustand, Profiltiefe
-- Gefahrene Kilometer pro Reifensatz
-- Lagerort: Heimgarage, Werkstatt, Reifenservice
-- Wann zuletzt gewechselt
-- Erinnerung: Reifenwechsel Frühjahr und Herbst
-- Warnung bei zu geringer Profiltiefe
-
-### 3. Dokumentenablage
-- Upload per WhatsApp, E-Mail oder direkt in der App
-- Automatische Zuordnung zum richtigen Fahrzeug per KI
-- Typen: Kaufvertrag, TÜV, Gutachten, Rechnungen, Versicherung, Zulassung
-- Ablaufdaten werden erkannt und als Erinnerung gesetzt
-- Suchfunktion über alle Dokumente aller Fahrzeuge
-
-### 4. WhatsApp-Integration
-- Foto oder Dokument in WhatsApp schicken
-- System erkennt automatisch zu welchem Auto es gehört
-- Wird sofort abgelegt ohne manuelles Sortieren
-- Spracheingabe: "Porsche war beim Ölwechsel, 280 Euro" → automatischer Wartungseintrag
-
-### 5. Spracheingabe (überall in der App)
-- Alles per Sprache bedienbar
-- Fahrterfassung: "Heute 80 km mit dem Ferrari gefahren" → wird automatisch geloggt
-- Wartungseinträge, Erinnerungen, Notizen — alles per Sprache
-
-### 6. Verkaufs-Dossier (PDF-Export)
-- Ein Klick → vollständiges professionelles PDF
-- Enthält: alle Fahrzeugdaten, komplette Wartungshistorie, Dokumente, Fotos, Gutachten
-- Teilbarer Link mit Ablaufdatum und Wasserzeichen
-- QR-Code für digitalen Käufer-Zugang ohne Login
-
-### 7. Wartungshistorie
-- Jede Wartung: Datum, Werkstatt, Kosten, Kilometerstand, Beschreibung
-- Wiederkehrende Wartungen mit Intervallen
-- Werkstatt-Kontakte hinterlegen
-- Kostenübersicht pro Auto und gesamt
-
-### 8. Erinnerungen & Fristen
-- TÜV/HU länderspezifisch automatisch
-- Versicherungsverlängerung, KFZ-Steuer
-- Reifenwechsel Frühjahr/Herbst
-- Benachrichtigung 30 / 7 / 1 Tag vorher per E-Mail
-- Eigene Erinnerungen frei definierbar
-
-### 9. Fahrt-Erinnerung (Oldtimer-Schutz)
-- Letztes Fahrdatum pro Auto
-- Maximale Standzeit einstellbar (Standard: 4 Wochen)
-- Erinnerung vor Standschäden (Batterie, Dichtungen, Bremsen)
-- Kilometerstand-Verlauf über Zeit
-
-### 10. Standort & Lagerung
-- Wo steht welches Auto: Heimgarage, Zweitgarage, Einlagerung, Werkstatt
-- Klimabedingungen hinterlegen
-- Kontaktdaten des Lagerorts
-- Erinnerung bei langer Einlagerung
-
-### 11. Marktwert & Wertentwicklung
-- Kaufpreis vs. aktueller Marktwert
-- Vergleichspreise aus Mobile.de / AutoScout24
-- Wertentwicklung über Zeit als Grafik
-- Holding-Kosten vs. Wertsteigerung → echte Rendite
-
-### 12. Portfolio-Dashboard
-- Gesamtwert aller Fahrzeuge
-- Kosten pro Auto (Wartung, Versicherung, Steuer, Lagerung)
-- Welches Auto kostet am meisten, welches hat am meisten gewonnen
-
-### 13. Versicherungs-Cockpit
-- Versicherter Wert vs. aktueller Marktwert
-- Warnung bei Unterversicherung
-- Auslaufdaten aller Policen
-- Schadenhistorie
-
-### 14. Rollen & Zugänge
-- Owner: voller Zugriff
-- Assistent: kann erfassen und bearbeiten, nicht löschen
-- Viewer: nur lesen
-- Aktivitäts-Log wer was wann geändert hat
-
-### 15. Fotos & Zustandsdokumentation
-- Unbegrenzte Fotos pro Auto
-- Zustandsbewertung hinterlegen
-- Vorher/Nachher-Vergleich
-- Upload per WhatsApp automatisch zugeordnet
-
-### 16. Länderspezifische Regelwerke
-- Deutschland: HU alle 2 Jahre, H-Kennzeichen-Regeln
-- Österreich: Pickerl §57a
-- Schweiz: MFK
-- Spanien: ITV
-- Pro Auto Land wählen → richtige Fristen greifen automatisch
-
-### 17. Kilometerstand-Tracking
-- Erfassung bei jeder Wartung oder Fahrt
-- Verlauf als Grafik
-- Durchschnittliche Jahreskilometer
-- Relevant für Wenigfahrer-Versicherungstarife
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Framework** | Next.js | 14+ (App Router) |
+| **Frontend** | React | 19 |
+| **Styling** | Tailwind CSS | 4 |
+| **Components** | shadcn/ui | Latest |
+| **Database** | Supabase PostgreSQL | Latest |
+| **Auth** | Supabase Auth (JWT) | Latest |
+| **Language** | TypeScript | Strict Mode |
+| **Icons** | Lucide React | Latest |
+| **Hosting** | Vercel | (Ready) |
 
 ---
 
-## Preismodell (final entschieden)
+## ✅ Current Features (Completed — Phase 1)
 
-### B2C
-| Tier | Fahrzeuge | Monat | Jahr |
-|---|---|---|---|
-| Solo | 1–2 Autos | 29 € | 290 € |
-| Collector | 3–5 Autos | 79 € | 790 € |
-| Estate | Ab 6 Autos — alles inklusive | 249 € | 2.490 € |
-
-### B2B
-| Tier | Fahrzeuge | Monat |
-|---|---|---|
-| Business | Bis 25 Autos | 399 € |
-| Enterprise | Unbegrenzt | auf Anfrage |
-
-**Empfehlung für Launch:** Nur Collector (79 €) und Estate (249 €) — Solo-Tier erst später.
+### 🟢 Core Features
+- ✅ **Authentication** — Supabase Auth (Login/Signup) with JWT
+- ✅ **Dashboard** — Vehicle Grid (responsive: 1→2→3-4 columns)
+  - VehicleCard with 4:5 aspect ratio, hover zoom
+  - Category badges (Modern, Oldtimer, Youngtimer)
+  - Add Vehicle placeholder card
+  - Empty state when no vehicles
+  - RLS-filtered user vehicles only
+- ✅ **Vehicle Details Page** — /vehicles/[id]
+  - Hero section with image + specs
+  - Specifications grid (4 columns on desktop)
+  - Insurance & assets section
+  - Category badge + metadata
+  - Permission-based edit/delete buttons
+- ✅ **Maintenance Tracker** — /termine
+  - List of maintenance tasks + reminders
+  - Filters: All, Maintenance, Reminders
+  - Status badges (Planned, Completed, Overdue)
+  - FAB for new maintenance
+  - Responsive grid layout
+- ✅ **Settings & User Management** — /settings
+  - User profile display
+  - **Guest Invitation System** (NEW)
+    - Resend email integration
+    - Token-based invitations (24hr expiry)
+    - Password setup page for new users
+    - Automatic user_access creation
+  - **User Deletion** (NEW)
+    - Revoke all vehicle access for guests
+    - Confirmation dialog
+    - Cascading deletion via RLS
+  - User list with vehicle access count
+- ✅ **Guest Sharing System** (NEW)
+  - `user_access` table with granular permissions
+  - can_view / can_edit / can_upload flags
+  - Time-limited access with expiry dates
+  - RLS policies for owner/guest isolation
+  - AddUserForm + UsersTable components
+- ✅ **Navigation**
+  - TopAppBar (Desktop + Mobile)
+  - BottomNav (Mobile only, 4 items)
+  - Responsive padding (px-6 → lg:px-12)
+- ✅ **Security & RLS**
+  - Row-Level Security on all tables
+  - User isolation (owner sees own vehicles only)
+  - Guest isolation (guests see only shared vehicles)
+  - Owner-only guest management
+  - Service role key for user creation
+- ✅ **Design System**
+  - Dark mode (Navy #0e131e + Gold #e9c349)
+  - Quiet Luxury aesthetic
+  - Google Fonts (Newsreader, Manrope, Inter)
+  - Material Symbols Outlined icons
+  - Global CSS classes (.glass-card, .champagne-gradient)
+  - Material Design 3 components
 
 ---
 
-## Datenbank Schema (vollständig)
+## 🚧 In Progress
 
-```sql
--- Fahrzeuge
-create table vehicles (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  make text not null,
-  model text not null,
-  year integer,
-  plate text,
-  vin text,
-  color text,
-  country_code text default 'DE',
-  category text default 'modern',
-  purchase_date date,
-  purchase_price numeric,
-  current_mileage integer,
-  last_driven_date date,
-  max_standzeit_weeks integer default 4,
-  location_id uuid references locations,
-  cover_photo_url text,
-  notes text,
-  created_at timestamptz default now()
-);
+*(None — Phase 1 complete, Phase 2 queued)*
 
--- Standorte
-create table locations (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  name text not null,
-  address text,
-  type text,
-  climate_controlled boolean default false,
-  contact_name text,
-  contact_phone text,
-  notes text
-);
+---
 
--- Dokumente
-create table documents (
-  id uuid primary key default gen_random_uuid(),
-  vehicle_id uuid references vehicles not null,
-  user_id uuid references auth.users not null,
-  type text,
-  file_url text not null,
-  file_name text,
-  expires_at date,
-  notes text,
-  uploaded_at timestamptz default now()
-);
+## ❌ TODO (Phase 2 & Beyond)
 
--- Erinnerungen
-create table reminders (
-  id uuid primary key default gen_random_uuid(),
-  vehicle_id uuid references vehicles not null,
-  user_id uuid references auth.users not null,
-  type text not null,
-  title text not null,
-  due_date date not null,
-  repeat_months integer,
-  status text default 'open',
-  notified_30 boolean default false,
-  notified_7 boolean default false,
-  notified_1 boolean default false,
-  notes text,
-  created_at timestamptz default now()
-);
+### Phase 2 — Payment & Guest Features (Next)
+- [ ] **Payment Integration (Stripe)**
+  - Subscription tiers (Free / Premium / Pro)
+  - Vehicle limits per tier
+  - Payment page at /billing
+  - Webhook handling
 
--- Wartung
-create table maintenance (
-  id uuid primary key default gen_random_uuid(),
-  vehicle_id uuid references vehicles not null,
-  user_id uuid references auth.users not null,
-  date date not null,
-  title text not null,
-  description text,
-  workshop text,
-  cost numeric,
-  mileage integer,
-  created_at timestamptz default now()
-);
+- [ ] **Guest Dashboard** (Shared Vehicles)
+  - /dashboard/shared route
+  - Display only vehicles shared with user
+  - Read-only or editable based on permissions
+  - Filter: "My Vehicles" vs "Shared with Me"
 
--- Reifen
-create table tires (
-  id uuid primary key default gen_random_uuid(),
-  vehicle_id uuid references vehicles not null,
-  user_id uuid references auth.users not null,
-  type text not null,
-  brand text,
-  size text,
-  purchase_date date,
-  mileage_km integer default 0,
-  tread_depth_mm numeric,
-  condition text,
-  storage_location text,
-  last_mounted_date date,
-  notes text
-);
+- [ ] **Photo & File Uploads**
+  - vehicle_photos table
+  - S3 integration for storage
+  - Upload page at /vehicles/[id]/photos
+  - Gallery view in details page
+  - Permission-based visibility
 
--- Fahrten
-create table drives (
-  id uuid primary key default gen_random_uuid(),
-  vehicle_id uuid references vehicles not null,
-  user_id uuid references auth.users not null,
-  date date not null,
-  km_driven integer,
-  mileage_after integer,
-  notes text,
-  created_at timestamptz default now()
-);
+### Phase 3 — Advanced Features
+- [ ] **Shared Vehicles Display on Main Dashboard**
+  - Merge shared + owned vehicles
+  - Visual indicator for shared vehicles
+  - Filter toggle: "Show Shared"
 
--- Rollen
-create table user_roles (
-  id uuid primary key default gen_random_uuid(),
-  owner_id uuid references auth.users not null,
-  member_email text not null,
-  member_id uuid references auth.users,
-  role text not null,
-  created_at timestamptz default now()
-);
+- [ ] **Advanced Search & Filters**
+  - Full-text search (make/model/color/year)
+  - Year range filter
+  - Mileage filter
+  - Category filter
+  - Status filter (active/archived)
+
+- [ ] **Analytics Dashboard**
+  - Total vehicles count
+  - Maintenance costs over time
+  - Upcoming maintenance alerts
+  - Cost trends by category
+  - Guest access statistics
+
+### Phase 4 — Mobile & Polish
+- [ ] **Notifications**
+  - Maintenance reminders (email + push)
+  - Guest access expiry warnings
+  - New shared vehicle notifications
+  - Push notifications via Supabase
+
+- [ ] **Mobile Optimization**
+  - React Native app (Expo)
+  - Offline sync
+  - Camera integration for vehicle photos
+  - Home screen widgets
+
+- [ ] **Admin Features**
+  - User management dashboard
+  - Usage analytics
+  - Support ticket system
+  - Database backups
+
+### Technical Debt & Quality
+- [ ] Error boundary components
+- [ ] Better loading states (skeleton screens)
+- [ ] Form validation + real-time feedback
+- [ ] Unit tests (Vitest setup)
+- [ ] E2E tests (Playwright)
+- [ ] Performance optimization (image compression, code splitting)
+- [ ] Accessibility audit (WCAG 2.1 AA)
+- [ ] Security audit (penetration testing)
+
+---
+
+## 📁 File Structure Overview
+
+```
+garageos/
+├── CLAUDE.md                          ← Diese Datei
+├── README.md                          ← User-facing intro
+├── DATABASE.md                        ← Schema + RLS + Relationships
+├── COMPONENT_INVENTORY.md             ← Component status + props
+├── DESIGN_SYSTEM.md                   ← Colors, fonts, tokens, CSS classes
+│
+├── src/
+│   ├── app/                           ← Next.js App Router
+│   │   ├── (auth)/
+│   │   │   ├── layout.tsx
+│   │   │   ├── login.tsx
+│   │   │   └── signup.tsx
+│   │   ├── dashboard/
+│   │   │   ├── page.tsx               ← Vehicle Grid (Server Component)
+│   │   │   └── loading.tsx            ← Skeleton Loading
+│   │   ├── vehicles/
+│   │   │   ├── [id]/
+│   │   │   │   ├── page.tsx           ← Vehicle Details (Server Component)
+│   │   │   │   └── edit/page.tsx      ← Edit Vehicle (stub)
+│   │   │   └── new/
+│   │   │       └── page.tsx           ← Add Vehicle (stub)
+│   │   ├── termine/
+│   │   │   ├── page.tsx               ← Maintenance Tracker (Server Component)
+│   │   │   └── new/
+│   │   │       └── page.tsx           ← Add Maintenance (stub)
+│   │   ├── settings/
+│   │   │   └── page.tsx               ← User Management + Shares (Server Component)
+│   │   ├── layout.tsx                 ← Google Fonts + Global CSS + TopAppBar
+│   │   └── error.tsx                  ← Error boundary (if exists)
+│   │
+│   ├── components/
+│   │   ├── TopAppBar.tsx              ← Fixed desktop header
+│   │   ├── BottomNav.tsx              ← Mobile navigation (lg:hidden)
+│   │   ├── VehicleCard.tsx            ← Reusable vehicle card with link
+│   │   ├── MaintenanceCard.tsx        ← Maintenance task card
+│   │   ├── ShareForm.tsx              ← Share management form
+│   │   ├── ShareTable.tsx             ← Share list table
+│   │   └── ui/                        ← shadcn/ui components
+│   │       ├── button.tsx
+│   │       ├── dropdown-menu.tsx
+│   │       ├── input.tsx
+│   │       ├── select.tsx
+│   │       ├── tabs.tsx
+│   │       └── ... (other shadcn components)
+│   │
+│   ├── lib/
+│   │   ├── supabase/
+│   │   │   ├── client.ts              ← Browser client (createClient)
+│   │   │   ├── server.ts              ← Server client
+│   │   │   └── middleware.ts          ← Auth middleware
+│   │   └── utils.ts                   ← Helper functions
+│   │
+│   └── types/
+│       ├── database.ts                ← Auto-generated from Supabase
+│       └── custom.ts                  ← Custom TypeScript types
+│
+├── supabase/
+│   ├── migrations/                    ← SQL migrations (NEVER DELETE)
+│   │   ├── 20240320_init.sql          ← Initial schema
+│   │   ├── 20260323_create_vehicles.sql
+│   │   ├── 20260323_create_maintenance_tasks.sql
+│   │   └── 20260323_create_vehicle_shares.sql
+│   └── functions/                     ← Edge Functions (if needed)
+│
+├── public/                            ← Static assets
+├── tailwind.config.ts                 ← Tailwind config + custom tokens
+├── tsconfig.json                      ← TypeScript strict mode
+├── next.config.js                     ← Next.js config
+├── .env.local                         ← Secrets (NOT in git)
+├── package.json                       ← Dependencies
+└── README.md                          ← User-facing documentation
 ```
 
 ---
 
-## Bauphasen
+## 🔐 Environment Variables (.env.local)
 
-### Phase 1 — Fundament (JETZT STARTEN)
-- Next.js Projekt initialisieren
-- Supabase Setup (Auth, DB, Storage)
-- Login / Signup / Logout
-- Dashboard: alle Fahrzeuge auf einen Blick
-- Fahrzeug anlegen / bearbeiten / löschen
-- Foto-Upload pro Fahrzeug
-- Dokumente hochladen und anzeigen
-- Fahrzeugakte mit Tab-Navigation
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
+SUPABASE_SERVICE_ROLE_KEY=eyJxxx...    # Server-only!
 
-### Phase 2 — Erinnerungen
-- Reminder-System mit allen Typen
-- Länderspezifische Regelwerke (DE, AT, CH, ES)
-- Fahrt-Erinnerung für Oldtimer
-- E-Mail-Benachrichtigungen via Resend
-- Cron Job täglich 08:00 Uhr via Vercel Cron
-
-### Phase 3 — Mehrwert
-- Marktwert-Tracking (Mobile.de)
-- Portfolio-Dashboard
-- Rollen & Zugänge
-- Verkaufs-Dossier PDF-Export
-- Reifenmanagement
-
-### Phase 4 — Profi-Features
-- WhatsApp-Integration
-- Spracheingabe (Web Speech API)
-- Versicherungs-Cockpit
-- Kilometerstand-Verlauf als Grafik
-
----
-
-## Design-Vorgaben
-
-- **Hintergrund:** #0A0A0A (sehr dunkel)
-- **Karten:** #1E1E1E
-- **Akzentfarbe:** #C9A84C (Gold)
-- **Text:** #F0F0F0 (fast weiß)
-- **Schrift:** Große Texte — mindestens 16px Fließtext
-- **Mobile-first** — alles auf dem Handy perfekt bedienbar
-- **Viel Weißraum** — nichts gedrängt, nichts gequetscht
-- Dunkles Premium-Feeling — passend zur Zielgruppe
-
----
-
-## Umgebungsvariablen (.env.local)
-
-```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-RESEND_API_KEY=
+# Optional
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
 ```
 
 ---
 
-## Wichtige Entscheidungen die bereits getroffen sind
+## 🚀 Key Commands
 
-- Kein kostenloses Tier beim Launch
-- Zuerst nur Collector (79 €) und Estate (249 €) anbieten
-- Marketing-Start: persönlich auf Oldtimermessen, nicht digital
-- Erste 10–20 Kunden bekommen "Founding Member" Status mit dauerhaftem Rabatt
-- Spracheingabe ist kein Premium-Feature — in allen Tarifen enthalten
-- Supabase Storage Bucket heißt: `vehicle-files`
-- E-Mails immer auf Deutsch
+```bash
+# Development
+npm run dev                            # Start dev server (http://localhost:3000)
+npm run build                          # Build for production
+npm run lint                           # ESLint check
+npx tsc --noEmit                       # TypeScript check
 
----
+# Supabase (if using local Supabase)
+supabase start                         # Start local Supabase
+supabase stop                          # Stop local Supabase
+supabase db push                       # Push migrations to remote
+supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/database.ts
 
-## Was noch NICHT existiert
-
-- Kein Code bisher — Projekt startet jetzt
-- Kein Design in Figma — direkt in Code bauen
-- Domain noch nicht registriert (Arbeitstitel: GarageOS)
-
----
-
-## Erster Schritt für Claude Cowork
-
-1. Neuen Ordner `garageos` erstellen
-2. Diese Datei als `CLAUDE.md` in den Ordner legen
-3. Next.js Projekt initialisieren:
-   ```bash
-   npx create-next-app@latest . --typescript --tailwind --app --eslint
-   npx shadcn-ui@latest init
-   npx shadcn-ui@latest add button input label card badge separator avatar dropdown-menu dialog tabs
-   npm install @supabase/supabase-js @supabase/ssr resend
-   ```
-4. `.env.local` mit den Supabase und Resend Keys befüllen
-5. Mit Phase 1 beginnen: Auth → Dashboard → Fahrzeugakte
+# Database
+npx supabase migration new <name>      # Create new migration
+```
 
 ---
 
-*Dokument erstellt: März 2026*
-*Projektstatus: Planungsphase abgeschlossen — bereit zum Bauen*
+## 🎯 Key Architecture Patterns
+
+### 1. **Server Components for Data Fetching**
+```typescript
+// app/dashboard/page.tsx — Server Component
+export default async function DashboardPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { data: vehicles } = await supabase
+    .from('vehicles')
+    .select('*')
+    .eq('user_id', user?.id)
+
+  return <VehicleGrid vehicles={vehicles} />
+}
+```
+
+### 2. **Client Components for Interactivity**
+```typescript
+// components/VehicleCard.tsx — Client Component
+"use client"
+export function VehicleCard({ id, make, model }: VehicleCardProps) {
+  return <Link href={`/vehicles/${id}`}>{/* Hover, Links, Forms */}</Link>
+}
+```
+
+### 3. **Mobile-First Responsive Design**
+```tailwind
+/* Default: Mobile (1 col, px-6 padding) */
+grid grid-cols-1 px-6
+
+/* Tablet: md breakpoint (2 cols) */
+md:grid-cols-2
+
+/* Desktop: lg breakpoint (3-4 cols, px-12 padding) */
+lg:grid-cols-3 lg:px-12 xl:grid-cols-4
+```
+
+### 4. **Supabase RLS for Multi-Tenant Safety**
+```sql
+-- Only users see their own vehicles
+CREATE POLICY "Users see own vehicles" ON vehicles
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Only owners can share their vehicles
+CREATE POLICY "Users can only share own vehicles" ON vehicle_shares
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM vehicles WHERE id = vehicle_id AND user_id = auth.uid())
+  );
+```
+
+### 5. **Global Styles in layout.tsx**
+```typescript
+// Google Fonts, Material Symbols, CSS Classes
+// .glass-card, .champagne-gradient, .no-scrollbar
+```
+
+---
+
+## ✅ Before Starting Any Work
+
+1. **Check Roadmap** in CLAUDE.md (this file)
+2. **Read DATABASE.md** → Table schemas + RLS policies
+3. **Check COMPONENT_INVENTORY.md** → What's done/WIP/TODO
+4. **Read DESIGN_SYSTEM.md** → Colors, fonts, spacing
+5. **Run type check:** `npx tsc --noEmit`
+
+---
+
+## 📋 Golden Rules
+
+| Rule | Why |
+|------|-----|
+| **Server Components for data fetching** | Faster, safer, no waterfall requests |
+| **Client Components only for UI state** | Links, forms, hover effects, filters |
+| **All queries filter by user_id** | RLS + security |
+| **NEVER delete migrations** | Database history matters |
+| **TypeScript strict mode** | No `any`, all types explicit |
+| **Mobile-first CSS** | Responsive guarantees |
+| **Tailwind colors from system** | No inline hex codes |
+| **German UI, English code** | Consistency + internationalization ready |
+| **RLS on every table** | Multi-tenant safety |
+
+---
+
+## 🔄 Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| **1.1** | 2026-03-23 | ✅ Phase 1 Complete: Guest Invitations (Resend), User Deletion, Full RLS |
+| **1.0** | 2026-03-23 | MVP Phase 1: Dashboard, Vehicle Details, Termine, Settings, Sharing |
+| **0.9** | 2026-03-20 | Responsive Design, TopAppBar, BottomNav, Migrations |
+| **0.8** | 2026-03-15 | Auth, Material Design 3, Tailwind Setup |
+
+---
+
+## 📞 Quick Links
+
+| Document | Purpose |
+|----------|---------|
+| **README.md** | User-facing intro + Getting Started |
+| **DATABASE.md** | Schema, RLS Policies, Relationships |
+| **COMPONENT_INVENTORY.md** | Component Status + Props |
+| **DESIGN_SYSTEM.md** | Colors, Fonts, Spacing, CSS Classes |
+| **ROADMAP.md** | Phase 2-4 Features + Timeline (NEW) |
+| **DEPLOYMENT.md** | Staging & Production Setup (NEW) |
+| **IMPLEMENTATION_GUIDE.md** | Guest Invitation System Details |
+
+---
+
+**Letzte Aktualisierung:** 2026-03-23 · **Status:** Phase 1 Complete ✅ · **Next:** Phase 2 (Payment + Guest Dashboard)

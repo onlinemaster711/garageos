@@ -1,320 +1,135 @@
-'use client'
+import { redirect } from "next/navigation"
+import Link from "next/link"
+import { Plus } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
+import { TopAppBar } from "@/components/TopAppBar"
+import { BottomNav } from "@/components/BottomNav"
+import { VehicleCard } from "@/components/VehicleCard"
+import { Button } from "@/components/ui/button"
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { VehicleCard } from '@/components/vehicles/vehicle-card'
-import Link from 'next/link'
-import { Plus, Car, Sliders } from 'lucide-react'
+export const metadata = {
+  title: "Meine Sammlung — GarageOS",
+  description: "Verwalte deine private Fahrzeugsammlung auf Autopilot",
+}
 
-type SortOption = 'recent' | 'value-high' | 'value-low' | 'age-new' | 'age-old' | 'category' | 'name'
+interface Vehicle {
+  id: string
+  make: string
+  model: string
+  year: number
+  current_mileage: number
+  color: string
+  category: "modern" | "oldtimer" | "youngtimer"
+  cover_photo_url: string | null
+}
 
-export default function DashboardPage() {
-  const supabase = createClient()
-  const [vehicles, setVehicles] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [sortBy, setSortBy] = useState<SortOption>('recent')
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [oldtimerCount, setOldtimerCount] = useState(0)
-  const [modernCount, setModernCount] = useState(0)
+export default async function DashboardPage() {
+  const supabase = await createClient()
 
-  useEffect(() => {
-    loadVehicles()
-  }, [])
+  // Get current user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  const isDateValid = (validFrom: string, validUntil: string | null): boolean => {
-    const now = new Date()
-    const from = new Date(validFrom)
-    if (now < from) return false
-    if (validUntil) {
-      const until = new Date(validUntil)
-      if (now > until) return false
-    }
-    return true
+  if (!user) {
+    redirect("/auth/login")
   }
 
-  const loadVehicles = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) return
+  // Fetch vehicles for current user
+  const { data: vehicles } = await supabase
+    .from("vehicles")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
 
-      // Get owned vehicles
-      const { data: ownedVehicles } = await supabase
-        .from('vehicles')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+  const vehicleList = (vehicles as Vehicle[]) || []
 
-      // Get shared vehicles
-      const { data: permissions } = await supabase
-        .from('user_permissions')
-        .select('vehicle_id, valid_from, valid_until')
-        .eq('guest_email', user.email)
-
-      let sharedVehicleIds: string[] = []
-      if (permissions) {
-        sharedVehicleIds = permissions
-          .filter((p) => p.vehicle_id && isDateValid(p.valid_from, p.valid_until))
-          .map((p) => p.vehicle_id)
-          .filter(Boolean)
-      }
-
-      let sharedVehicles: any[] = []
-      if (sharedVehicleIds.length > 0) {
-        const { data } = await supabase
-          .from('vehicles')
-          .select('*')
-          .in('id', sharedVehicleIds)
-          .order('created_at', { ascending: false })
-        sharedVehicles = data || []
-      }
-
-      const allVehicles = [
-        ...(ownedVehicles || []),
-        ...sharedVehicles.filter(
-          (sv) => !ownedVehicles?.some((ov) => ov.id === sv.id)
-        ),
-      ]
-
-      setVehicles(allVehicles)
-      const oldtimers = allVehicles.filter((v) => v.category === 'oldtimer').length
-      const moderns = allVehicles.filter((v) => v.category === 'modern').length
-      setOldtimerCount(oldtimers)
-      setModernCount(moderns)
-    } catch (err) {
-      console.error('Error loading vehicles:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const sortVehicles = (vehicleList: any[]) => {
-    const list = [...vehicleList]
-    
-    switch (sortBy) {
-      case 'value-high':
-        return list.sort((a, b) => (b.purchase_price || 0) - (a.purchase_price || 0))
-      case 'value-low':
-        return list.sort((a, b) => (a.purchase_price || 0) - (b.purchase_price || 0))
-      case 'age-new':
-        return list.sort((a, b) => (b.year || 0) - (a.year || 0))
-      case 'age-old':
-        return list.sort((a, b) => (a.year || 0) - (b.year || 0))
-      case 'category':
-        return list.sort((a, b) => (a.category || '').localeCompare(b.category || ''))
-      case 'name':
-        return list.sort((a, b) => `${a.make} ${a.model}`.localeCompare(`${b.make} ${b.model}`))
-      case 'recent':
-      default:
-        return list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    }
-  }
-
-  const sortedVehicles = sortVehicles(vehicles)
-
-  const getSortLabel = (option: SortOption): string => {
-    const labels: Record<SortOption, string> = {
-      recent: 'Hinzugefügt (Neu zuerst)',
-      'value-high': 'Wert (Teuer zuerst)',
-      'value-low': 'Wert (Günstig zuerst)',
-      'age-new': 'Baujahr (Neu zuerst)',
-      'age-old': 'Baujahr (Alt zuerst)',
-      category: 'Kategorie',
-      name: 'Name (A-Z)',
-    }
-    return labels[option]
-  }
+  // Get user initials for TopAppBar
+  const userInitials = user.email
+    ?.split("@")[0]
+    .substring(0, 2)
+    .toUpperCase() || "GB"
 
   return (
-    <div className="min-h-screen bg-[#0A1A2F] px-4 py-16 sm:py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        {/* Header Section - Premium Design */}
-        <div className="mb-10">
-          {/* Title */}
-          <div className="mb-4">
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6E6] tracking-tight">
-              Meine Sammlung
-            </h1>
+    <div className="min-h-screen bg-background">
+      <TopAppBar userInitials={userInitials} userName={user.email || "User"} />
+
+      <main className="mx-auto max-w-7xl px-6 py-8 pt-32 lg:px-12 lg:pb-32">
+        {/* Header */}
+        <div className="mb-12 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground">Meine Sammlung</h1>
+            <p className="mt-2 text-on-surface-variant">
+              {vehicleList.length} {vehicleList.length === 1 ? "Fahrzeug" : "Fahrzeuge"}
+            </p>
           </div>
-
-          {/* Subtitle with Categories */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
-            <div className="flex flex-wrap items-center gap-4 text-sm sm:text-base">
-              {vehicles.length > 0 ? (
-                <>
-                  <span className="text-gray-300">
-                    <span className="font-semibold text-[#E5C97B]">{oldtimerCount}</span>
-                    <span className="text-gray-400"> Oldtimer</span>
-                  </span>
-                  <span className="text-gray-500">·</span>
-                  <span className="text-gray-300">
-                    <span className="font-semibold text-[#E5C97B]">{modernCount}</span>
-                    <span className="text-gray-400"> Modern</span>
-                  </span>
-                </>
-              ) : (
-                <span className="text-gray-400">Keine Fahrzeuge</span>
-              )}
-            </div>
-
-            {/* Buttons Section */}
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <Link
-                href="/vehicles/new"
-                className="flex-1 sm:flex-none inline-flex items-center justify-center sm:justify-start gap-2 rounded-lg bg-[#E5C97B] px-4 py-2 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Fahrzeug hinzufügen</span>
-                <span className="sm:hidden">Hinzufügen</span>
-              </Link>
-
-              {/* Sortierung Dropdown */}
-              {vehicles.length > 0 && (
-                <div className="relative">
-                  <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="p-2 rounded-lg bg-[#2A2D30] text-[#E6E6E6] hover:bg-[#3D4450] hover:shadow-lg transition-all duration-200 border border-[#4A5260]"
-                    title="Sortierung"
-                  >
-                    <Sliders className="h-4 w-4" />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-[#2A2D30] border border-[#4A5260] rounded-lg shadow-xl z-50">
-                      <div className="p-2">
-                        <button
-                          onClick={() => {
-                            setSortBy('recent')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'recent'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Hinzugefügt (Neu zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('value-high')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'value-high'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Wert (Teuer zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('value-low')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'value-low'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Wert (Günstig zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('age-new')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'age-new'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Baujahr (Neu zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('age-old')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'age-old'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Baujahr (Alt zuerst)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('category')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'category'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Kategorie
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSortBy('name')
-                            setIsDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                            sortBy === 'name'
-                              ? 'bg-[#E5C97B] text-[#0A1A2F] font-medium'
-                              : 'text-[#E6E6E6] hover:bg-[#3D4450]'
-                          }`}
-                        >
-                          Name (A-Z)
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          <Link href="/vehicles/new">
+            <Button className="bg-primary text-surface-container hover:bg-primary/90">
+              <Plus className="mr-2 h-5 w-5" />
+              Fahrzeug hinzufügen
+            </Button>
+          </Link>
         </div>
 
-        {!loading && vehicles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sortedVehicles.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} />
-            ))}
-          </div>
-        ) : !loading ? (
-          <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center">
-            <div className="rounded-full bg-[#2A2D30] p-4 sm:p-6 mb-6">
-              <Car className="h-10 w-10 sm:h-12 sm:w-12 text-[#E5C97B]" />
-            </div>
-            <h2 className="text-lg sm:text-xl font-semibold text-[#E6E6E6] mb-2">
+        {/* Empty State */}
+        {vehicleList.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-outline-variant/30 px-8 py-16 text-center">
+            <h2 className="text-2xl font-semibold text-foreground">
               Noch keine Fahrzeuge
             </h2>
-            <p className="text-sm sm:text-base text-[#9B9B9B] mb-6 max-w-md">
-              Füge dein erstes Fahrzeug hinzu und beginne mit der Verwaltung deiner Sammlung.
+            <p className="mt-2 text-on-surface-variant">
+              Starten Sie mit der Verwaltung Ihrer Sammlung und fügen Sie ihr erstes Fahrzeug hinzu.
             </p>
-            <Link
-              href="/vehicles/new"
-              className="inline-flex items-center gap-2 rounded-lg bg-[#E5C97B] px-4 py-2.5 text-sm font-medium text-[#0A1A2F] hover:bg-[#B8961F] transition-colors duration-200"
-            >
-              <Plus className="h-4 w-4" />
-              Erstes Fahrzeug hinzufügen
+            <Link href="/vehicles/new" className="mt-6">
+              <Button className="bg-primary text-surface-container hover:bg-primary/90">
+                <Plus className="mr-2 h-5 w-5" />
+                Erstes Fahrzeug hinzufügen
+              </Button>
             </Link>
           </div>
         ) : (
-          <div className="flex justify-center items-center py-16">
-            <p className="text-[#9B9B9B]">Lädt...</p>
+          /* Vehicle Grid */
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {vehicleList.map((vehicle) => (
+              <VehicleCard
+                key={vehicle.id}
+                id={vehicle.id}
+                make={vehicle.make}
+                model={vehicle.model}
+                year={vehicle.year}
+                mileage={vehicle.current_mileage}
+                color={vehicle.color}
+                category={vehicle.category}
+                coverPhotoUrl={vehicle.cover_photo_url || undefined}
+              />
+            ))}
+
+            {/* Add Vehicle Card - Placeholder */}
+            <Link href="/vehicles/new">
+              <div className="group cursor-pointer">
+                <div className="flex aspect-[4/5] items-center justify-center rounded-lg border-2 border-dashed border-outline-variant/30 bg-surface-container/40 transition-colors duration-200 group-hover:border-primary/50 group-hover:bg-surface-container-high/60">
+                  <Plus className="h-12 w-12 text-outline-variant/50 transition-colors duration-200 group-hover:text-primary" />
+                </div>
+                <div className="mt-4 px-1">
+                  <p className="text-center font-serif text-lg italic text-on-surface-variant">
+                    Fahrzeug hinzufügen
+                  </p>
+                </div>
+              </div>
+            </Link>
           </div>
         )}
-      </div>
+      </main>
+
+      {/* FAB - Floating Action Button (Mobile) */}
+      <Link
+        href="/vehicles/new"
+        className="fixed bottom-24 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full champagne-gradient text-surface-container shadow-lg transition-transform hover:scale-110 lg:hidden"
+      >
+        <Plus className="h-6 w-6" />
+      </Link>
+
+      <BottomNav />
     </div>
   )
 }
