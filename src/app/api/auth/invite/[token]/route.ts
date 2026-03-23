@@ -6,15 +6,15 @@ import { createClient } from "@supabase/supabase-js"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   try {
+    const { token } = await params
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || "",
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
     )
-
-    const token = params.token
 
     // Find and validate invitation token
     const { data: invitation, error: inviteError } = await supabase
@@ -66,9 +66,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   try {
+    const { token } = await params
     const { password } = await request.json()
 
     if (!password || password.length < 8) {
@@ -77,8 +78,6 @@ export async function POST(
         { status: 400 }
       )
     }
-
-    const token = params.token
 
     // Use service role key for user creation
     const adminSupabase = createClient(
